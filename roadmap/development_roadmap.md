@@ -26,8 +26,8 @@ This roadmap outlines the key phases and deliverables for building, validating, 
 ## 🔍 Phase 3: Manual Governance Checklist
 
 **Deliverables:**
-- [x] Write `manual-questionnaire.md` for non-scanable subcategories
-- [x] Add `manual-remediation.md` for advisory follow-up
+- [ ] Write `manual-questionnaire.md` for non-scanable subcategories
+- [ ] Add `manual-remediation.md` for advisory follow-up
 - [ ] Create a standalone PDF/reporting version (optional)
 
 ---
@@ -46,8 +46,8 @@ This roadmap outlines the key phases and deliverables for building, validating, 
 **Deliverables:**
 - [ ] Finalize `README.md`, `LICENSE`, `.gitignore`
 - [ ] Organize folders: `/docs`, `/tools`, `/templates`, `/data`
-- [ ] Publish to GitHub under MIT or Apache 2.0
-- [ ] (Optional) Add GitHub Project board for task tracking
+- [ ] Publish to GitHub under GNU Public License
+- [ ] Add GitHub Project board for task tracking
 
 ---
 

@@ -20,7 +20,7 @@ This repository contains:
 
 - ✅ Curated CSF-Lite **subcategories** list (top 25)
 - ✅ Mapping of **Nuclei templates → CSF subcategories**
-- ✅ A Python script (`map_to_csf.py`) to map scan output to CSF
+- ✅ A Python scripts for mappping scan outputs to CSF subcategories.
 - ✅ CSV/JSON **lookup tables** for automation
 - ✅ A **manual questionnaire** for non-automatable items
 - ✅ Suggested **remediation guidance**
@@ -48,7 +48,7 @@ Contributors are welcome once the first working release is finalized.
 
 ## 📅 Roadmap
 
-See [`roadmap/development-roadmap.md`](./roadmap/development-roadmap.md) for phased deliverables and progress tracking.
+See [`roadmap/development-roadmap.md`](./roadmap/development_roadmap.md) for phased deliverables and progress tracking.
 
 ---
 

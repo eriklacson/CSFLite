@@ -34,7 +34,7 @@ This toolkit is for:
 
 - **SMEs/startups** that want structured risk insight without enterprise overhead
 - **Freelancers/consultants** running lightweight assessments
-- **Security-minded DevOps teams** bridging scanning and policy gaps
+- **Security-oriented DevOps teams** bridging scanning and policy gaps
 
 ---
 

@@ -54,7 +54,7 @@ See [`roadmap/development-roadmap.md`](./roadmap/development_roadmap.md) for pha
 
 ## 📄 License
 
-Released under the [MIT License](./LICENSE).
+Released under the [GNU Public License](./LICENSE).
 
 ---
 

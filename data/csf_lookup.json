@@ -1,0 +1,101 @@
+[
+  {
+    "templateID":"networking\/open-ports",
+    "finding":"Open Ports Detected",
+    "csf_function":"Identify",
+    "subcategory_id":"ID.AM-02",
+    "subcategory_name":"Devices and systems inventoried",
+    "rationale":"Open ports reflect active assets and exposed services\u2014critical to inventory.",
+    "recommended_remediation":"Close unnecessary ports or restrict access via firewall\/security group."
+  },
+  {
+    "templateID":"exposures\/git-auth-token",
+    "finding":"Publicly Exposed Git Auth Token",
+    "csf_function":"Identify",
+    "subcategory_id":"ID.RA-05",
+    "subcategory_name":"External information systems are cataloged",
+    "rationale":"Leaked tokens indicate poor control over external systems and APIs.",
+    "recommended_remediation":"Revoke the token, rotate credentials, and apply `.gitignore` rules."
+  },
+  {
+    "templateID":"default-logins\/ssh-default-creds",
+    "finding":"SSH Default Credentials",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.AC-01",
+    "subcategory_name":"Identities and credentials are managed",
+    "rationale":"Default or weak credentials are an easy entry point for attackers.",
+    "recommended_remediation":"Change default passwords and enforce key-based SSH authentication."
+  },
+  {
+    "templateID":"auth\/open-admin",
+    "finding":"Unauthenticated Admin Panel",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.AC-03",
+    "subcategory_name":"Remote access is managed",
+    "rationale":"Exposed admin interfaces without auth represent a major control gap.",
+    "recommended_remediation":"Restrict access with authentication, IP allowlists, or VPN."
+  },
+  {
+    "templateID":"headers\/missing-content-type",
+    "finding":"Missing X-Content-Type-Options Header",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.DS-01",
+    "subcategory_name":"Data-at-rest is protected",
+    "rationale":"Lack of this header allows MIME-sniffing attacks, risking improper content execution.",
+    "recommended_remediation":"Add `X-Content-Type-Options: nosniff` to all server responses."
+  },
+  {
+    "templateID":"misconfiguration\/dir-listing",
+    "finding":"Open Directory Listing",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.DS-06",
+    "subcategory_name":"Integrity checking mechanisms are used",
+    "rationale":"Directory listing exposes files and internal structure, violating data integrity and confidentiality.",
+    "recommended_remediation":"Disable directory listing in your web server (e.g., Apache\/NGINX)."
+  },
+  {
+    "templateID":"ssl\/self-signed",
+    "finding":"Self-Signed SSL Certificate",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.PT-04",
+    "subcategory_name":"Communications and control networks are protected",
+    "rationale":"Self-signed certs break trust boundaries, allowing MITM attacks.",
+    "recommended_remediation":"Replace with a valid certificate from a trusted CA (e.g., Let\u2019s Encrypt)."
+  },
+  {
+    "templateID":"ssl\/weak-cipher",
+    "finding":"Weak TLS Ciphers Supported",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.PT-04",
+    "subcategory_name":"Communications and control networks are protected",
+    "rationale":"Deprecated ciphers make encrypted communications vulnerable to compromise.",
+    "recommended_remediation":"Disable weak ciphers and enforce TLS 1.2 or higher."
+  },
+  {
+    "templateID":"ssl\/heartbleed",
+    "finding":"Heartbleed TLS Vulnerability",
+    "csf_function":"Protect",
+    "subcategory_id":"PR.PT-04",
+    "subcategory_name":"Communications and control networks are protected",
+    "rationale":"Heartbleed allows memory disclosure over encrypted channels\u2014critical to mitigate.",
+    "recommended_remediation":"Upgrade to a patched OpenSSL version (\u22651.0.1g) and reissue certs."
+  },
+  {
+    "templateID":"software\/outdated-plugin",
+    "finding":"Outdated WordPress Plugin Detected",
+    "csf_function":"Detect",
+    "subcategory_id":"DE.CM-08",
+    "subcategory_name":"Vulnerability scans are performed",
+    "rationale":"Identifies outdated components with known CVEs\u2014core to vuln management.",
+    "recommended_remediation":"Update the plugin to the latest secure version or disable it."
+  },
+  {
+    "templateID":"cves\/2021\/CVE-2021-44228",
+    "finding":"Log4Shell RCE",
+    "csf_function":"Detect",
+    "subcategory_id":"DE.CM-08",
+    "subcategory_name":"Vulnerability scans are performed",
+    "rationale":"High-impact CVE; confirms that vulnerability scanning is actually working.",
+    "recommended_remediation":"Patch Log4j to version \u22652.17.0 or apply vendor-specific mitigations."
+  }
+]

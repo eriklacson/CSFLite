@@ -10,6 +10,24 @@ readme = "README.md"
 python = "^3.12"
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+ruff = "^0.12.8"
+bandit = "^1.8.6"
+pre-commit = "^4.2.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+# Common rule sets
+select = ["E", "F", "B"]
+ignore = ["E501"]  # long lines handled by Black
+
+[tool.bandit]
+skips = ["B101"]    # assert-used outside tests

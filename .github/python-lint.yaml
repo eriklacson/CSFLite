@@ -1,0 +1,47 @@
+name: Python Lint (Poetry)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:  # adds a "Run workflow" button in the UI
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+      # actions/setup-python also supports caching with Poetry via cache: 'poetry'
+        id: py
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'poetry'
+          cache-dependency-path: |
+            **/poetry.lock
+            **/pyproject.toml
+
+      - name: Install Poetry (official installer)
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry --version
+
+      - name: Configure Poetry (use in-project .venv)
+        run: |
+          poetry config virtualenvs.in-project true
+
+      - name: Install dependencies (dev included)
+        run: poetry install --with dev --no-interaction --no-ansi
+
+      - name: Black — code format check
+        run: poetry run black --check .
+
+      - name: Ruff — style & bug lint
+        run: poetry run ruff check .
+
+      - name: Bandit — security scan (HIGH only)
+        run: poetry run bandit -r . --severity-level high

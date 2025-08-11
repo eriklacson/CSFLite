@@ -1,6 +1,6 @@
 # CSF-Lite Framework 🚧 *(Work in Progress)*
 
-> A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automated scanning (via Nuclei) with manual governance checks to produce a fast, actionable security baseline.
+A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automated scanning (via Nuclei) with manual governance checks to produce a fast, actionable security baseline.
 
 ---
 

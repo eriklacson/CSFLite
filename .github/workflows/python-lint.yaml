@@ -13,6 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Poetry (official installer)
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry --version
+
       - name: Set up Python
       # actions/setup-python also supports caching with Poetry via cache: 'poetry'
         id: py
@@ -24,11 +30,8 @@ jobs:
             **/poetry.lock
             **/pyproject.toml
 
-      - name: Install Poetry (official installer)
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          poetry --version
+      - name: Ensure Poetry uses this Python
+        run: poetry env use "${{ steps.py.outputs.python-path }}"
 
       - name: Configure Poetry (use in-project .venv)
         run: |

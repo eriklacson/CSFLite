@@ -22,5 +22,5 @@ repos:
     rev: 1.8.6
     hooks:
       - id: bandit
-        args: ["--severity-level", "high"]
+        args: [".",".","--severity-level", "high"]
 

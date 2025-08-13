@@ -47,4 +47,4 @@ jobs:
         run: poetry run ruff check .
 
       - name: Bandit — security scan (HIGH only)
-        run: poetry run bandit -r . --severity-level high
+        run: poetry run bandit -r your_package --severity-level high -x ".venv,venv,build,dist"

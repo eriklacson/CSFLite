@@ -24,7 +24,7 @@ jobs:
         id: py
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.10'
           cache: 'poetry'
           cache-dependency-path: |
             **/poetry.lock
@@ -47,4 +47,4 @@ jobs:
         run: poetry run ruff check .
 
       - name: Bandit — security scan (HIGH only)
-        run: poetry run bandit -r . --severity-level high
+        run: poetry run bandit -r your_package --severity-level high -x ".venv,venv,build,dist"

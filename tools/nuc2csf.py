@@ -1,17 +1,17 @@
 import json
 import csv
 
-input_file = "nuclei_output.json"
-output_file = "findings.csv"
+input_file = "../scans/sample_output.json"
+output_file = "../output/findings.csv"
 
 fields = [
-    "timestamp",
-    "host",
     "template_id",
+    "host",
+    "matched_at",
     "severity",
+    "timestamp",
     "matcher_name",
     "description",
-    "matched_url",
 ]
 
 with open(input_file, "r") as infile, open(output_file, "w", newline="") as outfile:

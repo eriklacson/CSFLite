@@ -22,6 +22,10 @@ bandit = "^1.8.6"
 pre-commit = "^4.2.0"
 pytest = "^8.4.1"
 
+[tool.pytest.ini_options]
+addopts = "-q --maxfail=1 --disable-warnings"
+testpaths = ["tests"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

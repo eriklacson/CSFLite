@@ -48,3 +48,7 @@ jobs:
 
       - name: Bandit — security scan (HIGH only)
         run: poetry run bandit -r your_package --severity-level high -x ".venv,venv,build,dist"
+
+      - name: Run unit tests
+        run: poetry run python -m pytest -q --maxfail=1 --disable-warnings 
+  

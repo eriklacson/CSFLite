@@ -2,6 +2,18 @@ from unittest.mock import mock_open, patch
 import json
 
 
+def test_get_paths():
+    from tools.nuc2csf import get_paths
+
+    expected_paths = {
+        "input_json": "data/nuclei-output.json",
+        "lookup_csv": "data/csf_lookup.csv",
+        "output_csv": "data/mapped-findings.csv",
+    }
+
+    assert get_paths() == expected_paths
+
+
 def test_read_scan_json_valid():
     # Mock JSON content
     mock_json_content = '{"key": "value"}'

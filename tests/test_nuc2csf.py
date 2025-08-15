@@ -1,4 +1,5 @@
 from unittest.mock import mock_open, patch
+import pytest
 import json
 
 
@@ -43,6 +44,77 @@ def test_read_scan_json_invalid():
             pass
         else:
             raise AssertionError("JSONDecodeError was not raised")
+
+
+# test_map_scan_to_csf.py
+
+
+@pytest.fixture
+def mock_lookup_csv(tmp_path):
+    # Create a temporary CSV file for the lookup data
+    lookup_data = """templateID,csf_function,subcategory_id,subcategory_name
+TEMPLATE-1,Identify,ID.AM-1,Asset Management
+TEMPLATE-2,Protect,PR.AC-1,Access Control
+"""
+    lookup_csv_path = tmp_path / "lookup.csv"
+    lookup_csv_path.write_text(lookup_data)
+    return lookup_csv_path
+
+
+def test_map_scan_to_csf(mock_lookup_csv):
+    from tools.nuc2csf import map_scan_to_csf
+
+    # Mock scan results
+    scan_results = {
+        "findings": [
+            {
+                "timestamp": "2023-01-01T12:00:00Z",
+                "host": "host1",
+                "templateID": "TEMPLATE-1",
+                "severity": "high",
+                "matcher-name": "matcher1",
+                "description": "Test finding 1",
+            },
+            {
+                "timestamp": "2023-01-01T13:00:00Z",
+                "host": "host2",
+                "templateID": "TEMPLATE-2",
+                "severity": "medium",
+                "matcher-name": "matcher2",
+                "description": "Test finding 2",
+            },
+        ]
+    }
+
+    # Expected mapped results
+    expected_mapped = [
+        {
+            "timestamp": "2023-01-01T12:00:00Z",
+            "host": "host1",
+            "templateID": "TEMPLATE-1",
+            "severity": "high",
+            "matcher_name": "matcher1",
+            "description": "Test finding 1",
+            "csf_function": "Identify",
+            "csf_subcategory_id": "ID.AM-1",
+            "csf_subcategory_name": "Asset Management",
+        },
+        {
+            "timestamp": "2023-01-01T13:00:00Z",
+            "host": "host2",
+            "templateID": "TEMPLATE-2",
+            "severity": "medium",
+            "matcher_name": "matcher2",
+            "description": "Test finding 2",
+            "csf_function": "Protect",
+            "csf_subcategory_id": "PR.AC-1",
+            "csf_subcategory_name": "Access Control",
+        },
+    ]
+
+    # Call the function and assert the results
+    result = map_scan_to_csf(scan_results, mock_lookup_csv)
+    assert result == expected_mapped
 
 
 if __name__ == "__main__":

@@ -1,36 +1,40 @@
 import json
-import csv
 
-input_file = "nuclei_output.json"
-output_file = "findings.csv"
 
-fields = [
-    "timestamp",
-    "host",
-    "template_id",
-    "severity",
-    "matcher_name",
-    "description",
-    "matched_url",
-]
+def get_paths():
+    """Returns the paths for input JSON, lookup CSV, and output CSV."""
 
-with open(input_file, "r") as infile, open(output_file, "w", newline="") as outfile:
-    writer = csv.DictWriter(outfile, fieldnames=fields)
-    writer.writeheader()
+    return {
+        "input_json": "data/nuclei-output.json",
+        "lookup_csv": "data/csf_lookup.csv",
+        "output_csv": "data/mapped-findings.csv",
+    }
 
-    for line in infile:
+
+def read_scan_json(file_path):
+    """Reads a JSON file and returns the parsed object.
+
+    Raises:
+        FileNotFoundError: If the file doesn't exist.
+        json.JSONDecodeError: If the file content is not valid JSON.
+        Exception: For any other unexpected errors.
+    """
+    with open(file_path, mode="r", encoding="utf-8") as file:
         try:
-            entry = json.loads(line)
-            writer.writerow(
-                {
-                    "timestamp": entry.get("timestamp"),
-                    "host": entry.get("host"),
-                    "template_id": entry.get("templateID"),
-                    "severity": entry.get("info", {}).get("severity"),
-                    "matcher_name": entry.get("matcher_name", ""),
-                    "description": entry.get("info", {}).get("name"),
-                    "matched_url": entry.get("matched", ""),
-                }
-            )
+            data = json.load(file)
         except json.JSONDecodeError:
-            continue
+            raise  # re-raise so tests/CI can detect failure
+        else:
+            print(json.dumps(data, indent=4))
+            return data
+
+
+def main():
+    # nuclei scan file
+    _scan_file = "../scans/sample_output.json"
+
+    print("Hello from main!")
+
+
+if __name__ == "__main__":
+    main()

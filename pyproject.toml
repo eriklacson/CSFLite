@@ -7,15 +7,24 @@ license = "GNU Public License 3.0"
 readme = "README.md"
 package-mode = false
 
+packages = [
+    { include = "tools" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.12"
-
+pytest = "^8.4.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
 ruff = "^0.12.8"
 bandit = "^1.8.6"
 pre-commit = "^4.2.0"
+pytest = "^8.4.1"
+
+[tool.pytest.ini_options]
+addopts = "-q --maxfail=1 --disable-warnings"
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core"]

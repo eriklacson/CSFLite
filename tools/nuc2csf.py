@@ -1,6 +1,16 @@
 import json
 
 
+def get_paths():
+    """Returns the paths for input JSON, lookup CSV, and output CSV."""
+
+    return {
+        "input_json": "data/nuclei-output.json",
+        "lookup_csv": "data/csf_lookup.csv",
+        "output_csv": "data/mapped-findings.csv",
+    }
+
+
 def read_scan_json(file_path):
     """Reads a JSON file and returns the parsed object.
 

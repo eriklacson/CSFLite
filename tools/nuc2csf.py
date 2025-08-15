@@ -2,25 +2,28 @@ import json
 
 
 def read_scan_json(file_path):
-    # This function reads a JSON file and prints its contents in a formatted way.
-    try:
-        with open(file_path, mode="r", encoding="utf-8") as file:
+    """Reads a JSON file and returns the parsed object.
+
+    Raises:
+        FileNotFoundError: If the file doesn't exist.
+        json.JSONDecodeError: If the file content is not valid JSON.
+        Exception: For any other unexpected errors.
+    """
+    with open(file_path, mode="r", encoding="utf-8") as file:
+        try:
             data = json.load(file)
+        except json.JSONDecodeError:
+            raise  # re-raise so tests/CI can detect failure
+        else:
             print(json.dumps(data, indent=4))
-    except FileNotFoundError:
-        print(f"Error: The file at {file_path} was not found.")
-    except json.JSONDecodeError:
-        print(f"Error: The file at {file_path} is not a valid JSON file.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+            return data
 
 
 def main():
     # nuclei scan file
-    scan_file = "../scans/sample_output.json"
+    _scan_file = "../scans/sample_output.json"
 
     print("Hello from main!")
-    read_scan_json(scan_file)
 
 
 if __name__ == "__main__":

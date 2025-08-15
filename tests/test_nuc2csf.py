@@ -9,7 +9,7 @@ def test_read_scan_json_valid():
 
     # Mock the open function and patch it
     with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        from nuc2csf import read_scan_json
+        from tools.nuc2csf import read_scan_json
 
         # Call the function and assert the result
         result = read_scan_json("mock_file.json")
@@ -18,11 +18,11 @@ def test_read_scan_json_valid():
 
 def test_read_scan_json_invalid():
     # Mock invalid JSON content
-    mock_json_content = '{"key": "value"}'
+    mock_json_content = '{"key": "value"'
 
     # Mock the open function and patch it
     with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        from nuc2csf import read_scan_json
+        from tools.nuc2csf import read_scan_json
 
         # Assert that a JSONDecodeError is raised
         try:

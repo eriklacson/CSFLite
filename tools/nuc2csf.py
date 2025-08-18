@@ -42,7 +42,7 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
     mapped = []
 
     # Iterate over the findings in the scan results
-    for f in scan_results.get("findings", []):
+    for f in scan_results:
         # Extract and strip the "templateID" from the current finding
         template_id = f.get("templateID", "").strip()
 
@@ -87,6 +87,10 @@ def write_to_csv(mapped_data, output_path):
 
 def main():
     print("Hello from main!")
+    paths = get_paths()
+    findings = read_scan_json(paths["input_json"])
+    mapped = map_scan_to_csf(findings, paths["lookup_csv"])
+    print(f"Paths: {mapped}")
 
 
 if __name__ == "__main__":

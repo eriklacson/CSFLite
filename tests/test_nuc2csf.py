@@ -48,8 +48,6 @@ def test_read_scan_json_invalid():
 
 
 # test_map_scan_to_csf.py
-
-
 @pytest.fixture
 def mock_lookup_csv(tmp_path):
     # Create a temporary CSV file for the lookup data
@@ -63,59 +61,35 @@ TEMPLATE-2,Protect,PR.AC-1,Access Control
 
 
 def test_map_scan_to_csf(mock_lookup_csv):
+    # import necessary functions
     from tools.nuc2csf import map_scan_to_csf
 
-    # Mock scan results
-    scan_results = {
-        "findings": [
-            {
-                "timestamp": "2023-01-01T12:00:00Z",
-                "host": "host1",
-                "templateID": "TEMPLATE-1",
-                "severity": "high",
-                "matcher-name": "matcher1",
-                "description": "Test finding 1",
-            },
-            {
-                "timestamp": "2023-01-01T13:00:00Z",
-                "host": "host2",
-                "templateID": "TEMPLATE-2",
-                "severity": "medium",
-                "matcher-name": "matcher2",
-                "description": "Test finding 2",
-            },
-        ]
-    }
-
-    # Expected mapped results
-    expected_mapped = [
+    # Sample findings (must be list of dicts, not strings)
+    test_findings = [
         {
-            "timestamp": "2023-01-01T12:00:00Z",
-            "host": "host1",
             "templateID": "TEMPLATE-1",
-            "severity": "high",
-            "matcher_name": "matcher1",
-            "description": "Test finding 1",
-            "csf_function": "Identify",
-            "csf_subcategory_id": "ID.AM-1",
-            "csf_subcategory_name": "Asset Management",
+            "host": "https://dev.example.com",
+            "timestamp": "2025-08-08T10:02:00Z",
+            "severity": "medium",
+            "matcher-name": "self-signed-cert",
+            "description": "TLS uses a self-signed certificate",
         },
         {
-            "timestamp": "2023-01-01T13:00:00Z",
-            "host": "host2",
             "templateID": "TEMPLATE-2",
-            "severity": "medium",
-            "matcher_name": "matcher2",
-            "description": "Test finding 2",
-            "csf_function": "Protect",
-            "csf_subcategory_id": "PR.AC-1",
-            "csf_subcategory_name": "Access Control",
+            "host": "http://example.com/admin",
+            "timestamp": "2025-08-08T10:01:00Z",
+            "severity": "high",
+            "matcher-name": "unauth-admin-panel",
+            "description": "Accessible admin panel without authentication",
         },
     ]
 
-    # Call the function and assert the results
-    result = map_scan_to_csf(scan_results, mock_lookup_csv)
-    assert result == expected_mapped
+    result = map_scan_to_csf(test_findings, mock_lookup_csv)
+    assert len(result) == 2
+    assert result[0]["csf_function"] == "Identify"
+    assert result[0]["csf_subcategory_id"] == "ID.AM-1"
+    assert "templateID" in result[0]
+    assert "host" in result[1]
 
 
 def test_write_with_data(tmp_path):

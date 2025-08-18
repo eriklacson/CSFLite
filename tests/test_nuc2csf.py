@@ -1,6 +1,7 @@
 from unittest.mock import mock_open, patch
 import pytest
 import json
+import csv
 
 
 def test_get_paths():
@@ -117,6 +118,30 @@ def test_map_scan_to_csf(mock_lookup_csv):
     assert result == expected_mapped
 
 
-if __name__ == "__main__":
-    test_read_scan_json_valid()
-    test_read_scan_json_invalid()
+def test_write_with_data(tmp_path):
+    # import necessary functions
+    from tools.nuc2csf import write_to_csv
+
+    test_data = [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]
+    path = tmp_path / "test.csv"
+
+    status = write_to_csv(test_data, str(path))
+
+    with open(path, newline="") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    assert status == f"Mapped results written to: {path}"
+    assert len(rows) == 2
+    assert rows[0]["name"] == "Alice"
+    assert rows[1]["age"] == "25"
+
+
+def test_write_no_data(tmp_path):
+    # import necessary functions
+    from tools.nuc2csf import write_to_csv
+
+    path = tmp_path / "empty.csv"
+    status = write_to_csv([], str(path))
+
+    assert status == "No data to write."

@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import csv
 
 
 def get_paths():
@@ -68,6 +69,20 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
 
     # Return the list of mapped findings
     return mapped
+
+
+def write_to_csv(mapped_data, output_path):
+    if mapped_data:
+        keys = mapped_data[0].keys()
+        with open(output_path, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=keys)
+            writer.writeheader()
+            writer.writerows(mapped_data)
+        status = f"Mapped results written to: {output_path}"
+    else:
+        status = "No data to write."
+
+    return status
 
 
 def main():

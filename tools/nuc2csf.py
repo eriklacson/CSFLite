@@ -7,9 +7,9 @@ def get_paths():
     """Returns the paths for input JSON, lookup CSV, and output CSV."""
 
     return {
-        "input_json": "data/nuclei-output.json",
-        "lookup_csv": "data/csf_lookup.csv",
-        "output_csv": "data/mapped-findings.csv",
+        "input_json": "../scans/sample_output.json",
+        "lookup_csv": "../data/csf_lookup.csv",
+        "output_csv": "../data/mapped-findings.csv",
     }
 
 
@@ -86,9 +86,6 @@ def write_to_csv(mapped_data, output_path):
 
 
 def main():
-    # nuclei scan file
-    _scan_file = "../scans/sample_output.json"
-
     print("Hello from main!")
 
 

@@ -8,9 +8,9 @@ def test_get_paths():
     from tools.nuc2csf import get_paths
 
     expected_paths = {
-        "input_json": "data/nuclei-output.json",
-        "lookup_csv": "data/csf_lookup.csv",
-        "output_csv": "data/mapped-findings.csv",
+        "input_json": "../scans/sample_output.json",
+        "lookup_csv": "../data/csf_lookup.csv",
+        "output_csv": "../data/mapped-findings.csv",
     }
 
     assert get_paths() == expected_paths

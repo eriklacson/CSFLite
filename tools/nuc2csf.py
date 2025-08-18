@@ -86,11 +86,10 @@ def write_to_csv(mapped_data, output_path):
 
 
 def main():
-    print("Hello from main!")
     paths = get_paths()
     findings = read_scan_json(paths["input_json"])
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
-    print(f"Paths: {mapped}")
+    write_to_csv(mapped, paths["output_csv"])
 
 
 if __name__ == "__main__":

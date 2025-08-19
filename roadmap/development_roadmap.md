@@ -1,49 +1,33 @@
-# CSF-Lite Framework – Development Roadmap
+# CSFLite Roadmap
 
-This roadmap outlines the key phases and deliverables for building, validating, and publishing the CSF-Lite project. The framework combines lightweight NIST CSF v2.0 alignment with automated scanning and manual governance checks.
+**Vision:** Bridge security strategy ↔ implementation for SMEs by turning raw vuln data into NIST CSF v2.0–aligned governance guide — fast.
 
+## Versioning
+SemVer. Minor releases can add features; patch = fixes only. CLI flags marked “experimental” may change in minors.
+S
 ---
 
-## ✅ Phase 1: Foundation – Define Scope & Priorities
+##
+**v0.1.0-alpha**
+- ✅ MVP CLI (fixed data paths) → `data/mock_heatmap.csv`
+- ✅ Top-25 CSF subcategories with weights
+- ✅ Initial `nuclei-csf` index (≥30 mappings)
+- ✅ Tests: multi-map & severity precedence
+- ✅ CI: black/ruff/bandit/pytest green
+- ✅ README Quickstart + sample output
+- ✅ License: **MIT**
+## Quickstart (MVP)
 
-**Deliverables:**
-- [x] Identify Top 25 CSF subcategories
-- [x] Classify which can be automated vs. manual
-- [x] Draft lookup table and manual questionnaire
+Configurable CLI flags (--scan/--lookup/--index/--out) arrive in v0.2.
 
----
 
-##  Phase 2: Automate Core Functionality
+**TO-DO ASAP**
+- CLI flags: `--scan/--lookup/--index/--out`
+- Config file support (`csf_lite.toml`) + env overrides
+- PDF exporter (simple Python HTML→PDF or wkhtmltopdf)
 
-**Deliverables:**
-- [x] Build `csf_lookup.csv` and `csf_lookup.json`
-- [x] Write `nuclei2csf.py` script to parse Nuclei JSON and output CSV with CSF mapping
-- [x] Validate against a test scan output
-- [x] Document automatable subcategories
-
----
-
-## Phase 3: Manual Governance Checklist
-
-**Deliverables:**
-- [x] Write `manual-questionnaire.md` for non-scanable subcategories
-- [x] Add `manual-remediation.md` for advisory follow-up
-- [ ] Create a standalone PDF/reporting version (optional)
-
----
-
-## Phase 4: Pilot Test
-
-**Deliverables:**
-- [ ] Run pilot scan + assessment on test environment
-- [ ] Deliver full CSF-Lite report (automated + manual)
-- [ ] Collect SME feedback and refine subcategory list and recommendations
-
----
-
-## Phase 6: Community Growth & Iteration
-
-**Deliverables:**
-- [ ] Add CONTRIBUTING.md and issues templates
-- [ ] Announce project on LinkedIn, Reddit, or community groups
-- [ ] Begin adding community-submitted templates and use cases
+**FUTURE DEVELOPMENTS**
+- Industry profiles (weights): SaaS, Finlite, Agency
+- Governance checks expanded to Top-25 with remediations
+- Better logging + `--verbose`
+- Packaging polish; pre-release to PyPI (optional)

@@ -1,4 +1,4 @@
-# CSFLite — Usage Guide
+ CSFLite — Usage Guide
 
 ## Getting Started
 
@@ -84,7 +84,7 @@ PR.PS-01,Personnel security policies,1,low,1.69
 
 ---
 
-## How mapping works (MVP)
+## How mapping works (alpha version)
 
 1. **Scan output** – `data/mock_scan_output.json` holds findings with `template_id` and `severity`.
 2. **Template → CSF mapping** – `data/nuclei-csf-index.csv` maps each Nuclei template to one or more CSF subcategories (`subcat_ids` supports multiple IDs separated by `;`).

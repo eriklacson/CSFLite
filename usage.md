@@ -7,25 +7,20 @@
 * Python **3.10+**
 * Git
 
-### Install (dev setup)
-
+### Install
 ```bash
 # clone
 git clone https://github.com/eriklacson/CSFLite.git
 cd CSFLite
 
-# create a virtualenv (pick one)
-python -m venv .venv && source .venv/bin/activate
-# or, on Windows:
-# py -3 -m venv .venv && .venv\Scripts\activate
+# install Poetry (if not already installed)
+curl -sSL https://install.python-poetry.org | python3
 
-# install deps (pip)
-pip install -e .  # editable; optional if you only run the CLI
+# install dependencies and set up virtualenv
+poetry install --with dev
 
-# optional: dev tools
-pip install black ruff bandit pytest
-# or with poetry:
-# poetry install --with dev
+# activate the virtual environment
+poetry shell
 ```
 
 ---
@@ -59,7 +54,7 @@ output/heatmap.csv
 
 ## What the tool produces
 
-### Output file: `data/mock_heatmap.csv`
+### Output file: `data/heatmap.csv`
 
 **Columns:**
 
@@ -119,22 +114,6 @@ The native **PDF exporter** ships in **v0.2**.
 
 ---
 
-## Tests & CI (optional for contributors)
-
-```bash
-# run tests
-pytest -q
-
-# style & security (match CI)
-black --check .
-ruff check .
-bandit -r . --severity-level medium --confidence-level medium
-```
-
-> If Bandit flags an issue you understand and accept, prefer a **code fix**. If you must suppress, use a **narrow** `# nosec` and add a one-line justification.
-
----
-
 ## Troubleshooting
 
 * **`FileNotFoundError: data/...`**
@@ -143,24 +122,4 @@ bandit -r . --severity-level medium --confidence-level medium
 * **CSV looks empty / few rows**
   Confirm your `template_id` values in `mock_scan_output.json` match entries in `nuclei-csf-index.csv`. Start with a small set you’re confident in.
 
-* **Weird values in Excel**
-  If any cell begins with `= + - @`, Excel may treat it as a formula. The exporter includes a simple guard; if you construct CSV manually, prefix such cells with a single quote `'`.
 
-* **Windows tip**
-  Use `py -3 csf_lite_cli.py` if `python` points to a different version.
-
----
-
-## Roadmap (what’s next)
-
-* **v0.2 (by Sep 5):** CLI flags, config file (`csf_lite.toml`), OpenVAS XML normalization (via `defusedxml`), CSV safety guard, simple PDF exporter, ≥60% test coverage.
-* **v0.3 (by Sep 26):** Industry weight profiles, expanded governance checks, improved logging/verbosity, unmapped reporting, optional pre-release to PyPI.
-
-See full details in **`roadmap/ROADMAP.md`**.
-
----
-
-## License
-
-MIT — see (./LICENSE).
-.

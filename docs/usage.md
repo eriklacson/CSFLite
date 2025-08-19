@@ -1,4 +1,4 @@
- CSFLite — Usage Guide
+# CSFLite — Usage Guide
 
 ## Getting Started
 
@@ -25,7 +25,7 @@ poetry shell
 
 ---
 
-## Quickstart (MVP)
+## Quickstart (v0.1 alpha version)
 
 This version only supports ***nuclie scan results*** and uses **default paths in `./data`**.
 
@@ -47,7 +47,7 @@ data/csf_lookup.csv
 output/heatmap.csv
 ```
 
-> Configurable CLI flags (`--scan/--lookup/--index/--out`) arrive in **v0.2**.
+> Configurable CLI flags (`--scan/--lookup/--index/--out`) will be included in **v0.2**.
 > Until then, keep your inputs in `./data` using the file names above.
 
 ---

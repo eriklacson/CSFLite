@@ -13,26 +13,26 @@ This roadmap outlines the key phases and deliverables for building, validating, 
 
 ---
 
-## 🚧 Phase 2: Automate Core Functionality
+##  Phase 2: Automate Core Functionality
 
 **Deliverables:**
-- [ ] Build `csf_lookup.csv` and `csf_lookup.json`
-- [ ] Write `map_to_csf.py` script to parse Nuclei JSON and output CSV with CSF mapping
-- [ ] Validate against a test scan output
-- [ ] Document automatable subcategories
+- [x] Build `csf_lookup.csv` and `csf_lookup.json`
+- [x] Write `nuclei2csf.py` script to parse Nuclei JSON and output CSV with CSF mapping
+- [x] Validate against a test scan output
+- [x] Document automatable subcategories
 
 ---
 
-## 🔍 Phase 3: Manual Governance Checklist
+## Phase 3: Manual Governance Checklist
 
 **Deliverables:**
-- [ ] Write `manual-questionnaire.md` for non-scanable subcategories
-- [ ] Add `manual-remediation.md` for advisory follow-up
+- [x] Write `manual-questionnaire.md` for non-scanable subcategories
+- [x] Add `manual-remediation.md` for advisory follow-up
 - [ ] Create a standalone PDF/reporting version (optional)
 
 ---
 
-## 🧪 Phase 4: Pilot Test
+## Phase 4: Pilot Test
 
 **Deliverables:**
 - [ ] Run pilot scan + assessment on test environment
@@ -41,17 +41,7 @@ This roadmap outlines the key phases and deliverables for building, validating, 
 
 ---
 
-## 📦 Phase 5: Package for GitHub
-
-**Deliverables:**
-- [ ] Finalize `README.md`, `LICENSE`, `.gitignore`
-- [ ] Organize folders: `/docs`, `/tools`, `/templates`, `/data`
-- [ ] Publish to GitHub under GNU Public License
-- [ ] Add GitHub Project board for task tracking
-
----
-
-## 🌱 Phase 6: Community Growth & Iteration
+## Phase 6: Community Growth & Iteration
 
 **Deliverables:**
 - [ ] Add CONTRIBUTING.md and issues templates

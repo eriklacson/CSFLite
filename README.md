@@ -1,10 +1,10 @@
-# CSF-Lite Framework 🚧 *(Work in Progress)*
+# CSF-Lite Framework
 
 A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automated scanning (via Nuclei) with manual governance checks to produce a fast, actionable security baseline.
 
 ---
 
-## 🌟 Project Vision
+## Vision
 
 **CSF-Lite** is designed for lean security operations. Instead of overwhelming organizations with the full CSF catalog, this framework focuses on:
 
@@ -14,7 +14,7 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 
 ---
 
-## 📦 What’s Included
+## What’s Included
 
 This repository contains:
 
@@ -28,7 +28,7 @@ This repository contains:
 
 ---
 
-## ⚙️ Use Case
+## Use Case
 
 This toolkit is for:
 
@@ -38,9 +38,9 @@ This toolkit is for:
 
 ---
 
-## 📌 Status
+## Status
 
-🔧 **This project is currently in early development (WIP).**  
+**This project is currently in early development (WIP).**  
 Expect changes to structure, mappings, and outputs.  
 Contributors are welcome once the first working release is finalized.
 
@@ -54,7 +54,7 @@ See [`roadmap/development-roadmap.md`](./roadmap/development_roadmap.md) for pha
 
 ## 📄 License
 
-Released under the [GNU Public License](./LICENSE).
+Released under the [MIT License](./LICENSE).
 
 ---
 

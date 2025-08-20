@@ -11,6 +11,7 @@ def test_get_paths():
         "input_json": "../scans/sample_output.json",
         "lookup_csv": "../data/csf_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
+        "output_json": "../output/mapped-findings.json",
     }
 
     assert get_paths() == expected_paths

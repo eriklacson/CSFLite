@@ -10,6 +10,7 @@ def get_paths():
         "input_json": "../scans/sample_output.json",
         "lookup_csv": "../data/csf_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
+        "output_json": "../output/mapped-findings.json",
     }
 
 
@@ -82,6 +83,16 @@ def write_to_csv(mapped_data, output_path):
     else:
         status = "No data to write."
 
+    return status
+
+
+def write_to_json(mapped_data, output_path):
+    if mapped_data:
+        with open(output_path, "w") as f:
+            json.dump(mapped_data, f, indent=4)
+        status = f"Mapped results written to: {output_path}"
+    else:
+        status = "No data to write."
     return status
 
 

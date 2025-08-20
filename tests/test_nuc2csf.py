@@ -2,6 +2,7 @@ from unittest.mock import mock_open, patch
 import pytest
 import json
 import csv
+from pathlib import Path
 
 
 def test_get_paths():
@@ -119,4 +120,38 @@ def test_write_no_data(tmp_path):
     path = tmp_path / "empty.csv"
     status = write_to_csv([], str(path))
 
+    assert status == "No data to write."
+
+
+def test_write_to_json_with_data(tmp_path: Path):
+    # Import necessary functions
+    from tools.nuc2csf import write_to_json
+
+    # prep test data and file
+    data = [{"a": 1, "b": 2}]
+    output_file = tmp_path / "out.json"
+
+    # call function
+    status = write_to_json(data, output_file)
+
+    # run test
+    assert output_file.exists()
+    written = json.loads(output_file.read_text())
+    assert written == data
+    assert f"Mapped results written to: {output_file}" in status
+
+
+def test_write_to_json_no_data(tmp_path: Path):
+    # import necessary functions
+    from tools.nuc2csf import write_to_json
+
+    # prep test data and file
+    data = []
+    output_file = tmp_path / "out.json"
+
+    # call function
+    status = write_to_json(data, output_file)
+
+    # run test
+    assert not output_file.exists()
     assert status == "No data to write."

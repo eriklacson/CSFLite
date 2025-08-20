@@ -22,17 +22,19 @@ def read_scan_json(file_path):
         json.JSONDecodeError: If the file content is not valid JSON.
         Exception: For any other unexpected errors.
     """
+    print("reading scan results from:", file_path)
     with open(file_path, mode="r", encoding="utf-8") as file:
         try:
             scan_result = json.load(file)
         except json.JSONDecodeError:
+            print(f"Error decoding JSON from file: {file_path}")
             raise  # re-raise so tests/CI can detect failure
         else:
-            print(json.dumps(scan_result, indent=4))
             return scan_result
 
 
 def map_scan_to_csf(scan_results, lookup_csv_path):
+    print("mapping scan results to CSF...")
     # Read the lookup CSV file into a pandas DataFrame
     lookup_df = pd.read_csv(lookup_csv_path)
 
@@ -73,6 +75,7 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
 
 
 def write_to_csv(mapped_data, output_path):
+    print("writing mapped results to CSV...")
     if mapped_data:
         keys = mapped_data[0].keys()
         with open(output_path, "w", newline="") as f:
@@ -87,6 +90,7 @@ def write_to_csv(mapped_data, output_path):
 
 
 def write_to_json(mapped_data, output_path):
+    print("writing mapped results to JSON...")
     if mapped_data:
         with open(output_path, "w") as f:
             json.dump(mapped_data, f, indent=4)
@@ -101,6 +105,7 @@ def main():
     findings = read_scan_json(paths["input_json"])
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
     write_to_csv(mapped, paths["output_csv"])
+    write_to_json(mapped, paths["output_json"])
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ def get_paths():
     return {
         "input_json": "../scans/sample_output.json",
         "lookup_csv": "../data/csf_lookup.csv",
-        "output_csv": "../data/mapped-findings.csv",
+        "output_csv": "../output/mapped-findings.csv",
     }
 
 

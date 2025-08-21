@@ -142,7 +142,17 @@ def generate_heatmap(mapped, heatmap_lookup):
         count=("sev_w", "size"), max_w=("sev_w", "max")
     )
 
-    return []  # Return heatmap lookup data as a placeholder
+    # sanity check required fields is in the Dataframe: expect 'subcategory_id', 'name' (optional), 'weight' (optional)
+    pd_heatmap_lookup = pd.read_csv(heatmap_lookup)
+    if "subcategory_id" not in pd_heatmap_lookup.columns:
+        raise KeyError("lookup CSV must contain 'subcategory_id'")
+    if "name" not in pd_heatmap_lookup.columns:
+        pd_heatmap_lookup["name"] = pd_heatmap_lookup["subcategory_id"]
+    if "weight" not in pd_heatmap_lookup.columns:
+        pd_heatmap_lookup["weight"] = 1.0
+    pd_heatmap_lookup["weight"] = pd_heatmap_lookup["weight"].astype(float)
+
+    return []  # Return placeholder
 
 
 def main():

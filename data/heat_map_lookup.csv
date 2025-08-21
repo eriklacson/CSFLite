@@ -1,0 +1,26 @@
+subcat_id,name,weight
+ID.AM-01,Asset inventory is maintained,1.0
+ID.AM-02,Software platforms are identified,1.0
+ID.AM-05,External information systems are catalogued,1.0
+ID.RA-01,Asset vulnerabilities are identified,1.5
+ID.RA-03,Threats are identified,1.5
+PR.AC-01,Access to assets is managed,1.5
+PR.AC-03,Remote access is managed,1.5
+PR.AC-06,Access permissions are managed,1.5
+PR.DS-01,Data-at-rest is protected,1.0
+PR.DS-02,Data-in-transit is protected,1.0
+PR.PT-03,External threats are managed,1.2
+PR.PT-04,Communications and control networks are protected,1.2
+PR.IP-08,Effectiveness of protection technologies is shared,0.8
+PR.MA-01,Maintenance and repair are performed and logged,1.0
+DE.AE-01,Anomalous activity is detected,1.2
+DE.AE-02,Detected events are analyzed,1.2
+DE.CM-07,Monitoring for unauthorized personnel, devices, etc.,1.2
+DE.CM-08,Vulnerability scans are performed,1.5
+DE.DP-01,Response plans are executed during or after events,1.0
+RS.RP-01,Response plans are executed,1.0
+RS.MI-01,Incidents are contained,1.0
+RS.MI-03,Newly identified vulnerabilities are mitigated,1.2
+RC.IM-01,Recovery plans are executed,1.0
+RC.CO-01,Internal and external communication is managed,0.8
+RC.RP-01,Recovery planning and testing,1.0

@@ -137,6 +137,11 @@ def generate_heatmap(mapped, heatmap_lookup):
     if mapped_df.empty:
         return []
 
+    # aggregate per subcategory
+    df_aggregate = mapped_df.groupby("subcat_id", as_index=False).agg(  # noqa: F841
+        count=("sev_w", "size"), max_w=("sev_w", "max")
+    )
+
     return []  # Return heatmap lookup data as a placeholder
 
 

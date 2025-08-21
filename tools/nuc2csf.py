@@ -1,3 +1,5 @@
+from math import log1p  # noqa: F401
+from pathlib import Path
 import json
 import pandas as pd
 import csv
@@ -8,7 +10,8 @@ def get_paths():
 
     return {
         "input_json": "../scans/sample_output.json",
-        "lookup_csv": "../data/nuclie_lookup.csv",
+        "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        "heatmap_lookup": "../data/nuclie_csf_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
     }
@@ -100,12 +103,29 @@ def write_to_json(mapped_data, output_path):
     return status
 
 
+def generate_heatmap(mapped: list[dict], heatmap_lookup: str) -> list[dict]:
+    print("generating heatmap data...")
+
+    # Convert heatmap_lookup to a Path object
+    heatmap_lookup_path = Path(heatmap_lookup)
+
+    # Fail early if the lookup file is missing
+    if not heatmap_lookup_path.is_file():
+        raise FileNotFoundError(f"Heatmap lookup file not found: {heatmap_lookup}")
+
+    # Placeholder for heatmap generation logic
+    # Add your heatmap generation code here
+
+    return []  # Return an empty list or the generated heatmap data
+
+
 def main():
     paths = get_paths()
     findings = read_scan_json(paths["input_json"])
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
     write_to_csv(mapped, paths["output_csv"])
     write_to_json(mapped, paths["output_json"])
+    generate_heatmap(mapped, paths["heatmap_lookup"])
 
 
 if __name__ == "__main__":

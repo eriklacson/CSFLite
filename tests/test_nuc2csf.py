@@ -1,8 +1,8 @@
 from unittest.mock import mock_open, patch
+from pathlib import Path
 import pytest
 import json
 import csv
-from pathlib import Path
 
 
 def test_get_paths():

@@ -103,9 +103,11 @@ def write_to_json(mapped_data, output_path):
     return status
 
 
-def generate_heatmap(mapped: list[dict], heatmap_lookup: str) -> list[dict]:
+def generate_heatmap(mapped, heatmap_lookup):
     print("generating heatmap data...")
 
+    # Guards for early failure
+    #
     # Convert heatmap_lookup to a Path object
     heatmap_lookup_path = Path(heatmap_lookup)
 
@@ -113,10 +115,29 @@ def generate_heatmap(mapped: list[dict], heatmap_lookup: str) -> list[dict]:
     if not heatmap_lookup_path.is_file():
         raise FileNotFoundError(f"Heatmap lookup file not found: {heatmap_lookup}")
 
-    # Placeholder for heatmap generation logic
-    # Add your heatmap generation code here
+    # Fail early if the mapped data is empty
+    if not mapped:
+        return []
+    mapped_df = pd.DataFrame(mapped)
 
-    return []  # Return an empty list or the generated heatmap data
+    # Check if the required columns are present in the DataFrame
+    if not {"csf_subcategory_id", "severity"}.issubset(mapped_df.columns):
+        return []
+
+    # normalize + map severities -> weights
+    sev_w = {"low": 1, "medium": 2, "high": 3}
+    sev_by_w = {v: k for k, v in sev_w.items()}  # noqa: F841
+
+    # Convert the DataFrame to a format suitable for heatmap lookup
+    mapped_df["subcat_id"] = mapped_df["csf_subcategory_id"].astype(str).str.strip()
+    mapped_df["sev_w"] = mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w)
+    mapped_df = mapped_df[(mapped_df["subcat_id"] != "") & mapped_df["sev_w"].notna()]
+
+    # If the DataFrame is empty after filtering, return an empty list
+    if mapped_df.empty:
+        return []
+
+    return []  # Return heatmap lookup data as a placeholder
 
 
 def main():
@@ -125,7 +146,8 @@ def main():
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
     write_to_csv(mapped, paths["output_csv"])
     write_to_json(mapped, paths["output_json"])
-    generate_heatmap(mapped, paths["heatmap_lookup"])
+    lookup = generate_heatmap(mapped, paths["heatmap_lookup"])
+    print("Heatmap lookup data:", lookup)
 
 
 if __name__ == "__main__":

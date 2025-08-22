@@ -1,4 +1,3 @@
-from math import log1p  # noqa: F401
 from pathlib import Path
 import json
 import pandas as pd
@@ -139,7 +138,7 @@ def generate_heatmap(mapped, heatmap_lookup):
         return []
 
     # aggregate per subcategory
-    df_aggregate = mapped_df.groupby("subcat_id", as_index=False).agg(  # noqa: F841
+    df_aggregate = mapped_df.groupby("subcat_id", as_index=False).agg(
         count=("sev_w", "size"), max_w=("sev_w", "max")
     )
 

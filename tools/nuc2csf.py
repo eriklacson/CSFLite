@@ -2,6 +2,7 @@ from math import log1p  # noqa: F401
 from pathlib import Path
 import json
 import pandas as pd
+import numpy as np
 import csv
 
 
@@ -151,6 +152,21 @@ def generate_heatmap(mapped, heatmap_lookup):
     if "weight" not in pd_heatmap_lookup.columns:
         pd_heatmap_lookup["weight"] = 1.0
     pd_heatmap_lookup["weight"] = pd_heatmap_lookup["weight"].astype(float)
+
+    # join two datasets and compute heatmap scores
+    pd_heatmap = df_aggregate.merge(
+        pd_heatmap_lookup[["subcategory_id", "name", "weight"]],
+        left_on="subcat_id",
+        right_on="subcategory_id",
+        how="left",
+    )
+    pd_heatmap["name"] = pd_heatmap["name"].fillna(pd_heatmap["subcat_id"])
+    pd_heatmap["weight"] = pd_heatmap["weight"].fillna(1.0)
+    pd_heatmap["score"] = pd_heatmap["weight"] * (
+        pd_heatmap["max_w"] + np.log1p(pd_heatmap["count"])
+    )
+    pd_heatmap["max_severity"] = pd_heatmap["max_w"].map(sev_by_w).fillna("low")
+    pd_heatmap["weighted_score"] = pd_heatmap["score"].map(lambda x: f"{x:.2f}")
 
     return []  # Return placeholder
 

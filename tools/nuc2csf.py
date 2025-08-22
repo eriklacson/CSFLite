@@ -168,7 +168,13 @@ def generate_heatmap(mapped, heatmap_lookup):
     pd_heatmap["max_severity"] = pd_heatmap["max_w"].map(sev_by_w).fillna("low")
     pd_heatmap["weighted_score"] = pd_heatmap["score"].map(lambda x: f"{x:.2f}")
 
-    return []  # Return placeholder
+    # shape + sort + return
+    heatmap_columns = ["subcat_id", "name", "count", "max_severity", "weighted_score"]
+    heatmap = pd_heatmap.sort_values(["score", "subcat_id"], ascending=[False, True])[
+        heatmap_columns
+    ].to_dict(orient="records")
+
+    return heatmap  # Return placeholder
 
 
 def main():

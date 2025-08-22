@@ -14,6 +14,7 @@ def get_paths():
         "heatmap_lookup": "../data/nuclie_csf_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
+        "heatmap_csv": "../output/heatmap.csv",
     }
 
 
@@ -182,8 +183,8 @@ def main():
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
     write_to_csv(mapped, paths["output_csv"])
     write_to_json(mapped, paths["output_json"])
-    lookup = generate_heatmap(mapped, paths["heatmap_lookup"])
-    print("Heatmap lookup data:", lookup)
+    heatmap = generate_heatmap(mapped, paths["heatmap_lookup"])
+    write_to_csv(heatmap, paths["heatmap_csv"])
 
 
 if __name__ == "__main__":

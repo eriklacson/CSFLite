@@ -14,6 +14,7 @@ def test_get_paths():
         "heatmap_lookup": "../data/nuclie_csf_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
+        "heatmap_csv": "../output/heatmap.csv",
     }
 
     assert get_paths() == expected_paths

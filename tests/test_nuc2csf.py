@@ -10,8 +10,8 @@ def test_get_paths():
 
     expected_paths = {
         "input_json": "../scans/sample_output.json",
-        "lookup_csv": "../data/heat_map_lookup.csv",
-        "heatmap_lookup": "../data/nuclie_csf_lookup.csv",
+        "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        "heatmap_lookup": "../data/heat_map_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
         "heatmap_csv": "../output/heatmap.csv",

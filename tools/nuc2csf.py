@@ -10,7 +10,7 @@ def get_paths():
 
     return {
         "input_json": "../scans/sample_output.json",
-        "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        "lookup_csv": "../data/heat_map_lookup.csv",
         "heatmap_lookup": "../data/nuclie_csf_lookup.csv",
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
@@ -179,6 +179,7 @@ def generate_heatmap(mapped, heatmap_lookup):
 
 def main():
     paths = get_paths()
+    print(paths)
     findings = read_scan_json(paths["input_json"])
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
     write_to_csv(mapped, paths["output_csv"])

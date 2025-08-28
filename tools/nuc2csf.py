@@ -119,7 +119,10 @@ def generate_heatmap(mapped, heatmap_lookup):
     # Fail early if the mapped data is empty
     if not mapped:
         return []
+
     mapped_df = pd.DataFrame(mapped)
+
+    print(mapped_df)
 
     # Check if the required columns are present in the DataFrame
     if not {"csf_subcategory_id", "severity"}.issubset(mapped_df.columns):
@@ -130,9 +133,10 @@ def generate_heatmap(mapped, heatmap_lookup):
     sev_by_w = {v: k for k, v in sev_w.items()}  # noqa: F841
 
     # Convert the DataFrame to a format suitable for heatmap lookup
+    #
+    # refact: provide check for missing or invalid data
     mapped_df["subcat_id"] = mapped_df["csf_subcategory_id"].astype(str).str.strip()
     mapped_df["sev_w"] = mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w)
-    mapped_df = mapped_df[(mapped_df["subcat_id"] != "") & mapped_df["sev_w"].notna()]
 
     # If the DataFrame is empty after filtering, return an empty list
     if mapped_df.empty:
@@ -140,8 +144,10 @@ def generate_heatmap(mapped, heatmap_lookup):
 
     # aggregate per subcategory
     df_aggregate = mapped_df.groupby("subcat_id", as_index=False).agg(
-        count=("sev_w", "size"), max_w=("sev_w", "max")
+        count=("csf_subcategory_id", "size"), max_w=("sev_w", "max")
     )
+
+    print(df_aggregate)
 
     # sanity check required fields is in the Dataframe: expect 'subcategory_id', 'name' (optional), 'weight' (optional)
     pd_heatmap_lookup = pd.read_csv(heatmap_lookup)

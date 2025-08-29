@@ -104,7 +104,7 @@ def write_to_json(mapped_data, output_path):
     return status
 
 
-def generate_heatmap(mapped, heatmap_lookup):
+def generate_scan_heatmap(mapped, heatmap_lookup):
     print("generating heatmap data...")
 
     # Guards for early failure
@@ -192,8 +192,8 @@ def main():
     mapped = map_scan_to_csf(findings, paths["lookup_csv"])
     write_to_csv(mapped, paths["output_csv"])
     write_to_json(mapped, paths["output_json"])
-    heatmap = generate_heatmap(mapped, paths["heatmap_lookup"])
-    write_to_csv(heatmap, paths["heatmap_csv"])
+    scan_heatmap = generate_scan_heatmap(mapped, paths["heatmap_lookup"])
+    write_to_csv(scan_heatmap, paths["heatmap_csv"])
 
 
 if __name__ == "__main__":

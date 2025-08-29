@@ -134,8 +134,8 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 
     # Convert the DataFrame to a format suitable for heatmap lookup
     #
-    # refact: provide check for missing or invalid data
-    mapped_df["subcat_id"] = mapped_df["csf_subcategory_id"].astype(str).str.strip()
+    # refactor flag: provide check for missing or invalid data
+    mapped_df["csf_subcategory_id"] = mapped_df["csf_subcategory_id"].astype(str).str.strip()
     mapped_df["sev_w"] = mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w)
 
     # If the DataFrame is empty after filtering, return an empty list
@@ -143,32 +143,36 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
         return []
 
     # aggregate per subcategory
-    df_aggregate = mapped_df.groupby("subcat_id", as_index=False).agg(
+    df_aggregate = mapped_df.groupby("csf_subcategory_id", as_index=False).agg(
         count=("csf_subcategory_id", "size"), max_w=("sev_w", "max")
     )
 
-    print(df_aggregate)
-
-    # sanity check required fields is in the Dataframe:
-    # expect 'subcategory_id', 'name' (optional), 'weight' (optional)
+    # sanity check required fields are in the Dataframe:
+    # expect 'csf_subcategory_id', 'name' (optional), 'weight' (optional)
 
     pd_heatmap_lookup = pd.read_csv(heatmap_lookup)
+
+    # convert field names to human-friendly column names for report outputs
+    pd_heatmap_lookup.rename(columns={"subcategory_name": "name"}, inplace=True)
+
     if "subcategory_id" not in pd_heatmap_lookup.columns:
         raise KeyError("lookup CSV must contain 'subcategory_id'")
-    if "subcategory_name" not in pd_heatmap_lookup.columns:
-        pd_heatmap_lookup["subcategory_name"] = pd_heatmap_lookup["subcategory_id"]
+    if "name" not in pd_heatmap_lookup.columns:
+        pd_heatmap_lookup["name"] = pd_heatmap_lookup["subcategory_id"]
     if "weight" not in pd_heatmap_lookup.columns:
         pd_heatmap_lookup["weight"] = 1.0
     pd_heatmap_lookup["weight"] = pd_heatmap_lookup["weight"].astype(float)
 
     # join two datasets and compute heatmap scores
     pd_heatmap = df_aggregate.merge(
-        pd_heatmap_lookup[["subcategory_id", "name", "weight"]],
-        left_on="subcat_id",
-        right_on="subcategory_id",
+        pd_heatmap_lookup[["csf_subcategory_id", "csf_subcategory_name", "weight"]],
+        on="csf_subcategory_id",
         how="left",
     )
-    pd_heatmap["name"] = pd_heatmap["name"].fillna(pd_heatmap["subcat_id"])
+
+    pd_heatmap["csf_subcategory_name"] = pd_heatmap["csf_subcategory_name"].fillna(
+        pd_heatmap["csf_subcategory_id"]
+    )
     pd_heatmap["weight"] = pd_heatmap["weight"].fillna(1.0)
     pd_heatmap["score"] = pd_heatmap["weight"] * (
         pd_heatmap["max_w"] + np.log1p(pd_heatmap["count"])
@@ -177,12 +181,18 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     pd_heatmap["weighted_score"] = pd_heatmap["score"].map(lambda x: f"{x:.2f}")
 
     # shape + sort + return
-    heatmap_columns = ["subcat_id", "name", "count", "max_severity", "weighted_score"]
-    heatmap = pd_heatmap.sort_values(["score", "subcat_id"], ascending=[False, True])[
+    heatmap_columns = [
+        "csf_subcategory_id",
+        "csf_subcategory_name",
+        "count",
+        "max_severity",
+        "weighted_score",
+    ]
+    heatmap = pd_heatmap.sort_values(["score", "csf_subcategory_id"], ascending=[False, True])[
         heatmap_columns
     ].to_dict(orient="records")
 
-    return heatmap  # Return placeholder
+    return heatmap
 
 
 def main():

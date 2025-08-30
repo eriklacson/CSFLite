@@ -1,9 +1,0 @@
-subcat_id,name,count,max_severity,weighted_score
-ID.RA-05,ID.RA-05,1,high,3.69
-PR.AC-01,PR.AC-01,1,high,3.69
-PR.AC-03,PR.AC-03,1,high,3.69
-PR.DS-06,PR.DS-06,1,medium,2.69
-PR.PT-04,PR.PT-04,1,medium,2.69
-PR.PT-04,PR.PT-04,1,medium,2.69
-PR.PT-04,PR.PT-04,1,medium,2.69
-PR.DS-01,PR.DS-01,1,low,1.69

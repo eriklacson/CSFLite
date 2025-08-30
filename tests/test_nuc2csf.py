@@ -162,3 +162,28 @@ def test_write_to_json_no_data(tmp_path: Path):
     # run test
     assert not output_file.exists()
     assert status == "No data to write."
+
+
+def test_generate_scan_heatmap(tmp_path: Path):
+    from tools.nuc2csf import generate_scan_heatmap
+
+    # sample mapped findings
+    mapped = [
+        {"csf_subcategory_id": "ID.AM-02", "severity": "high"},
+        {"csf_subcategory_id": "ID.AM-02", "severity": "low"},
+    ]
+
+    # heatmap lookup CSV with CSF column names
+    lookup_csv = tmp_path / "heatmap_lookup.csv"
+    lookup_csv.write_text(
+        "csf_subcategory_id,csf_subcategory_name,weight\n"
+        "ID.AM-02,Devices and systems inventoried,1.0\n"
+    )
+
+    result = generate_scan_heatmap(mapped, lookup_csv)
+
+    assert len(result) == 1
+    assert result[0]["csf_subcategory_id"] == "ID.AM-02"
+    assert result[0]["name"] == "Devices and systems inventoried"
+    assert result[0]["count"] == 2
+    assert result[0]["max_severity"] == "high"

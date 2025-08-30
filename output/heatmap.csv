@@ -1,9 +1,9 @@
-subcat_id,name,count,max_severity,weighted_score
-PR.AC-01,Access to assets is managed,1,high,5.54
-PR.AC-03,Remote access is managed,1,high,5.54
+csf_subcategory_id,name,count,max_severity,weighted_score
+PR.AC-01,Identities and credentials are managed,1,high,5.54
+PR.AC-03,Remote access is managed,1,high,4.43
 PR.PT-04,Communications and control networks are protected,2,medium,3.72
-ID.RA-05,ID.RA-05,1,high,3.69
-PR.DS-06,PR.DS-06,1,medium,2.69
+ID.RA-05,External information systems are cataloged,1,high,3.69
+PR.DS-06,Integrity checking mechanisms are used,1,medium,2.69
 PR.DS-01,Data-at-rest is protected,1,low,1.69
 DE.CM-08,Vulnerability scans are performed,1,low,nan
-ID.AM-02,Software platforms are identified,1,low,nan
+ID.AM-02,Devices and systems inventoried,1,low,nan

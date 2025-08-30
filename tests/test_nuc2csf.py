@@ -3,6 +3,11 @@ from pathlib import Path
 import pytest
 import json
 import csv
+import os
+import sys
+
+# ensure project root is on the import path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 def test_get_paths():

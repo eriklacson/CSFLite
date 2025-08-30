@@ -148,15 +148,15 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     )
 
     # sanity check required fields are in the Dataframe:
-    # expect 'csf_subcategory_id', 'name' (optional), 'weight' (optional)
+    # expect 'csf_subcategory_id', 'csf_subcategory_name' (optional), 'weight' (optional)
 
     pd_heatmap_lookup = pd.read_csv(heatmap_lookup)
 
     # convert field names to human-friendly column names for report outputs
-    pd_heatmap_lookup.rename(columns={"subcategory_name": "name"}, inplace=True)
+    pd_heatmap_lookup.rename(columns={"csf_subcategory_name": "name"}, inplace=True)
 
-    if "subcategory_id" not in pd_heatmap_lookup.columns:
-        raise KeyError("lookup CSV must contain 'subcategory_id'")
+    if "csf_subcategory_id" not in pd_heatmap_lookup.columns:
+        raise KeyError("lookup CSV must contain 'csf_subcategory_id'")
     if "name" not in pd_heatmap_lookup.columns:
         pd_heatmap_lookup["name"] = pd_heatmap_lookup["subcategory_id"]
     if "weight" not in pd_heatmap_lookup.columns:
@@ -165,14 +165,12 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 
     # join two datasets and compute heatmap scores
     pd_heatmap = df_aggregate.merge(
-        pd_heatmap_lookup[["csf_subcategory_id", "csf_subcategory_name", "weight"]],
+        pd_heatmap_lookup[["csf_subcategory_id", "name", "weight"]],
         on="csf_subcategory_id",
         how="left",
     )
 
-    pd_heatmap["csf_subcategory_name"] = pd_heatmap["csf_subcategory_name"].fillna(
-        pd_heatmap["csf_subcategory_id"]
-    )
+    pd_heatmap["name"] = pd_heatmap["name"].fillna(pd_heatmap["csf_subcategory_id"])
     pd_heatmap["weight"] = pd_heatmap["weight"].fillna(1.0)
     pd_heatmap["score"] = pd_heatmap["weight"] * (
         pd_heatmap["max_w"] + np.log1p(pd_heatmap["count"])
@@ -183,7 +181,7 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     # shape + sort + return
     heatmap_columns = [
         "csf_subcategory_id",
-        "csf_subcategory_name",
+        "name",
         "count",
         "max_severity",
         "weighted_score",

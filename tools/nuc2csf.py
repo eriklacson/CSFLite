@@ -152,13 +152,14 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 
     pd_heatmap_lookup = pd.read_csv(heatmap_lookup)
 
-    # convert field names to human-friendly column names for report outputs
+    # convert field csf_subcategory_names to human-friendly name
+    # for client-facing report outputs.
     pd_heatmap_lookup.rename(columns={"csf_subcategory_name": "name"}, inplace=True)
 
     if "csf_subcategory_id" not in pd_heatmap_lookup.columns:
         raise KeyError("lookup CSV must contain 'csf_subcategory_id'")
     if "name" not in pd_heatmap_lookup.columns:
-        pd_heatmap_lookup["name"] = pd_heatmap_lookup["subcategory_id"]
+        pd_heatmap_lookup["name"] = pd_heatmap_lookup["csf_subcategory_id"]
     if "weight" not in pd_heatmap_lookup.columns:
         pd_heatmap_lookup["weight"] = 1.0
     pd_heatmap_lookup["weight"] = pd_heatmap_lookup["weight"].astype(float)

@@ -46,7 +46,7 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
     lookup_df["templateID"] = lookup_df["templateID"].str.strip()
 
     # Initialize an empty list to store the mapped results
-    mapped = []
+    mapped_scan = []
 
     # Iterate over the findings in the scan results
     for f in scan_results:
@@ -58,7 +58,7 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
 
         # If a match is found, map the finding to the corresponding CSF details
         if not match.empty:
-            mapped.append(
+            mapped_scan.append(
                 {
                     "timestamp": f.get("timestamp"),  # Timestamp of the finding
                     "host": f.get("host"),  # Host where the finding was detected
@@ -75,7 +75,7 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
             )
 
     # Return the list of mapped findings
-    return mapped
+    return mapped_scan
 
 
 def write_to_csv(mapped_data, output_path):
@@ -194,14 +194,20 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     return heatmap
 
 
+def governance_check():
+    print("governance check placeholder...")
+    return True
+
+
 def main():
     paths = get_paths()
     print(paths)
     findings = read_scan_json(paths["input_json"])
-    mapped = map_scan_to_csf(findings, paths["lookup_csv"])
-    write_to_csv(mapped, paths["output_csv"])
-    write_to_json(mapped, paths["output_json"])
-    scan_heatmap = generate_scan_heatmap(mapped, paths["heatmap_lookup"])
+    mapped_scan = map_scan_to_csf(findings, paths["lookup_csv"])
+    write_to_csv(mapped_scan, paths["output_csv"])
+    write_to_json(mapped_scan, paths["output_json"])
+    governance_check()
+    scan_heatmap = generate_scan_heatmap(mapped_scan, paths["heatmap_lookup"])
     write_to_csv(scan_heatmap, paths["heatmap_csv"])
 
 

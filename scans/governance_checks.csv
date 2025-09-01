@@ -1,4 +1,4 @@
-function,subcategory_id,subcategory_name,question,evidence,notes,response
+csf_function,csf_subcategory_id,csf_subcategory_name,question,evidence,notes,response
 Identify,ID.AM-05,Resources are prioritized and protected,Do you maintain a prioritized list of critical assets or data systems?,Asset inventory with risk ranking or business criticality tags,,
 Identify,ID.SC-01,Supply chain agreements are managed,Do you maintain security-related agreements with key vendors or partners?,"Vendor contracts, SLAs, third-party risk assessments",,
 Identify,ID.GV-01,"Governance roles, policies, and processes are established",Do you have documented cybersecurity policies and assigned governance roles?,"Security policy document, org chart with roles",,

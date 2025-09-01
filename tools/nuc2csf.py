@@ -132,15 +132,13 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 
     mapped_df = pd.DataFrame(mapped)
 
-    print(mapped_df)
-
     # Check if the required columns are present in the DataFrame
     if not {"csf_subcategory_id", "severity"}.issubset(mapped_df.columns):
         return []
 
     # normalize + map severities -> weights
     sev_w = {"low": 1, "medium": 2, "high": 3}
-    sev_by_w = {v: k for k, v in sev_w.items()}  # noqa: F841
+    sev_by_w = {v: k for k, v in sev_w.items()}
 
     # Convert the DataFrame to a format suitable for heatmap lookup
     #
@@ -204,7 +202,7 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     return heatmap
 
 
-def load_governance_checkist(governance_checklist_path):
+def get_governance_checkist_results(governance_checklist_path):
     print("governance check placeholder...")
 
     """guards for early failure"""
@@ -221,21 +219,47 @@ def load_governance_checkist(governance_checklist_path):
     # Data validation
     #
     # Check for required columns
-    required_columns = ["function", "subcategory_id", "subcategory_name", "response"]
+    required_columns = ["csf_function", "csf_subcategory_id", "csf_subcategory_name", "response"]
     missing_columns = set(required_columns) - set(raw_checklist_df.columns)
 
     if missing_columns:
         raise ValueError(f"Missing required columns: {missing_columns}")
 
+    # Create a new DataFrame with only the required columns
+    governance_checklist_result_df = raw_checklist_df[required_columns]
+
+    # organize data
+    # shape + sort + return
+    governance_checklist_result_columns = [
+        "csf_function",
+        "csf_subcategory_id",
+        "csf_subcategory_name",
+        "csf_response",
+    ]
+
+    governance_checklist_results = governance_checklist_result_df.sort_values(
+        ["csf_Ssubcategory_id"], ascending=False
+    )[governance_checklist_result_columns].to_dict(orient="records")
+
     # return checklist
-    return True
+    return governance_checklist_results
+
+
+def generate_governance_findings(governance_checklist_results, csf_lookup_path):
+    """Generates governance findings based on the checklist results and CSF lookup.
+
+    Args:
+        governance_checklist_results (list): The governance checklist results.
+        csf_lookup_path (str): Path to the CSF lookup file.
+
+    Returns:
+        list: A list of governance findings.
+    """
+    return
 
 
 def main():
     paths = get_paths()
-
-    # cli validation check for get_path
-    print(paths)
 
     """get input data"""
     # nuclie scan outputt
@@ -243,7 +267,9 @@ def main():
     # map findings to CSF
     mapped_scan = map_scan_to_csf(findings, paths["lookup_csv"])
     # map findings to CSF
-    governance_checklist = load_governance_checkist(paths["governance_checklist"])  # noqa: F841
+    governance_checklist_results = get_governance_checkist_results(paths["governance_checklist"])
+    # print(governance_checklist_results)
+    print(governance_checklist_results)
 
     write_to_csv(mapped_scan, paths["output_csv"])
     write_to_json(mapped_scan, paths["output_json"])

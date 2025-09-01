@@ -9,11 +9,21 @@ def get_paths():
     """Returns the paths for input JSON, lookup CSV, and output CSV."""
 
     return {
-        "input_json": "../scans/sample_output.json",
+        # Input Data
+        # scan results
+        "scan_input_json": "../scans/sample_output.json",
+        # governance checklist answer questionaire
+        "governance_checklist": "../scans/governance_checks.csv",
+        # Reference Data
+        # nuclie to csf lookup - map of nuclie template to CSF Sub-category
         "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
+        # Output Data
+        # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
+        # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
         "heatmap_csv": "../output/heatmap.csv",
     }
 
@@ -194,19 +204,50 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     return heatmap
 
 
-def governance_check():
+def load_governance_checkist(governance_checklist_path):
     print("governance check placeholder...")
+
+    """guards for early failure"""
+    # Convert governance checklist path to a path object
+    governance_checklist_path = Path(governance_checklist_path)
+
+    # Fail early if the lookup file is missing
+    if not governance_checklist_path.is_file():
+        raise FileNotFoundError(f"governance checklist file not found: {governance_checklist_path}")
+
+    # Read the checklist questionaire CSV file into a pandas DataFrame
+    raw_checklist_df = pd.read_csv(governance_checklist_path)
+
+    # Data validation
+    #
+    # Check for required columns
+    required_columns = ["function", "subcategory_id", "subcategory_name", "response"]
+    missing_columns = set(required_columns) - set(raw_checklist_df.columns)
+
+    if missing_columns:
+        raise ValueError(f"Missing required columns: {missing_columns}")
+
+    # return checklist
     return True
 
 
 def main():
     paths = get_paths()
+
+    # cli validation check for get_path
     print(paths)
-    findings = read_scan_json(paths["input_json"])
+
+    """get input data"""
+    # nuclie scan outputt
+    findings = read_scan_json(paths["scan_input_json"])
+    # map findings to CSF
     mapped_scan = map_scan_to_csf(findings, paths["lookup_csv"])
+    # map findings to CSF
+    governance_checklist = load_governance_checkist(paths["governance_checklist"])  # noqa: F841
+
     write_to_csv(mapped_scan, paths["output_csv"])
     write_to_json(mapped_scan, paths["output_json"])
-    governance_check()
+
     scan_heatmap = generate_scan_heatmap(mapped_scan, paths["heatmap_lookup"])
     write_to_csv(scan_heatmap, paths["heatmap_csv"])
 

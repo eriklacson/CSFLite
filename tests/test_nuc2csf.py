@@ -14,11 +14,21 @@ def test_get_paths():
     from tools.nuc2csf import get_paths
 
     expected_paths = {
-        "input_json": "../scans/sample_output.json",
+        # Input Data
+        # scan results
+        "scan_input_json": "../scans/sample_output.json",
+        # governance checklist answer questionaire
+        "governance_checklist": "../scans/governance_checks.csv",
+        # Reference Data
+        # nuclie to csf lookup - map of nuclie template to CSF Sub-category
         "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
+        # Output Data
+        # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
+        # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
         "heatmap_csv": "../output/heatmap.csv",
     }
 

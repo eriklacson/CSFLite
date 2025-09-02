@@ -15,16 +15,21 @@ def test_get_paths():
 
     expected_paths = {
         # Input Data
+        #
         # scan results
         "scan_input_json": "../scans/sample_output.json",
         # governance checklist answer questionaire
         "governance_checklist": "../scans/governance_checks.csv",
         # Reference Data
+        #
         # nuclie to csf lookup - map of nuclie template to CSF Sub-category
         "lookup_csv": "../data/nuclie_csf_lookup.csv",
         # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
+        # map of CSF sub-category to with score weight and recommendation
+        "csf_lookup": "../data/csf_lookup.csv",
         # Output Data
+        #
         # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",

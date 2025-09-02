@@ -6,26 +6,45 @@ import csv
 
 
 def get_paths():
-    """Returns the paths for input JSON, lookup CSV, and output CSV."""
+    """Returns the paths for input, reference, and output datasets."""
 
     return {
         # Input Data
+        #
         # scan results
         "scan_input_json": "../scans/sample_output.json",
         # governance checklist answer questionaire
         "governance_checklist": "../scans/governance_checks.csv",
         # Reference Data
+        #
         # nuclie to csf lookup - map of nuclie template to CSF Sub-category
         "lookup_csv": "../data/nuclie_csf_lookup.csv",
         # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
+        # map of CSF sub-category to with score weight and recommendation
+        "csf_lookup": "../data/csf_lookup.csv",
         # Output Data
+        #
         # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
         # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
         "heatmap_csv": "../output/heatmap.csv",
     }
+
+
+def get_csf_lookup(csf_lookup_path):
+    """Reads the CSF lookup CSV file and returns a dictionary."""
+    print("reading CSF lookup from:", csf_lookup_path)
+
+    # Guards for early failure
+    if not Path(csf_lookup_path).is_file():
+        raise FileNotFoundError(f"CSF lookup file not found: {csf_lookup_path}")
+
+    # Read the CSF lookup CSV file into a pandas DataFrame
+    csf_lookup_df = pd.read_csv(csf_lookup_path)
+
+    return csf_lookup_df.to_dict(orient="records")
 
 
 def read_scan_json(file_path):
@@ -203,8 +222,6 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 
 
 def get_governance_checkist_results(governance_checklist_path):
-    print("governance check placeholder...")
-
     """guards for early failure"""
     # Convert governance checklist path to a path object
     governance_checklist_path = Path(governance_checklist_path)
@@ -234,27 +251,43 @@ def get_governance_checkist_results(governance_checklist_path):
         "csf_function",
         "csf_subcategory_id",
         "csf_subcategory_name",
-        "csf_response",
+        "response",
     ]
 
     governance_checklist_results = governance_checklist_result_df.sort_values(
-        ["csf_Ssubcategory_id"], ascending=False
+        ["csf_subcategory_id"], ascending=False
     )[governance_checklist_result_columns].to_dict(orient="records")
 
     # return checklist
     return governance_checklist_results
 
 
-def generate_governance_findings(governance_checklist_results, csf_lookup_path):
-    """Generates governance findings based on the checklist results and CSF lookup.
+def generate_governance_assessement(governance_checklist_results, csf_lookup):
+    """Generates governance findings based on the checklist results and CSF lookup"""
+    print("generating governance findings placeholder...")
 
-    Args:
-        governance_checklist_results (list): The governance checklist results.
-        csf_lookup_path (str): Path to the CSF lookup file.
+    # convert governance checklist results to DataFrame
+    governance_checklist_df = pd.DataFrame(governance_checklist_results)
+    csf_lookup = pd.DataFrame(csf_lookup)
 
-    Returns:
-        list: A list of governance findings.
-    """
+    # normalize response
+    response_score = {"yes": 1, "partial": 0.5, "no": 0}
+
+    # Add a 'score' column based on the 'response' column
+    governance_checklist_df["score"] = governance_checklist_df["response"].map(response_score)
+
+    # Merge governance_checklist_df with csf_lookup on 'csf_subcategory_id'
+    governance_score_df = governance_checklist_df.merge(
+        csf_lookup[["csf_subcategory_id", "weight", "recommendation"]],
+        on="csf_subcategory_id",
+        how="left",
+    )
+
+    governance_score_df["weighted_score"] = (
+        governance_score_df["score"] * governance_score_df["weight"]
+    )
+
+    # return list of findings with heatmap weight and recommendation
     return
 
 
@@ -264,12 +297,21 @@ def main():
     """get input data"""
     # nuclie scan outputt
     findings = read_scan_json(paths["scan_input_json"])
-    # map findings to CSF
+
+    """get reference data"""
+    # CSF lookup
+    csf_lookup = get_csf_lookup(paths["csf_lookup"])
+
+    # map scan findings to CSF
     mapped_scan = map_scan_to_csf(findings, paths["lookup_csv"])
-    # map findings to CSF
+
+    # map governance check to CSF
+    #
+    # get check questionaire result
     governance_checklist_results = get_governance_checkist_results(paths["governance_checklist"])
-    # print(governance_checklist_results)
-    print(governance_checklist_results)
+
+    # generate governance assessment
+    generate_governance_assessement(governance_checklist_results, csf_lookup)  # noqa: F841
 
     write_to_csv(mapped_scan, paths["output_csv"])
     write_to_json(mapped_scan, paths["output_json"])

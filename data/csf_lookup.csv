@@ -1,26 +1,26 @@
 csf_subcategry_id,csf_name,weight,recommendation
-ID.AM-02,Assets and systems inventoried,1.2,Maintain an up-to-date asset inventory including devices, VMs, and containers.
-ID.AM-05,Resources are prioritized and protected,1.0,Classify assets by criticality and apply appropriate protection levels.
-ID.RA-05,External information systems are cataloged,1.0,Maintain a list of all external vendors, cloud services, and third-party tools.
-ID.SC-01,Supply chain agreements are managed,1.0,Ensure contracts with suppliers include security and risk requirements.
-ID.GV-01,Governance roles, policies, and processes are established,1.0,Define and document security responsibilities and enforcement processes.
+ID.AM-02,Assets and systems inventoried,1.2,"Maintain an up-to-date asset inventory including devices, Vms, and containers."
+ID.AM-05,Resources are prioritized and protected,1,Classify assets by criticality and apply appropriate protection levels.
+ID.RA-05,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."
+ID.SC-01,Supply chain agreements are managed,1,Ensure contracts with suppliers include security and risk requirements.
+ID.GV-01,"Governance roles, policies, and processes are established",1,Define and document security responsibilities and enforcement processes.
 PR.AC-01,Identities and credentials are managed,1.5,Enforce strong password policies and implement MFA.
 PR.AC-03,Remote access is managed,1.2,Restrict access to remote interfaces via VPN and firewalls.
-PR.DS-01,Data-at-rest is protected,1.0,Use full-disk encryption or encrypted file systems.
-PR.DS-06,Integrity checking mechanisms are used,1.0,Implement file integrity monitoring and version control.
+PR.DS-01,Data-at-rest is protected,1,Use full-disk encryption or encrypted file systems.
+PR.DS-06,Integrity checking mechanisms are used,1,Implement file integrity monitoring and version control.
 PR.PT-04,Communications and control networks are protected,1.2,Disable insecure protocols and enforce TLS 1.2+.
 DE.CM-01,Unauthorized connections and devices are monitored,1.2,Use NAC tools to detect rogue devices on internal networks.
-DE.CM-02,Physical environment is monitored for security events,1.0,Deploy CCTV and alarm systems where appropriate.
+DE.CM-02,Physical environment is monitored for security events,1,Deploy CCTV and alarm systems where appropriate.
 DE.CM-07,Unauthorized changes to systems are monitored,1.2,Use file change detection tools and configure SIEM alerts.
 DE.CM-08,Vulnerability scans are performed,1.5,Schedule regular internal/external vuln scans and track remediation.
 DE.AE-01,A baseline of network operations is established and managed,1.2,Establish baselines for traffic and alert on anomalies.
-RS.RP-01,Response plan is executed,1.0,Create and rehearse a documented incident response plan.
-RS.CO-02,Public relations are managed,1.0,Prepare public statements and designate a PR spokesperson.
-RS.CO-03,Legal and regulatory requirements are managed,1.0,Ensure legal counsel reviews incident processes and compliance.
-RS.MI-01,Incidents are mitigated,1.0,Contain threats immediately using playbooks and escalation procedures.
-RS.IM-01,Response plans are improved following lessons learned,1.0,Conduct post-mortems and update IR playbooks.
-RC.RP-01,Recovery plan is executed,1.0,Test backups and rehearse system restoration procedures.
-RC.IM-01,Recovery strategies are improved following exercises,1.0,Update recovery strategies based on DR tests.
-RC.IM-02,Recovery plans incorporate lessons learned,1.0,Document findings from incidents and incorporate them into plans.
+RS.RP-01,Response plan is executed,1,Create and rehearse a documented incident response plan.
+RS.CO-02,Public relations are managed,1,Prepare public statements and designate a PR spokesperson.
+RS.CO-03,Legal and regulatory requirements are managed,1,Ensure legal counsel reviews incident processes and compliance.
+RS.MI-01,Incidents are mitigated,1,Contain threats immediately using playbooks and escalation procedures.
+RS.IM-01,Response plans are improved following lessons learned,1,Conduct post-mortems and update IR playbooks.
+RC.RP-01,Recovery plan is executed,1,Test backups and rehearse system restoration procedures.
+RC.IM-01,Recovery strategies are improved following exercises,1,Update recovery strategies based on DR tests.
+RC.IM-02,Recovery plans incorporate lessons learned,1,Document findings from incidents and incorporate them into plans.
 RC.CO-01,Communications are coordinated during recovery,0.8,Predefine roles and contact lists for recovery communication.
-RC.GV-01,Recovery policies and procedures are established,1.0,Maintain formal documentation for recovery roles and timelines.
+RC.GV-01,Recovery policies and procedures are established,1,Maintain formal documentation for recovery roles and timelines.

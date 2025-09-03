@@ -129,7 +129,7 @@ def test_write_with_data(tmp_path):
         reader = csv.DictReader(f)
         rows = list(reader)
 
-    assert status == f"Mapped results written to: {path}"
+    assert status == f"Dataset written to: {path}"
     assert len(rows) == 2
     assert rows[0]["name"] == "Alice"
     assert rows[1]["age"] == "25"
@@ -160,7 +160,7 @@ def test_write_to_json_with_data(tmp_path: Path):
     assert output_file.exists()
     written = json.loads(output_file.read_text())
     assert written == data
-    assert f"Mapped results written to: {output_file}" in status
+    assert f"Dataset written to: {output_file}" in status
 
 
 def test_write_to_json_no_data(tmp_path: Path):

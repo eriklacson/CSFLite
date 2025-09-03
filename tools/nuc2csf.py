@@ -107,27 +107,27 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
     return mapped_scan
 
 
-def write_to_csv(mapped_data, output_path):
+def write_to_csv(dataset, output_path):
     print("writing mapped results to CSV...")
-    if mapped_data:
-        keys = mapped_data[0].keys()
+    if dataset:
+        keys = dataset[0].keys()
         with open(output_path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=keys)
             writer.writeheader()
-            writer.writerows(mapped_data)
-        status = f"Mapped results written to: {output_path}"
+            writer.writerows(dataset)
+        status = f"Dataset written to: {output_path}"
     else:
         status = "No data to write."
 
     return status
 
 
-def write_to_json(mapped_data, output_path):
-    print("writing mapped results to JSON...")
-    if mapped_data:
+def write_to_json(dataset, output_path):
+    print("writing dataset to JSON...")
+    if dataset:
         with open(output_path, "w") as f:
-            json.dump(mapped_data, f, indent=4)
-        status = f"Mapped results written to: {output_path}"
+            json.dump(dataset, f, indent=4)
+        status = f"Dataset written to: {output_path}"
     else:
         status = "No data to write."
     return status

@@ -226,3 +226,37 @@ def test_get_csf_lookup_missing_file():
 
     with pytest.raises(FileNotFoundError):
         get_csf_lookup("missing.csv")
+
+
+def test_get_governance_checklist_results(tmp_path: Path):
+    from tools.nuc2csf import get_governance_checklist_results
+
+    checklist_content = (
+        "csf_function,csf_subcategory_id,csf_subcategory_name,notes,response\n"
+        "Identify,ID.AM-1,Assets inventoried,,yes\n"
+        "Protect,PR.AC-1,Access control,need to implement ssl,partial\n"
+    )
+    checklist_path = tmp_path / "checklist.csv"
+    checklist_path.write_text(checklist_content)
+
+    result = get_governance_checklist_results(checklist_path)
+    assert result[0]["csf_subcategory_id"] == "PR.AC-1"
+    assert result[1]["response"] == "yes"
+
+
+def test_get_governance_checklist_results_missing_file():
+    from tools.nuc2csf import get_governance_checklist_results
+
+    with pytest.raises(FileNotFoundError):
+        get_governance_checklist_results("no-file.csv")
+
+
+def test_get_governance_checklist_results_missing_columns(tmp_path: Path):
+    from tools.nuc2csf import get_governance_checklist_results
+
+    checklist_content = "csf_function,csf_subcategory_id,response\nIdentify,ID.AM-1,yes\n"
+    checklist_path = tmp_path / "checklist.csv"
+    checklist_path.write_text(checklist_content)
+
+    with pytest.raises(ValueError):
+        get_governance_checklist_results(checklist_path)

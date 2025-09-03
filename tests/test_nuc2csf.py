@@ -202,3 +202,27 @@ def test_generate_scan_heatmap(tmp_path: Path):
     assert result[0]["name"] == "Devices and systems inventoried"
     assert result[0]["count"] == 2
     assert result[0]["max_severity"] == "high"
+
+
+def test_get_csf_lookup(tmp_path: Path):
+    from tools.nuc2csf import get_csf_lookup
+
+    csv_content = (
+        "csf_subcategory_id,weight,recommendation\n"
+        "ID.AM-1,1,Assess assets\n"
+        "PR.AC-1,2,Enforce access control\n"
+    )
+    lookup_path = tmp_path / "csf_lookup.csv"
+    lookup_path.write_text(csv_content)
+
+    result = get_csf_lookup(lookup_path)
+    assert len(result) == 2
+    assert result[0]["csf_subcategory_id"] == "ID.AM-1"
+    assert result[1]["weight"] == 2
+
+
+def test_get_csf_lookup_missing_file():
+    from tools.nuc2csf import get_csf_lookup
+
+    with pytest.raises(FileNotFoundError):
+        get_csf_lookup("missing.csv")

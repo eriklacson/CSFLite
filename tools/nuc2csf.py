@@ -221,7 +221,7 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     return heatmap
 
 
-def get_governance_checkist_results(governance_checklist_path):
+def get_governance_checklist_results(governance_checklist_path):
     """guards for early failure"""
     # Convert governance checklist path to a path object
     governance_checklist_path = Path(governance_checklist_path)
@@ -308,7 +308,7 @@ def main():
     # map governance check to CSF
     #
     # get check questionaire result
-    governance_checklist_results = get_governance_checkist_results(paths["governance_checklist"])
+    governance_checklist_results = get_governance_checklist_results(paths["governance_checklist"])
 
     # generate governance assessment
     generate_governance_assessement(governance_checklist_results, csf_lookup)  # noqa: F841

@@ -274,7 +274,9 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
     response_score = {"yes": 1, "partial": 0.5, "no": 0}
 
     # Add a 'score' column based on the 'response' column
-    governance_checklist_df["score"] = governance_checklist_df["response"].map(response_score)
+    governance_checklist_df["score"] = (
+        governance_checklist_df["response"].map(response_score).astype(float)
+    )
 
     # Merge governance_checklist_df with csf_lookup on 'csf_subcategory_id'
     governance_score_df = governance_checklist_df.merge(
@@ -288,7 +290,9 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
     )
 
     # return list of findings with heatmap weight and recommendation
-    return
+    governance_assessment = governance_score_df.to_dict(orient="records")
+
+    return governance_assessment
 
 
 def main():

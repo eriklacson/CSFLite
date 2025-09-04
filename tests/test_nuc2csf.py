@@ -260,3 +260,43 @@ def test_get_governance_checklist_results_missing_columns(tmp_path: Path):
 
     with pytest.raises(ValueError):
         get_governance_checklist_results(checklist_path)
+
+
+def test_generate_governance_assessment():
+    from tools.nuc2csf import generate_governance_assessement
+
+    checklist = [
+        {
+            "csf_subcategory_id": "ID.AM-1",
+            "csf_subcategory_name": "Assets inventoried",
+            "notes": "",
+            "response": "yes",
+        },
+        {
+            "csf_subcategory_id": "PR.AC-1",
+            "csf_subcategory_name": "Access control",
+            "notes": "need to implement ssl",
+            "response": "partial",
+        },
+    ]
+
+    lookup = [
+        {
+            "csf_subcategory_id": "ID.AM-1",
+            "weight": 2,
+            "recommendation": "Assess assets",
+        },
+        {
+            "csf_subcategory_id": "PR.AC-1",
+            "weight": 1,
+            "recommendation": "Enforce access control",
+        },
+    ]
+
+    result = generate_governance_assessement(checklist, lookup)
+
+    assert len(result) == 2
+    result_by_id = {r["csf_subcategory_id"]: r for r in result}
+    assert result_by_id["ID.AM-1"]["weighted_score"] == float("2.0")
+    assert result_by_id["PR.AC-1"]["recommendation"] == "Enforce access control"
+    assert result_by_id["PR.AC-1"]["weighted_score"] == float("0.5")

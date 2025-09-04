@@ -264,33 +264,54 @@ def get_governance_checklist_results(governance_checklist_path):
 
 def generate_governance_assessement(governance_checklist_results, csf_lookup):
     """Generates governance findings based on the checklist results and CSF lookup"""
-    print("generating governance findings placeholder...")
-
-    # convert governance checklist results to DataFrame
-    governance_checklist_df = pd.DataFrame(governance_checklist_results)
-    csf_lookup = pd.DataFrame(csf_lookup)
+    print("generating governance assessment...")
 
     # normalize response
     response_score = {"yes": 1, "partial": 0.5, "no": 0}
 
-    # Add a 'score' column based on the 'response' column
-    governance_checklist_df["score"] = (
-        governance_checklist_df["response"].map(response_score).astype(float)
-    )
+    if not governance_checklist_results:
+        return []
 
-    # Merge governance_checklist_df with csf_lookup on 'csf_subcategory_id'
+    """convert inputs to DataFrame"""
+    # convert governance checklist results to DataFrame
+    governance_checklist_df = pd.DataFrame(governance_checklist_results)
+    # convert csf_lookup to DataFrame
+    csf_lookup_df = pd.DataFrame(csf_lookup)
+
+    # merge governance_checklist_df with csf_lookup on 'csf_subcategory_id'
     governance_score_df = governance_checklist_df.merge(
-        csf_lookup[["csf_subcategory_id", "weight", "recommendation"]],
+        csf_lookup_df[["csf_subcategory_id", "weight", "recommendation"]],
         on="csf_subcategory_id",
         how="left",
     )
 
+    # Add a 'score' column based on the 'response' column
+    governance_score_df["score"] = (
+        governance_checklist_df["response"].map(response_score).astype(float)
+    )
+
+    # Calculate weighted score
     governance_score_df["weighted_score"] = (
         governance_score_df["score"] * governance_score_df["weight"]
     )
 
+    # format weighted score to 2 decimal places
+    governance_score_df["weighted_score"] = governance_score_df["weighted_score"].map(
+        lambda x: f"{x:.2f}"
+    )
+
+    # shape + return relevant columns
+    columns = [
+        "csf_subcategory_id",
+        "csf_subcategory_name",
+        "response",
+        "weight",
+        "recommendation",
+        "weighted_score",
+    ]
+
     # return list of findings with heatmap weight and recommendation
-    governance_assessment = governance_score_df.to_dict(orient="records")
+    governance_assessment = governance_score_df[columns].to_dict(orient="records")
 
     return governance_assessment
 

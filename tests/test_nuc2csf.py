@@ -297,6 +297,6 @@ def test_generate_governance_assessment():
 
     assert len(result) == 2
     result_by_id = {r["csf_subcategory_id"]: r for r in result}
-    assert result_by_id["ID.AM-1"]["weighted_score"] == float("2.0")
+    assert result_by_id["ID.AM-1"]["weighted_score"] == "2.00"
     assert result_by_id["PR.AC-1"]["recommendation"] == "Enforce access control"
-    assert result_by_id["PR.AC-1"]["weighted_score"] == float("0.5")
+    assert result_by_id["PR.AC-1"]["weighted_score"] == "0.50"

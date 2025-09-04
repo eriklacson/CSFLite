@@ -35,6 +35,8 @@ def test_get_paths():
         "output_json": "../output/mapped-findings.json",
         # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
         "heatmap_csv": "../output/heatmap.csv",
+        # governance assessment - governance assessment derived from governance checklist and csf lookup
+        "governance_assessment_csv": "../output/governance_assessment.csv",
     }
 
     assert get_paths() == expected_paths

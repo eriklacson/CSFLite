@@ -30,6 +30,8 @@ def get_paths():
         "output_json": "../output/mapped-findings.json",
         # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
         "heatmap_csv": "../output/heatmap.csv",
+        # governance assessment - governance assessment derived from governance checklist and csf lookup
+        "governance_assessment_csv": "../output/governance_assessment.csv",
     }
 
 
@@ -214,11 +216,11 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
         "max_severity",
         "weighted_score",
     ]
-    heatmap = pd_heatmap.sort_values(["score", "csf_subcategory_id"], ascending=[False, True])[
+    scan_heatmap = pd_heatmap.sort_values(["score", "csf_subcategory_id"], ascending=[False, True])[
         heatmap_columns
     ].to_dict(orient="records")
 
-    return heatmap
+    return scan_heatmap
 
 
 def get_governance_checklist_results(governance_checklist_path):
@@ -336,13 +338,20 @@ def main():
     governance_checklist_results = get_governance_checklist_results(paths["governance_checklist"])
 
     # generate governance assessment
-    generate_governance_assessement(governance_checklist_results, csf_lookup)  # noqa: F841
 
+    # write scan findings
     write_to_csv(mapped_scan, paths["output_csv"])
     write_to_json(mapped_scan, paths["output_json"])
 
+    # write scan heatmap
     scan_heatmap = generate_scan_heatmap(mapped_scan, paths["heatmap_lookup"])
     write_to_csv(scan_heatmap, paths["heatmap_csv"])
+
+    # write governance assessment
+    governance_assessment = generate_governance_assessement(
+        governance_checklist_results, csf_lookup
+    )
+    write_to_csv(governance_assessment, paths["governance_assessment_csv"])
 
 
 if __name__ == "__main__":

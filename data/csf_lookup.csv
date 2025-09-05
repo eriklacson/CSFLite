@@ -1,4 +1,4 @@
-csf_subcategry_id,csf_name,weight,recommendation
+csf_subcategory_id,csf_name,weight,recommendation
 ID.AM-02,Assets and systems inventoried,1.2,"Maintain an up-to-date asset inventory including devices, Vms, and containers."
 ID.AM-05,Resources are prioritized and protected,1,Classify assets by criticality and apply appropriate protection levels.
 ID.RA-05,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."

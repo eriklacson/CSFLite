@@ -272,13 +272,13 @@ def test_generate_governance_assessment():
             "csf_subcategory_id": "ID.AM-1",
             "csf_subcategory_name": "Assets inventoried",
             "notes": "",
-            "response": "yes",
+            "response": "Yes",
         },
         {
             "csf_subcategory_id": "PR.AC-1",
             "csf_subcategory_name": "Access control",
             "notes": "need to implement ssl",
-            "response": "partial",
+            "response": "Partial",
         },
     ]
 

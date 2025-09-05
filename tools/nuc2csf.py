@@ -269,7 +269,7 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
     print("generating governance assessment...")
 
     # normalize response
-    response_score = {"yes": 1, "partial": 0.5, "no": 0}
+    response_score = {"Yes": 1, "Partial": 0.5, "No": 0}
 
     if not governance_checklist_results:
         return []

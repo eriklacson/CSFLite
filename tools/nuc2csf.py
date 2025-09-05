@@ -160,14 +160,24 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
         return []
 
     # normalize + map severities -> weights
-    sev_w = {"low": 1, "medium": 2, "high": 3}
+    # include informational (lowest) and critical (highest) severities
+    sev_w = {
+        "info": 0,
+        "low": 1,
+        "medium": 2,
+        "high": 3,
+        "critical": 4,
+    }
+
     sev_by_w = {v: k for k, v in sev_w.items()}
 
     # Convert the DataFrame to a format suitable for heatmap lookup
     #
     # refactor flag: provide check for missing or invalid data
     mapped_df["csf_subcategory_id"] = mapped_df["csf_subcategory_id"].astype(str).str.strip()
-    mapped_df["sev_w"] = mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w)
+    mapped_df["sev_w"] = (
+        mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w).fillna(0)
+    )
 
     # If the DataFrame is empty after filtering, return an empty list
     if mapped_df.empty:
@@ -207,7 +217,7 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     pd_heatmap["score"] = pd_heatmap["weight"] * (
         pd_heatmap["max_w"] + np.log1p(pd_heatmap["count"])
     )
-    pd_heatmap["max_severity"] = pd_heatmap["max_w"].map(sev_by_w).fillna("low")
+    pd_heatmap["max_severity"] = pd_heatmap["max_w"].map(sev_by_w).fillna("info")
     pd_heatmap["weighted_score"] = pd_heatmap["score"].map(lambda x: f"{x:.2f}")
 
     # shape + sort + return

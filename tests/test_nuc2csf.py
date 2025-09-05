@@ -182,16 +182,15 @@ def test_write_to_json_no_data(tmp_path: Path):
     assert status == "No data to write."
 
 
-def test_generate_scan_heatmap(tmp_path: Path):
+def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
     from tools.nuc2csf import generate_scan_heatmap
+    import numpy as np
 
-    # sample mapped findings
     mapped = [
-        {"csf_subcategory_id": "ID.AM-02", "severity": "high"},
-        {"csf_subcategory_id": "ID.AM-02", "severity": "low"},
+        {"csf_subcategory_id": "ID.AM-02", "severity": "critical"},
+        {"csf_subcategory_id": "ID.AM-02", "severity": "info"},
     ]
 
-    # heatmap lookup CSV with CSF column names
     lookup_csv = tmp_path / "heatmap_lookup.csv"
     lookup_csv.write_text(
         "csf_subcategory_id,csf_subcategory_name,weight\n"
@@ -202,9 +201,10 @@ def test_generate_scan_heatmap(tmp_path: Path):
 
     assert len(result) == 1
     assert result[0]["csf_subcategory_id"] == "ID.AM-02"
-    assert result[0]["name"] == "Devices and systems inventoried"
+    assert result[0]["max_severity"] == "critical"
     assert result[0]["count"] == 2
-    assert result[0]["max_severity"] == "high"
+    expected_score = 4 + np.log1p(2)
+    assert float(result[0]["weighted_score"]) == pytest.approx(expected_score, rel=1e-2)
 
 
 def test_get_csf_lookup(tmp_path: Path):

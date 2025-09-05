@@ -307,6 +307,7 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
         "csf_subcategory_id",
         "csf_subcategory_name",
         "response",
+        "score",
         "weight",
         "recommendation",
         "weighted_score",

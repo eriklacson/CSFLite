@@ -302,3 +302,33 @@ def test_generate_governance_assessment():
     assert result_by_id["ID.AM-1"]["weighted_score"] == "2.00"
     assert result_by_id["PR.AC-1"]["recommendation"] == "Enforce access control"
     assert result_by_id["PR.AC-1"]["weighted_score"] == "0.50"
+
+
+def test_generate_governance_heatmap():
+    from tools.nuc2csf import generate_governance_heatmap
+
+    assessment = [
+        {
+            "csf_subcategory_id": "ID.GV-01",
+            "csf_subcategory_name": "Governance roles",
+            "response": "Yes",
+            "weight": 1.0,
+            "weighted_score": "0.00",
+        },
+        {
+            "csf_subcategory_id": "PR.AC-01",
+            "csf_subcategory_name": "Access control",
+            "response": "No",
+            "weight": 2.0,
+            "weighted_score": "2.00",
+        },
+    ]
+
+    result = generate_governance_heatmap(assessment)
+
+    assert len(result) == 2
+    assert result[0]["csf_subcategory_id"] == "ID.GV-01"
+    assert result[0]["severity"] == "high"
+    assert result[0]["weighted_score"] == "1.00"
+    assert result[1]["severity"] == "low"
+    assert result[1]["weighted_score"] == "0.00"

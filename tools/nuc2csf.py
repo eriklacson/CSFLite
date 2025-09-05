@@ -319,6 +319,62 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
     return governance_assessment
 
 
+def generate_governance_heatmap(governance_assessment):
+    print("generating governance heatmap data...")
+
+    # Fail early if no assessment data is provided
+    if not governance_assessment:
+        return []
+
+    df = pd.DataFrame(governance_assessment)
+
+    # Ensure required columns exist
+    required = {
+        "csf_subcategory_id",
+        "csf_subcategory_name",
+        "response",
+        "weight",
+        "weighted_score",
+    }
+    if not required.issubset(df.columns):
+        return []
+
+    # normalize numeric fields
+    df["weight"] = df["weight"].astype(float)
+    df["assessment_score"] = df["weighted_score"].astype(float)
+
+    # determine heat level from weighted score
+    def score_to_sev(row):
+        if row["assessment_score"] <= 0:
+            return "high"
+        elif row["assessment_score"] < row["weight"]:
+            return "medium"
+        else:
+            return "low"
+
+    df["severity"] = df.apply(score_to_sev, axis=1)
+
+    # compute gap score (higher means bigger governance gap)
+    df["gap_score"] = df["weight"] - df["assessment_score"]
+    df["weighted_score"] = df["gap_score"].map(lambda x: f"{x:.2f}")
+
+    # prepare final shape
+    df["name"] = df["csf_subcategory_name"]
+    heatmap_columns = [
+        "csf_subcategory_id",
+        "name",
+        "response",
+        "severity",
+        "weighted_score",
+    ]
+
+    governance_heatmap = df.sort_values(
+        ["gap_score", "csf_subcategory_id"], ascending=[False, True]
+    )[heatmap_columns].to_dict(orient="records")
+
+    return governance_heatmap
+
+
 def main():
     paths = get_paths()
 

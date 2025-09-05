@@ -32,6 +32,8 @@ def get_paths():
         "heatmap_csv": "../output/heatmap.csv",
         # governance assessment - governance assessment derived from governance checklist and csf lookup
         "governance_assessment_csv": "../output/governance_assessment.csv",
+        # governance heatmap - heatmap data derived from governance assessment
+        "governance_heatmap_csv": "../output/governance_heatmap_csv.csv",
     }
 
 
@@ -409,6 +411,9 @@ def main():
         governance_checklist_results, csf_lookup
     )
     write_to_csv(governance_assessment, paths["governance_assessment_csv"])
+
+    goverance_heatmap = generate_governance_heatmap(governance_assessment)
+    write_to_csv(goverance_heatmap, paths["governance_heatmap_csv"])
 
 
 if __name__ == "__main__":

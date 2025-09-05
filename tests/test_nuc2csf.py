@@ -13,8 +13,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 def test_get_paths():
     from tools.nuc2csf import get_paths
 
-    expected_paths = {
-        # Input Data
+    expected_paths = {  # Input Data
         #
         # scan results
         "scan_input_json": "../scans/sample_output.json",
@@ -37,6 +36,8 @@ def test_get_paths():
         "heatmap_csv": "../output/heatmap.csv",
         # governance assessment - governance assessment derived from governance checklist and csf lookup
         "governance_assessment_csv": "../output/governance_assessment.csv",
+        # governance heatmap - heatmap data derived from governance assessment
+        "governance_heatmap_csv": "../output/governance_heatmap_csv.csv",
     }
 
     assert get_paths() == expected_paths

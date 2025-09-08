@@ -17,15 +17,15 @@ def get_paths():
         "governance_checklist": "../scans/governance_checks.csv",
         # Reference Data
         #
-        # nuclie to csf lookup - map of nuclie template to CSF Sub-category
-        "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        # nuclei to csf lookup - map of nuclei template to CSF Sub-category
+        "lookup_csv": "../data/nuclei_csf_lookup.csv",
         # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
         # map of CSF sub-category to with score weight and recommendation
         "csf_lookup": "../data/csf_lookup.csv",
         # Output Data
         #
-        # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
+        # mapped findings - nuclei findings mapped to CSF Sub-category (json and csv)
         "output_csv": "../output/mapped-findings.csv",
         "output_json": "../output/mapped-findings.json",
         # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
@@ -391,7 +391,7 @@ def main():
     paths = get_paths()
 
     """get input data"""
-    # nuclie scan outputt
+    # nuclei scan outputt
     findings = read_scan_json(paths["scan_input_json"])
 
     """get reference data"""

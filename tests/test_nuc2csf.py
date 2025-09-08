@@ -22,7 +22,7 @@ def test_get_paths():
         # Reference Data
         #
         # nuclie to csf lookup - map of nuclie template to CSF Sub-category
-        "lookup_csv": "../data/nuclie_csf_lookup.csv",
+        "lookup_csv": "../data/nuclei_csf_lookup.csv",
         # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
         # map of CSF sub-category to with score weight and recommendation

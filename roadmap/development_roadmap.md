@@ -13,7 +13,7 @@ This roadmap outlines the key phases and deliverables for building, validating, 
 
 ---
 
-##  Phase 2: Automate Core Functionality
+## Phase 2: Automate Core Functionality
 
 **Deliverables:**
 - [x] Build `csf_lookup.csv` and `csf_lookup.json`
@@ -26,8 +26,8 @@ This roadmap outlines the key phases and deliverables for building, validating, 
 ## Phase 3: Manual Governance Checklist
 
 **Deliverables:**
-- [x] Write `manual_questionnaire.md` for non-scanable subcategories
-- [x] Add `manual_Sremediation.md` for advisory follow-up
+- [x] Write `manual_questionnaire.md` for non-scannable subcategories
+- [x] Add `manual_remediation.md` for advisory follow-up
 
 ---
 

@@ -78,9 +78,9 @@ def test_read_scan_json_invalid():
 @pytest.fixture
 def mock_lookup_csv(tmp_path):
     # Create a temporary CSV file for the lookup data
-    lookup_data = """templateID,csf_function,subcategory_id,subcategory_name
-TEMPLATE-1,Identify,ID.AM-1,Asset Management
-TEMPLATE-2,Protect,PR.AC-1,Access Control
+    lookup_data = """templateID,csf_function,subcategory_id,subcategory_name,recommended_remediation
+TEMPLATE-1,Identify,ID.AM-1,Asset Management,Remediate template 1
+TEMPLATE-2,Protect,PR.AC-1,Access Control,Remediate template 2
 """
     lookup_csv_path = tmp_path / "lookup.csv"
     lookup_csv_path.write_text(lookup_data)

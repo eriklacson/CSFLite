@@ -104,6 +104,9 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
                     "csf_subcategory_name": match.iloc[0][
                         "subcategory_name"
                     ],  # CSF subcategory name
+                    "recommended_remediation": match.iloc[0][
+                        "recommended_remediation"
+                    ],  # Suggested remediation steps
                 }
             )
 

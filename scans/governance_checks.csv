@@ -1,0 +1,14 @@
+csf_function,csf_subcategory_id,csf_subcategory_name,question,evidence,notes,response
+Identify,ID.AM-05,Resources are prioritized and protected,Do you maintain a prioritized list of critical assets or data systems?,Asset inventory with risk ranking or business criticality tags,,Yes
+Identify,ID.SC-01,Supply chain agreements are managed,Do you maintain security-related agreements with key vendors or partners?,"Vendor contracts, SLAs, third-party risk assessments",,No
+Identify,ID.GV-01,"Governance roles, policies, and processes are established",Do you have documented cybersecurity policies and assigned governance roles?,"Security policy document, org chart with roles",,Partial
+Respond,RS.RP-01,Response plan is executed,Have you tested your incident response plan in the past 12 months?,"Tabletop exercise report, drill logs",,No
+Respond,RS.CO-02,Public relations are managed,Do you have a process for communicating security incidents to external parties?,"Crisis communication plan, draft templates",,No
+Respond,RS.CO-03,Legal and regulatory requirements are managed,Do you identify and review relevant security-related laws or regulations?,"Compliance tracking log, legal/regulatory register",,No
+Respond,RS.MI-01,Incidents are mitigated,Do you document and review mitigation steps taken during security incidents?,Incident logs with mitigation steps,,No
+Respond,RS.IM-01,Response plans are improved following lessons learned,Do you update your response plan based on past incidents or exercises?,"Version history of IR plan, postmortem reviews",,No
+Recover,RC.RP-01,Recovery plan is executed,Have you tested your system/data recovery procedures in the last 12 months?,"Backup restore logs, DR exercise report",,No
+Recover,RC.IM-01,Recovery strategies are improved following exercises,Do you update recovery strategies based on lessons from past recovery drills?,"Meeting notes, plan revision logs",,No
+Recover,RC.IM-02,Recovery plans incorporate lessons learned,Do you document lessons learned from real or simulated recovery events?,"After-action reports, recovery plan change logs",,No
+Recover,RC.CO-01,Communications are coordinated during recovery,Is there a documented communication plan for recovery operations?,"DR comms plan, team contact trees",,No
+Recover,RC.GV-01,Recovery policies and procedures are established,Do you have formal recovery policies and procedures in place?,"Recovery policy documents, DR runbooks",,No

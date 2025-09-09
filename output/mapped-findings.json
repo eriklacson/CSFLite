@@ -8,7 +8,8 @@
         "description": "Exposed TCP port detected",
         "csf_function": "Identify",
         "csf_subcategory_id": "ID.AM-02",
-        "csf_subcategory_name": "Devices and systems inventoried"
+        "csf_subcategory_name": "Devices and systems inventoried",
+        "recommended_remediation": "Close unnecessary ports or restrict access via firewall/security group."
     },
     {
         "timestamp": "2025-08-08T10:01:00Z",
@@ -19,7 +20,8 @@
         "description": "Accessible admin panel without authentication",
         "csf_function": "Protect",
         "csf_subcategory_id": "PR.AC-03",
-        "csf_subcategory_name": "Remote access is managed"
+        "csf_subcategory_name": "Remote access is managed",
+        "recommended_remediation": "Restrict access with authentication, IP allowlists, or VPN."
     },
     {
         "timestamp": "2025-08-08T10:02:00Z",
@@ -30,7 +32,8 @@
         "description": "TLS uses a self-signed certificate",
         "csf_function": "Protect",
         "csf_subcategory_id": "PR.PT-04",
-        "csf_subcategory_name": "Communications and control networks are protected"
+        "csf_subcategory_name": "Communications and control networks are protected",
+        "recommended_remediation": "Replace with a valid certificate from a trusted CA (e.g., Let\u2019s Encrypt)."
     },
     {
         "timestamp": "2025-08-08T10:03:00Z",
@@ -41,7 +44,8 @@
         "description": "Host is vulnerable to Heartbleed",
         "csf_function": "Protect",
         "csf_subcategory_id": "PR.PT-04",
-        "csf_subcategory_name": "Communications and control networks are protected"
+        "csf_subcategory_name": "Communications and control networks are protected",
+        "recommended_remediation": "Upgrade to a patched OpenSSL version (\u22651.0.1g) and reissue certs."
     },
     {
         "timestamp": "2025-08-08T10:04:00Z",
@@ -52,7 +56,8 @@
         "description": "Missing X-Content-Type-Options header",
         "csf_function": "Protect",
         "csf_subcategory_id": "PR.DS-01",
-        "csf_subcategory_name": "Data-at-rest is protected"
+        "csf_subcategory_name": "Data-at-rest is protected",
+        "recommended_remediation": "Add `X-Content-Type-Options: nosniff` to all server responses."
     },
     {
         "timestamp": "2025-08-08T10:06:00Z",
@@ -63,7 +68,8 @@
         "description": "SSH service allows default login",
         "csf_function": "Protect",
         "csf_subcategory_id": "PR.AC-01",
-        "csf_subcategory_name": "Identities and credentials are managed"
+        "csf_subcategory_name": "Identities and credentials are managed",
+        "recommended_remediation": "Change default passwords and enforce key-based SSH authentication."
     },
     {
         "timestamp": "2025-08-08T10:07:00Z",
@@ -74,7 +80,8 @@
         "description": "Directory listing is enabled",
         "csf_function": "Protect",
         "csf_subcategory_id": "PR.DS-06",
-        "csf_subcategory_name": "Integrity checking mechanisms are used"
+        "csf_subcategory_name": "Integrity checking mechanisms are used",
+        "recommended_remediation": "Disable directory listing in your web server (e.g., Apache/NGINX)."
     },
     {
         "timestamp": "2025-08-08T10:08:00Z",
@@ -85,7 +92,8 @@
         "description": "GitHub token or credential exposed",
         "csf_function": "Identify",
         "csf_subcategory_id": "ID.RA-05",
-        "csf_subcategory_name": "External information systems are cataloged"
+        "csf_subcategory_name": "External information systems are cataloged",
+        "recommended_remediation": "Revoke the token, rotate credentials, and apply `.gitignore` rules."
     },
     {
         "timestamp": "2025-08-08T10:09:00Z",
@@ -96,6 +104,7 @@
         "description": "Apache Log4j RCE (Log4Shell) detected",
         "csf_function": "Detect",
         "csf_subcategory_id": "DE.CM-08",
-        "csf_subcategory_name": "Vulnerability scans are performed"
+        "csf_subcategory_name": "Vulnerability scans are performed",
+        "recommended_remediation": "Patch Log4j to version \u22652.17.0 or apply vendor-specific mitigations."
     }
 ]

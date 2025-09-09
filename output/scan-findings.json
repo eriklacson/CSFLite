@@ -1,0 +1,110 @@
+[
+    {
+        "timestamp": "2025-08-08T10:00:00Z",
+        "host": "http://192.168.1.10",
+        "templateID": "networking/open-ports",
+        "severity": "info",
+        "matcher_name": "tcp-open-port",
+        "description": "Exposed TCP port detected",
+        "csf_function": "Identify",
+        "csf_subcategory_id": "ID.AM-02",
+        "csf_subcategory_name": "Devices and systems inventoried",
+        "recommended_remediation": "Close unnecessary ports or restrict access via firewall/security group."
+    },
+    {
+        "timestamp": "2025-08-08T10:01:00Z",
+        "host": "http://example.com/admin",
+        "templateID": "auth/open-admin",
+        "severity": "high",
+        "matcher_name": "unauth-admin-panel",
+        "description": "Accessible admin panel without authentication",
+        "csf_function": "Protect",
+        "csf_subcategory_id": "PR.AC-03",
+        "csf_subcategory_name": "Remote access is managed",
+        "recommended_remediation": "Restrict access with authentication, IP allowlists, or VPN."
+    },
+    {
+        "timestamp": "2025-08-08T10:02:00Z",
+        "host": "https://dev.example.com",
+        "templateID": "ssl/self-signed",
+        "severity": "medium",
+        "matcher_name": "self-signed-cert",
+        "description": "TLS uses a self-signed certificate",
+        "csf_function": "Protect",
+        "csf_subcategory_id": "PR.PT-04",
+        "csf_subcategory_name": "Communications and control networks are protected",
+        "recommended_remediation": "Replace with a valid certificate from a trusted CA (e.g., Let\u2019s Encrypt)."
+    },
+    {
+        "timestamp": "2025-08-08T10:03:00Z",
+        "host": "https://legacy.example.com",
+        "templateID": "ssl/heartbleed",
+        "severity": "critical",
+        "matcher_name": "heartbleed-check",
+        "description": "Host is vulnerable to Heartbleed",
+        "csf_function": "Protect",
+        "csf_subcategory_id": "PR.PT-04",
+        "csf_subcategory_name": "Communications and control networks are protected",
+        "recommended_remediation": "Upgrade to a patched OpenSSL version (\u22651.0.1g) and reissue certs."
+    },
+    {
+        "timestamp": "2025-08-08T10:04:00Z",
+        "host": "https://www.example.org",
+        "templateID": "headers/missing-content-type",
+        "severity": "low",
+        "matcher_name": "missing-x-content-type-options",
+        "description": "Missing X-Content-Type-Options header",
+        "csf_function": "Protect",
+        "csf_subcategory_id": "PR.DS-01",
+        "csf_subcategory_name": "Data-at-rest is protected",
+        "recommended_remediation": "Add `X-Content-Type-Options: nosniff` to all server responses."
+    },
+    {
+        "timestamp": "2025-08-08T10:06:00Z",
+        "host": "ssh://server.example.com",
+        "templateID": "default-logins/ssh-default-creds",
+        "severity": "high",
+        "matcher_name": "default-ssh-login",
+        "description": "SSH service allows default login",
+        "csf_function": "Protect",
+        "csf_subcategory_id": "PR.AC-01",
+        "csf_subcategory_name": "Identities and credentials are managed",
+        "recommended_remediation": "Change default passwords and enforce key-based SSH authentication."
+    },
+    {
+        "timestamp": "2025-08-08T10:07:00Z",
+        "host": "http://files.example.net",
+        "templateID": "misconfiguration/dir-listing",
+        "severity": "medium",
+        "matcher_name": "dir-listing-enabled",
+        "description": "Directory listing is enabled",
+        "csf_function": "Protect",
+        "csf_subcategory_id": "PR.DS-06",
+        "csf_subcategory_name": "Integrity checking mechanisms are used",
+        "recommended_remediation": "Disable directory listing in your web server (e.g., Apache/NGINX)."
+    },
+    {
+        "timestamp": "2025-08-08T10:08:00Z",
+        "host": "https://repo.example.dev/.git/config",
+        "templateID": "exposures/git-auth-token",
+        "severity": "high",
+        "matcher_name": "exposed-token",
+        "description": "GitHub token or credential exposed",
+        "csf_function": "Identify",
+        "csf_subcategory_id": "ID.RA-05",
+        "csf_subcategory_name": "External information systems are cataloged",
+        "recommended_remediation": "Revoke the token, rotate credentials, and apply `.gitignore` rules."
+    },
+    {
+        "timestamp": "2025-08-08T10:09:00Z",
+        "host": "https://vuln.example.com",
+        "templateID": "cves/2021/CVE-2021-44228",
+        "severity": "critical",
+        "matcher_name": "log4shell",
+        "description": "Apache Log4j RCE (Log4Shell) detected",
+        "csf_function": "Detect",
+        "csf_subcategory_id": "DE.CM-08",
+        "csf_subcategory_name": "Vulnerability scans are performed",
+        "recommended_remediation": "Patch Log4j to version \u22652.17.0 or apply vendor-specific mitigations."
+    }
+]

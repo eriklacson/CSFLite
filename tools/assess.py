@@ -26,14 +26,14 @@ def get_paths():
         # Output Data
         #
         # mapped findings - nuclei findings mapped to CSF Sub-category (json and csv)
-        "output_csv": "../output/mapped-findings.csv",
-        "output_json": "../output/mapped-findings.json",
+        "output_csv": "../output/scan-findings.csv",
+        "output_json": "../output/scan-findings.json",
         # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
-        "heatmap_csv": "../output/heatmap.csv",
+        "heatmap_csv": "../output/scan_heatmap.csv",
         # governance assessment - governance assessment derived from governance checklist and csf lookup
         "governance_assessment_csv": "../output/governance_assessment.csv",
         # governance heatmap - heatmap data derived from governance assessment
-        "governance_heatmap_csv": "../output/governance_heatmap_csv.csv",
+        "governance_heatmap_csv": "../output/governance_heatmap.csv",
     }
 
 

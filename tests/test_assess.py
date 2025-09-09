@@ -25,19 +25,19 @@ def test_get_paths():
         "lookup_csv": "../data/nuclei_csf_lookup.csv",
         # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
         "heatmap_lookup": "../data/heat_map_lookup.csv",
-        # map of CSF sub-category to with score weight and recommendation
+        # map of CSF sub-category to with score weight and recommendations
         "csf_lookup": "../data/csf_lookup.csv",
         # Output Data
         #
         # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
-        "output_csv": "../output/mapped-findings.csv",
-        "output_json": "../output/mapped-findings.json",
+        "output_csv": "../output/scan-findings.csv",
+        "output_json": "../output/scan-findings.json",
         # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
-        "heatmap_csv": "../output/heatmap.csv",
+        "heatmap_csv": "../output/scan_heatmap.csv",
         # governance assessment - governance assessment derived from governance checklist and csf lookup
         "governance_assessment_csv": "../output/governance_assessment.csv",
         # governance heatmap - heatmap data derived from governance assessment
-        "governance_heatmap_csv": "../output/governance_heatmap_csv.csv",
+        "governance_heatmap_csv": "../output/governance_heatmap.csv",
     }
 
     assert get_paths() == expected_paths

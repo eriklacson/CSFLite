@@ -6,7 +6,28 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ---
 
-## 🟦 Identify
+
+
+### Govern
+
+
+### GV-RR-02 — Governance roles, policies, and processes are established
+
+> Assigning roles and documenting processes sets the foundation for any security program.
+
+### GV.SC-01 — Supply chain agreements are managed
+
+> Vendor relationships should include security responsibilities and breach handling.
+
+### GV.P0-01 — Cybersecurity Policy is Established
+
+> Policy and strategy for managing cybersecurity created, communicated and enforced.
+
+
+
+---
+
+## Identify
 
 ### ID.AM-02 — Devices and systems inventoried
 
@@ -20,23 +41,17 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Third-party APIs and SaaS dependencies must be tracked as part of your risk surface.
 
-### ID.SC-01 — Supply chain agreements are managed
 
-> Vendor relationships should include security responsibilities and breach handling.
-
-### ID.GV-01 — Governance roles, policies, and processes are established
-
-> Assigning roles and documenting processes sets the foundation for any security program.
 
 ---
 
-## 🟩 Protect
+## Protect
 
-### PR.AC-01 — Identities and credentials are managed
+### PR.AA-01 — Identities and credentials are managed
 
 > Default credentials are a common attack vector—manage them with intent.
 
-### PR.AC-03 — Remote access is managed
+### PR.AA-03 — Remote access is managed
 
 > Unrestricted admin interfaces expose critical systems to external threat actors.
 
@@ -44,25 +59,21 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Controls like encryption and content-type headers prevent data leaks.
 
-### PR.DS-06 — Integrity checking mechanisms are used
+### PR.DS-10 — Integrity checking mechanisms are used
 
 > File exposures or tampering can be detected through integrity monitoring.
 
-### PR.PT-04 — Communications and control networks are protected
+### PR.IR-01 — Communications and control networks are protected
 
 > Ensuring encrypted, trusted communications is critical to security posture.
 
 ---
 
-## 🟨 Detect
+## Detect
 
 ### DE.CM-01 — Unauthorized connections and devices are monitored
 
 > Network monitoring helps spot intrusions and abnormal activity early.
-
-### DE.CM-02 — Physical environment is monitored for security events
-
-> Physical access risks should be logged and reviewed—even in digital-first companies.
 
 ### DE.CM-07 — Unauthorized changes to systems are monitored
 
@@ -78,7 +89,7 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ---
 
-## 🟥 Respond
+## Respond
 
 ### RS.RP-01 — Response plan is executed
 
@@ -102,7 +113,7 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ---
 
-## 🟪 Recover
+## Recover
 
 ### RC.RP-01 — Recovery plan is executed
 

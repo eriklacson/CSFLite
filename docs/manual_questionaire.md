@@ -9,10 +9,19 @@ Each question includes:
 * Examples of acceptable evidence
 
 ---
+---
+## Govern
 
-## 🟦 Identify
+### GV.PO-01 — Organizational cybersecurity policy is established and communicated
 
-### ID.AM-05 — Resources are prioritized and protected
+**Question:** Has a formal cybersecurity policy been established and communicated to the organization?
+**Evidence:** Security policy document, communication or training records
+
+---
+
+## Identify
+
+### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value
 
 **Question:** Do you maintain a prioritized list of critical assets or data systems?
 **Evidence:** Asset inventory with risk ranking or business criticality tags
@@ -22,14 +31,10 @@ Each question includes:
 **Question:** Do you maintain security-related agreements with key vendors or partners?
 **Evidence:** Vendor contracts, SLAs, third-party risk assessments
 
-### ID.GV-01 — Governance roles, policies, and processes are established
-
-**Question:** Do you have documented cybersecurity policies and assigned governance roles?
-**Evidence:** Security policy document, org chart with roles
 
 ---
 
-## 🟥 Respond
+## Respond
 
 ### RS.RP-01 — Response plan is executed
 
@@ -58,7 +63,7 @@ Each question includes:
 
 ---
 
-## 🟪 Recover
+## Recover
 
 ### RC.RP-01 — Recovery plan is executed
 

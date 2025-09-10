@@ -8,7 +8,7 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 ## 🟦 Identify
 
-### ID.AM-05 — Resources are prioritized and protected
+### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value
 
 **Remediation:** Establish and maintain a critical asset inventory with priority ratings based on business impact.
 

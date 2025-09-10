@@ -6,19 +6,19 @@ Each entry includes the CSF ID, Function, automation coverage level, and a short
 
 ---
 
-## 🟦 Identify
+## Identify
 
-### ID.AM-02 — Devices and systems inventoried *(Partial)*
+### ID.AM-02 — Assets and systems inventoried *(Partial)*
 
 > Nuclei and network scans detect open ports and exposed services, but don’t inventory internal/cloud assets fully.
 
 ### ID.RA-05 — External information systems are cataloged *(Partial)*
 
-> Detects exposed API endpoints, public tokens, and leaked credentials, but not vendor lists or formal tracking.
+> Detects exposed API endpoints, public tokens, and leaked credentials, but not vendor lists or formal tracking. *(Partial)*
 
 ---
 
-## 🟩 Protect
+## Protect
 
 ### PR.AC-01 — Identities and credentials are managed *(Full)*
 
@@ -42,12 +42,11 @@ Each entry includes the CSF ID, Function, automation coverage level, and a short
 
 ---
 
-## 🟨 Detect
+## Detect
 
-### DE.CM-01 — Unauthorized connections and devices are monitored *(Partial)*
+### DE.CM-01 — The network is monitored to detect potential cybersecurity events  *(Partial)*
 
-> Anomalies like unexpected HTTP 5xx errors can hint at unauthorized behavior but deeper monitoring requires agents.
-
+> Anomalies like unexpected HTTP 5xx errors can hint at unauthorized behavior but comprehensive coverage requires dedicated monitoring. 
 ### DE.CM-07 — Unauthorized changes to systems are monitored *(Partial)*
 
 > Can catch some file exposure/configuration drift, but lacks deep OS-level file integrity monitoring.

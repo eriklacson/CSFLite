@@ -1,15 +1,15 @@
 csf_subcategory_id,csf_name,weight,recommendation
-ID.AM-02,Assets and systems inventoried,1.2,"Maintain an up-to-date asset inventory including devices, Vms, and containers."
-ID.AM-05,Resources are prioritized and protected,1,Classify assets by criticality and apply appropriate protection levels.
-ID.RA-05,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."
+GV.PO-01,"Organizational cybersecurity policy is established and communicated",1,Define and document security responsibilities and enforcement processes.
+ID.AM-02,Assets and systems are inventoried,1.2,"Maintain an up-to-date asset inventory including devices, Vms, and containers."
+ID.AM-04,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."
+ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",,1,Classify assets by criticality and apply appropriate protection levels.
 ID.SC-01,Supply chain agreements are managed,1,Ensure contracts with suppliers include security and risk requirements.
-ID.GV-01,"Governance roles, policies, and processes are established",1,Define and document security responsibilities and enforcement processes.
 PR.AC-01,Identities and credentials are managed,1.5,Enforce strong password policies and implement MFA.
 PR.AC-03,Remote access is managed,1.2,Restrict access to remote interfaces via VPN and firewalls.
 PR.DS-01,Data-at-rest is protected,1,Use full-disk encryption or encrypted file systems.
 PR.DS-06,Integrity checking mechanisms are used,1,Implement file integrity monitoring and version control.
 PR.PT-04,Communications and control networks are protected,1.2,Disable insecure protocols and enforce TLS 1.2+.
-DE.CM-01,Unauthorized connections and devices are monitored,1.2,Use NAC tools to detect rogue devices on internal networks.
+DE.CM-01,The network is monitored to detect potential cybersecurity events,1.2,"Implement network monitoring tools to detect anomalies and potential cybersecurity events."
 DE.CM-02,Physical environment is monitored for security events,1,Deploy CCTV and alarm systems where appropriate.
 DE.CM-07,Unauthorized changes to systems are monitored,1.2,Use file change detection tools and configure SIEM alerts.
 DE.CM-08,Vulnerability scans are performed,1.5,Schedule regular internal/external vuln scans and track remediation.

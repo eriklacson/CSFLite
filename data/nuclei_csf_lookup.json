@@ -4,7 +4,7 @@
     "finding":"Open Ports Detected",
     "csf_function":"Identify",
     "subcategory_id":"ID.AM-02",
-    "subcategory_name":"Devices and systems inventoried",
+    "subcategory_name":"Assets and systems inventoried",
     "rationale":"Open ports reflect active assets and exposed services\u2014critical to inventory.",
     "recommended_remediation":"Close unnecessary ports or restrict access via firewall\/security group."
   },
@@ -12,7 +12,7 @@
     "templateID":"exposures\/git-auth-token",
     "finding":"Publicly Exposed Git Auth Token",
     "csf_function":"Identify",
-    "subcategory_id":"ID.RA-05",
+    "subcategory_id":"ID.AM-05",
     "subcategory_name":"External information systems are cataloged",
     "rationale":"Leaked tokens indicate poor control over external systems and APIs.",
     "recommended_remediation":"Revoke the token, rotate credentials, and apply `.gitignore` rules."

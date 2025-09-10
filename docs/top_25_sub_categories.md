@@ -1,39 +1,31 @@
 # CSF-Lite: Top 25 NIST CSF v2.0 Subcategories
 
-These are the 25 most impactful and practical subcategories from the NIST CSF v2.0, selected for inclusion in the CSF-Lite framework. They span all five CSF Functions and are prioritized for SME environments.
-
+These are the 25 most impactful and practical subcategories from the NIST CSF v2.0, selected for inclusion in the CSF-Lite framework. They span all six CSF Functions and are prioritized for SME environments.
 Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ---
 
-
-
 ### Govern
 
-
-### GV-RR-02 — Governance roles, policies, and processes are established
-
-> Assigning roles and documenting processes sets the foundation for any security program.
-
-### GV.SC-01 — Supply chain agreements are managed
-
-> Vendor relationships should include security responsibilities and breach handling.
 
 ### GV.P0-01 — Cybersecurity Policy is Established
 
 > Policy and strategy for managing cybersecurity created, communicated and enforced.
 
+### GV.SC-01 — Supply chain agreements are managed
+
+> Vendor relationships should include security responsibilities and breach handling.
 
 
 ---
 
 ## Identify
 
-### ID.AM-02 — Devices and systems inventoried
+### ID.AM-02 — Assets and systems inventoried
 
 > You can’t secure what you don’t know. This ensures visibility into physical and cloud-based assets.
 
-### ID.AM-05 — Resources are prioritized and protected
+### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value.
 
 > Prioritizing critical assets helps focus limited security resources for maximum impact.
 
@@ -71,9 +63,9 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ## Detect
 
-### DE.CM-01 — Unauthorized connections and devices are monitored
+### DE.CM-01 — The network is monitored to detect potential cybersecurity events
 
-> Network monitoring helps spot intrusions and abnormal activity early.
+> Monitoring network traffic helps detect intrusions, anomalies, and other cybersecurity events early
 
 ### DE.CM-07 — Unauthorized changes to systems are monitored
 

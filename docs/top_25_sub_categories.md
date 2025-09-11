@@ -67,7 +67,7 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Monitoring network traffic helps detect intrusions, anomalies, and other cybersecurity events early
 
-### DE.CM-07 — Unauthorized changes to systems are monitored
+### DE.CM-07 — Monitoring for unauthorized changes to systems is performed
 
 > File or configuration drift detection is a key indicator of compromise.
 
@@ -75,9 +75,9 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Routine scanning detects outdated components and known issues.
 
-### DE.AE-01 — A baseline of network operations is established and managed
+### DE.AE-01 — A baseline of network operations and expected data flows for users and systems is established and managed
 
-> Knowing what "normal" looks like enables detection of anomalies.
+> Establishing baselines for network operations and expected data flows helps detect anomalies
 
 ---
 

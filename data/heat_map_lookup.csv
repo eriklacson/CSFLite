@@ -11,17 +11,17 @@ PR.DS-06,Integrity checking mechanisms are used,1.0
 PR.PT-04,Communications and control networks are protected,1.2
 DE.CM-01,The network is monitored to detect potential cybersecurity events,1.2
 DE.CM-02,Physical environment is monitored for security events,1.0
-DE.CM-07,Unauthorized changes to systems are monitored,1.2
+DE.CM-07,Monitoring for unauthorized changes to systems is performed,1.2
 DE.CM-08,Vulnerability scans are performed,1.5
-DE.AE-01,A baseline of network operations is established and managed,1.2
+DE.AE-01,A baseline of network operations and user data flows is established and managed,1.2
 RS.RP-01,Response plan is executed,1.0
 RS.CO-02,Public relations are managed,1.0
 RS.CO-03,Legal and regulatory requirements are managed,1.0
 RS.MI-01,Incidents are mitigated,1.0
 RS.IM-01,Response plans are improved following lessons learned,1.0
 RC.RP-01,Recovery plan is executed,1.0
-RC.IM-01,Recovery strategies are improved following exercises,1.0
-RC.IM-02,Recovery plans incorporate lessons learned,1.0
+RC.IM-01,Recovery plans incorporate lessons learned,1.0
+RC.IM-02,Recovery stratetegies are updated,1.0
 RC.CO-01,Communications are coordinated during recovery,0.8
 RC.GV-01,Recovery policies and procedures are established,1.0
 

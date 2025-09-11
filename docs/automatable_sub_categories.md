@@ -49,13 +49,13 @@ Each entry includes the CSF ID, Function, automation coverage level, and a short
 > Anomalies like unexpected HTTP 5xx errors can hint at unauthorized behavior but comprehensive coverage requires dedicated monitoring. 
 ### DE.CM-07 — Unauthorized changes to systems are monitored *(Partial)*
 
-> Can catch some file exposure/configuration drift, but lacks deep OS-level file integrity monitoring.
+> Nuclei can detect some file exposure or configuration drift but lacks deep OS-level file integrity monitoring.
 
 ### DE.CM-08 — Vulnerability scans are performed *(Full)*
 
 > Nuclei CVE and software template packs perform surface-level vuln scanning.
 
-### DE.AE-01 — Network baselines are established and managed *(Partial)*
+### DE.AE-01 — A baseline of of network operations and expected user data flows are established and managed *(Partial)*
 
 > Repeated scanning can reveal changes or anomalies over time, but true baselining requires behavioral analytics.
 

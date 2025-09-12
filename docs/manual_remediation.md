@@ -5,6 +5,18 @@ This markdown file provides actionable remediation guidance for each non-automat
 Use these recommendations as follow-up actions after identifying governance or process gaps.
 
 ---
+## Govern
+
+### GV.PO-01 — Organizational cybersecurity policy is established and communicated
+
+**Remediation:** Formalize and distribute a cybersecurity policy approved by leadership and acknowledged by staff
+
+### ID.SC-01 — Supply chain agreements are managed
+
+**Remediation:** Ensure vendor agreements include SLAs, security clauses, and breach notification terms.
+
+
+---
 
 ## 🟦 Identify
 
@@ -12,13 +24,7 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 **Remediation:** Establish and maintain a critical asset inventory with priority ratings based on business impact.
 
-### ID.SC-01 — Supply chain agreements are managed
 
-**Remediation:** Ensure vendor agreements include SLAs, security clauses, and breach notification terms.
-
-### ID.GV-01 — Governance roles, policies, and processes are established
-
-**Remediation:** Define roles and responsibilities for cybersecurity and document them in a policy framework.
 
 ---
 
@@ -52,13 +58,14 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 **Remediation:** Test recovery procedures regularly and validate restore times align with business expectations.
 
-### RC.IM-01 — Recovery strategies are improved following exercises
+### RC.IM-01 — Recovery strategies incorporate lessons learned
 
-**Remediation:** After each DR test or real incident, assess what worked and revise strategies accordingly.
+**Remediation:** Incorporate lessons learned from past recovery exercises into into formal documents and procedures
+
 
 ### RC.IM-02 — Recovery plans incorporate lessons learned
 
-**Remediation:** Integrate lessons from past recovery exercises into formal documentation and procedures.
+**Remediation:** After each DR test or real incident, assess what worked and revise strategies accordingly.
 
 ### RC.CO-01 — Communications are coordinated during recovery
 

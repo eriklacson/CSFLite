@@ -20,11 +20,11 @@ Each entry includes the CSF ID, Function, automation coverage level, and a short
 
 ## Protect
 
-### PR.AC-01 — Identities and credentials are managed *(Full)*
+### PR.AA-01 — Identities and credentials are managed *(Full)*
 
 > Nuclei checks like `default-logins/*` detect default or weak credentials on exposed services.
 
-### PR.AC-03 — Remote access is managed *(Full)*
+### PR.AA-03 — Remote access is managed *(Full)*
 
 > Templates such as `auth/open-admin` detect admin panels or management interfaces lacking authentication.
 
@@ -32,11 +32,11 @@ Each entry includes the CSF ID, Function, automation coverage level, and a short
 
 > Missing HTTP headers like `X-Content-Type-Options` can be identified by header-based Nuclei templates.
 
-### PR.DS-06 — Integrity checking mechanisms are used *(Full)*
+### PR.DS-10 — Integrity checking mechanisms are used *(Full)*
 
 > Directory listing, file exposure, or checksum failures are discoverable through Nuclei misconfiguration templates.
 
-### PR.PT-04 — Communications and control networks are protected *(Full)*
+### PR.IR-01 — Communications and control networks are protected *(Full)*
 
 > Weak SSL ciphers, self-signed certs, and Heartbleed can be detected via `ssl/*` templates.
 

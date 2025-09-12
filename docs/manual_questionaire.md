@@ -17,6 +17,13 @@ Each question includes:
 **Question:** Has a formal cybersecurity policy been established and communicated to the organization?
 **Evidence:** Security policy document, communication or training records
 
+
+## GV.SC-01 — Supply chain agreements are managed
+
+**Question:** Do you maintain security-related agreements with key vendors or partners?
+**Evidence:** Vendor contracts, SLAs, third-party risk assessments
+
+
 ---
 
 ## Identify
@@ -26,11 +33,7 @@ Each question includes:
 **Question:** Do you maintain a prioritized list of critical assets or data systems?
 **Evidence:** Asset inventory with risk ranking or business criticality tags
 
-### ID.SC-01 — Supply chain agreements are managed
-
-**Question:** Do you maintain security-related agreements with key vendors or partners?
-**Evidence:** Vendor contracts, SLAs, third-party risk assessments
-
+#
 
 ---
 
@@ -76,14 +79,10 @@ Each question includes:
 **Evidence:** After-action reports, recovery plan change logs
 
 
-### RC.IM-02 — 
+### RC.IM-02 — Recovery strategies are improved following exercises
 
 **Question:** Do you update recovery strategies based on lessons from past recovery drills?
 **Evidence:** Meeting notes, plan revision logs
-
-
-**Question:** Do you document lessons learned from real or simulated recovery events?
-**Evidence:** After-action reports, recovery plan change logs
 
 ### RC.CO-01 — Communications are coordinated during recovery
 

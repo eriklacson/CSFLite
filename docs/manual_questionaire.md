@@ -18,10 +18,16 @@ Each question includes:
 **Evidence:** Security policy document, communication or training records
 
 
-## GV.SC-01 — Supply chain agreements are managed
+### GV.SC-01 — Supply chain agreements are managed
 
 **Question:** Do you maintain security-related agreements with key vendors or partners?
 **Evidence:** Vendor contracts, SLAs, third-party risk assessments
+
+
+### GV.RR-01 — Roles and responsibilities are assigned
+
+**Question:** Are cybersecurity roles, responsibilities, and authorities formally defined and communicated?
+**Evidence:** Organizational chart, role descriptions, RACI matrix
 
 
 ---

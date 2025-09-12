@@ -16,6 +16,10 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Vendor relationships should include security responsibilities and breach handling.
 
+### GV.RR-01 — Roles and responsibilities are assigned
+
+> Clear cybersecurity roles ensure accountability for managing risk.
+
 
 ---
 

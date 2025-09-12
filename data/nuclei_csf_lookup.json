@@ -30,7 +30,7 @@
     "templateID":"auth/open-admin",
     "finding":"Unauthenticated Admin Panel",
     "csf_function":"Protect",
-    "subcategory_id":"PR.AC-03",
+    "subcategory_id":"PR.AA-03",
     "subcategory_name":"Remote access is managed",
     "rationale":"Exposed admin interfaces without auth represent a major control gap.",
     "recommended_remediation":"Restrict access with authentication, IP allowlists, or VPN."

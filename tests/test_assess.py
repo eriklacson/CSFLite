@@ -79,8 +79,8 @@ def test_read_scan_json_invalid():
 def mock_lookup_csv(tmp_path):
     # Create a temporary CSV file for the lookup data
     lookup_data = """templateID,csf_function,subcategory_id,subcategory_name,recommended_remediation
-TEMPLATE-1,Identify,ID.AM-1,Asset Management,Remediate template 1
-TEMPLATE-2,Protect,PR.AC-1,Access Control,Remediate template 2
+TEMPLATE-1,Identify,ID.AM-02,Asset Management,Remediate template 1
+TEMPLATE-2,Protect,PR.AA-03,Access Control,Remediate template 2
 """
     lookup_csv_path = tmp_path / "lookup.csv"
     lookup_csv_path.write_text(lookup_data)
@@ -114,7 +114,7 @@ def test_map_scan_to_csf(mock_lookup_csv):
     result = map_scan_to_csf(test_findings, mock_lookup_csv)
     assert len(result) == 2
     assert result[0]["csf_function"] == "Identify"
-    assert result[0]["csf_subcategory_id"] == "ID.AM-1"
+    assert result[0]["csf_subcategory_id"] == "ID.AM-02"
     assert "templateID" in result[0]
     assert "host" in result[1]
 
@@ -212,15 +212,15 @@ def test_get_csf_lookup(tmp_path: Path):
 
     csv_content = (
         "csf_subcategory_id,weight,recommendation\n"
-        "ID.AM-1,1,Assess assets\n"
-        "PR.AC-1,2,Enforce access control\n"
+        "ID.AM-02,1,Assess assets\n"
+        "PR.AA-03,2,Enforce access control\n"
     )
     lookup_path = tmp_path / "csf_lookup.csv"
     lookup_path.write_text(csv_content)
 
     result = get_csf_lookup(lookup_path)
     assert len(result) == 2
-    assert result[0]["csf_subcategory_id"] == "ID.AM-1"
+    assert result[0]["csf_subcategory_id"] == "ID.AM-02"
     assert result[1]["weight"] == 2
 
 
@@ -236,14 +236,14 @@ def test_get_governance_checklist_results(tmp_path: Path):
 
     checklist_content = (
         "csf_function,csf_subcategory_id,csf_subcategory_name,notes,response\n"
-        "Identify,ID.AM-1,Assets inventoried,,yes\n"
-        "Protect,PR.AC-1,Access control,need to implement ssl,partial\n"
+        "Identify,ID.AM-02,Assets inventoried,,yes\n"
+        "Protect,PR.AA-03,Access control,need to implement ssl,partial\n"
     )
     checklist_path = tmp_path / "checklist.csv"
     checklist_path.write_text(checklist_content)
 
     result = get_governance_checklist_results(checklist_path)
-    assert result[0]["csf_subcategory_id"] == "PR.AC-1"
+    assert result[0]["csf_subcategory_id"] == "PR.AA-03"
     assert result[1]["response"] == "yes"
 
 
@@ -257,7 +257,7 @@ def test_get_governance_checklist_results_missing_file():
 def test_get_governance_checklist_results_missing_columns(tmp_path: Path):
     from tools.assess import get_governance_checklist_results
 
-    checklist_content = "csf_function,csf_subcategory_id,response\nIdentify,ID.AM-1,yes\n"
+    checklist_content = "csf_function,csf_subcategory_id,response\nIdentify,ID.AM-02,yes\n"
     checklist_path = tmp_path / "checklist.csv"
     checklist_path.write_text(checklist_content)
 
@@ -270,13 +270,13 @@ def test_generate_governance_assessment():
 
     checklist = [
         {
-            "csf_subcategory_id": "ID.AM-1",
+            "csf_subcategory_id": "ID.AM-02",
             "csf_subcategory_name": "Assets inventoried",
             "notes": "",
             "response": "Yes",
         },
         {
-            "csf_subcategory_id": "PR.AC-1",
+            "csf_subcategory_id": "PR.AA-03",
             "csf_subcategory_name": "Access control",
             "notes": "need to implement ssl",
             "response": "Partial",
@@ -285,12 +285,12 @@ def test_generate_governance_assessment():
 
     lookup = [
         {
-            "csf_subcategory_id": "ID.AM-1",
+            "csf_subcategory_id": "ID.AM-02",
             "weight": 2,
             "recommendation": "Assess assets",
         },
         {
-            "csf_subcategory_id": "PR.AC-1",
+            "csf_subcategory_id": "PR.AA-03",
             "weight": 1,
             "recommendation": "Enforce access control",
         },
@@ -300,9 +300,9 @@ def test_generate_governance_assessment():
 
     assert len(result) == 2
     result_by_id = {r["csf_subcategory_id"]: r for r in result}
-    assert result_by_id["ID.AM-1"]["weighted_score"] == "2.00"
-    assert result_by_id["PR.AC-1"]["recommendation"] == "Enforce access control"
-    assert result_by_id["PR.AC-1"]["weighted_score"] == "0.50"
+    assert result_by_id["ID.AM-02"]["weighted_score"] == "2.00"
+    assert result_by_id["PR.AA-03"]["recommendation"] == "Enforce access control"
+    assert result_by_id["PR.AA-03"]["weighted_score"] == "0.50"
 
 
 def test_generate_governance_heatmap():

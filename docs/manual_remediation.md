@@ -7,11 +7,11 @@ Use these recommendations as follow-up actions after identifying governance or p
 ---
 ## Govern
 
-### GV.PO-01 — Organizational cybersecurity policy is established and communicated
+### GV.P0-01 — Organizational cybersecurity policy is established and communicated
 
 **Remediation:** Formalize and distribute a cybersecurity policy approved by leadership and acknowledged by staff
 
-### ID.SC-01 — Supply chain agreements are managed
+### GV.SC-01 — Supply chain agreements are managed
 
 **Remediation:** Ensure vendor agreements include SLAs, security clauses, and breach notification terms.
 

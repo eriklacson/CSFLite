@@ -15,10 +15,16 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 **Remediation:** Ensure vendor agreements include SLAs, security clauses, and breach notification terms.
 
+### GV.RR-01 — Roles and responsibilities are assigned
+
+**Remediation:** Define, document, and communicate security roles and responsibilities with clear ownership and accountability.
+
+**Evidence:** Organizational chart, role descriptions, RACI matrix
+
 
 ---
 
-## 🟦 Identify
+## Identify
 
 ### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value
 
@@ -28,7 +34,7 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 ---
 
-## 🟥 Respond
+## Respond
 
 ### RS.RP-01 — Response plan is executed
 
@@ -52,7 +58,7 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 ---
 
-## 🟪 Recover
+## Recover
 
 ### RC.RP-01 — Recovery plan is executed
 

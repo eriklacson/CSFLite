@@ -1,7 +1,7 @@
 csf_subcategory_id,csf_name,weight,recommendation
 GV.P0-01,"Organizational cybersecurity policy is established and communicated",1,"Define and document security responsibilities and enforcement processes."
 GV.SC-01,Supply chain agreements are managed,1,"Ensure contracts with suppliers include security and risk requirements."
-GV.RR-01,"Roles and responsibilities for cybersecurity risk management are established and communicated",1,"Document and communicate security roles, responsibilities, and authorities."
+GV.RR-01,"Roles and responsibilities are assigned",1,"Document and communicate security roles, responsibilities, and authorities."
 ID.AM-02,Assets and systems are inventoried,1.2,"Maintain an up-to-date asset inventory including devices, VMs, and containers."
 ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",1,"Classify assets by criticality and apply appropriate protection levels."
 ID.RA-05,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."

@@ -310,14 +310,14 @@ def test_generate_governance_heatmap():
 
     assessment = [
         {
-            "csf_subcategory_id": "ID.GV-01",
+            "csf_subcategory_id": "GV.P0-01",
             "csf_subcategory_name": "Governance roles",
             "response": "Yes",
             "weight": 1.0,
             "weighted_score": "0.00",
         },
         {
-            "csf_subcategory_id": "PR.AC-01",
+            "csf_subcategory_id": "PR.AA-01",
             "csf_subcategory_name": "Access control",
             "response": "No",
             "weight": 2.0,
@@ -328,7 +328,7 @@ def test_generate_governance_heatmap():
     result = generate_governance_heatmap(assessment)
 
     assert len(result) == 2
-    assert result[0]["csf_subcategory_id"] == "ID.GV-01"
+    assert result[0]["csf_subcategory_id"] == "GV.P0-01"
     assert result[0]["severity"] == "high"
     assert result[0]["weighted_score"] == "1.00"
     assert result[1]["severity"] == "low"

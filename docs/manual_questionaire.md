@@ -12,7 +12,7 @@ Each question includes:
 ---
 ## Govern
 
-### GV.PO-01 — Organizational cybersecurity policy is established and communicated
+### GV.P0-01 — Organizational cybersecurity policy is established and communicated
 
 **Question:** Has a formal cybersecurity policy been established and communicated to the organization?
 **Evidence:** Security policy document, communication or training records
@@ -28,7 +28,6 @@ Each question includes:
 
 **Question:** Are cybersecurity roles, responsibilities, and authorities formally defined and communicated?
 **Evidence:** Organizational chart, role descriptions, RACI matrix
-
 
 ---
 

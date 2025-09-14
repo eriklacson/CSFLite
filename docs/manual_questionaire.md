@@ -38,8 +38,6 @@ Each question includes:
 **Question:** Do you maintain a prioritized list of critical assets or data systems?
 **Evidence:** Asset inventory with risk ranking or business criticality tags
 
-#
-
 ---
 
 ## Respond
@@ -78,16 +76,15 @@ Each question includes:
 **Question:** Have you tested your system/data recovery procedures in the last 12 months?
 **Evidence:** Backup restore logs, DR exercise report
 
-### RC.IM-01 — Recovery plans incorporate lessons learned
-
-**Question:** Do you document lessons learned from real or simulated recovery events?
-**Evidence:** After-action reports, recovery plan change logs
-
-
-### RC.IM-02 — Recovery strategies are improved following exercises
+### RC.IM-01 — Recovery strategies are improved following exercises
 
 **Question:** Do you update recovery strategies based on lessons from past recovery drills?
 **Evidence:** Meeting notes, plan revision logs
+
+### RC.IM-02 — Recovery plans incorporate lessons learned.
+
+**Question:** Do you document lessons learned from real or simulated recovery events?
+**Evidence:** After-action reports, recovery plan change logs
 
 ### RC.CO-01 — Communications are coordinated during recovery
 

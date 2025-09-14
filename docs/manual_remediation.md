@@ -64,14 +64,13 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 **Remediation:** Test recovery procedures regularly and validate restore times align with business expectations.
 
-### RC.IM-01 — Recovery strategies incorporate lessons learned
+### RC.IM-01 — Recovery strategies are improved following exercises
 
-**Remediation:** Incorporate lessons learned from past recovery exercises into into formal documents and procedures
+**Remediation:** Use lessons from recovery exercises to enhance recovery strategies and update formal procedures
 
+### RC.IM-02 — Recovery plans incorporate lessons learned 
 
-### RC.IM-02 — Recovery plans incorporate lessons learned
-
-**Remediation:** After each DR test or real incident, assess what worked and revise strategies accordingly.
+**Remediation:** After each DR test or real incident, assess what worked and revise recover plans accordingly.
 
 ### RC.CO-01 — Communications are coordinated during recovery
 

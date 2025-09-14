@@ -9,27 +9,38 @@ Each question includes:
 * Examples of acceptable evidence
 
 ---
+---
+## Govern
 
-## 🟦 Identify
+### GV.P0-01 — Organizational cybersecurity policy is established and communicated
 
-### ID.AM-05 — Resources are prioritized and protected
+**Question:** Has a formal cybersecurity policy been established and communicated to the organization?
+**Evidence:** Security policy document, communication or training records
 
-**Question:** Do you maintain a prioritized list of critical assets or data systems?
-**Evidence:** Asset inventory with risk ranking or business criticality tags
 
-### ID.SC-01 — Supply chain agreements are managed
+### GV.SC-01 — Supply chain agreements are managed
 
 **Question:** Do you maintain security-related agreements with key vendors or partners?
 **Evidence:** Vendor contracts, SLAs, third-party risk assessments
 
-### ID.GV-01 — Governance roles, policies, and processes are established
 
-**Question:** Do you have documented cybersecurity policies and assigned governance roles?
-**Evidence:** Security policy document, org chart with roles
+### GV.RR-01 — Roles and responsibilities are assigned
+
+**Question:** Are cybersecurity roles, responsibilities, and authorities formally defined and communicated?
+**Evidence:** Organizational chart, role descriptions, RACI matrix
 
 ---
 
-## 🟥 Respond
+## Identify
+
+### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value
+
+**Question:** Do you maintain a prioritized list of critical assets or data systems?
+**Evidence:** Asset inventory with risk ranking or business criticality tags
+
+---
+
+## Respond
 
 ### RS.RP-01 — Response plan is executed
 
@@ -58,7 +69,7 @@ Each question includes:
 
 ---
 
-## 🟪 Recover
+## Recover
 
 ### RC.RP-01 — Recovery plan is executed
 
@@ -70,7 +81,7 @@ Each question includes:
 **Question:** Do you update recovery strategies based on lessons from past recovery drills?
 **Evidence:** Meeting notes, plan revision logs
 
-### RC.IM-02 — Recovery plans incorporate lessons learned
+### RC.IM-02 — Recovery plans incorporate lessons learned.
 
 **Question:** Do you document lessons learned from real or simulated recovery events?
 **Evidence:** After-action reports, recovery plan change logs

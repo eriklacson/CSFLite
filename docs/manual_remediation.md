@@ -5,24 +5,36 @@ This markdown file provides actionable remediation guidance for each non-automat
 Use these recommendations as follow-up actions after identifying governance or process gaps.
 
 ---
+## Govern
 
-## 🟦 Identify
+### GV.P0-01 — Organizational cybersecurity policy is established and communicated
 
-### ID.AM-05 — Resources are prioritized and protected
+**Remediation:** Formalize and distribute a cybersecurity policy approved by leadership and acknowledged by staff
 
-**Remediation:** Establish and maintain a critical asset inventory with priority ratings based on business impact.
-
-### ID.SC-01 — Supply chain agreements are managed
+### GV.SC-01 — Supply chain agreements are managed
 
 **Remediation:** Ensure vendor agreements include SLAs, security clauses, and breach notification terms.
 
-### ID.GV-01 — Governance roles, policies, and processes are established
+### GV.RR-01 — Roles and responsibilities are assigned
 
-**Remediation:** Define roles and responsibilities for cybersecurity and document them in a policy framework.
+**Remediation:** Define, document, and communicate security roles and responsibilities with clear ownership and accountability.
+
+**Evidence:** Organizational chart, role descriptions, RACI matrix
+
 
 ---
 
-## 🟥 Respond
+## Identify
+
+### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value
+
+**Remediation:** Establish and maintain a critical asset inventory with priority ratings based on business impact.
+
+
+
+---
+
+## Respond
 
 ### RS.RP-01 — Response plan is executed
 
@@ -46,7 +58,7 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 ---
 
-## 🟪 Recover
+## Recover
 
 ### RC.RP-01 — Recovery plan is executed
 
@@ -54,11 +66,11 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 ### RC.IM-01 — Recovery strategies are improved following exercises
 
-**Remediation:** After each DR test or real incident, assess what worked and revise strategies accordingly.
+**Remediation:** Use lessons from recovery exercises to enhance recovery strategies and update formal procedures
 
-### RC.IM-02 — Recovery plans incorporate lessons learned
+### RC.IM-02 — Recovery plans incorporate lessons learned 
 
-**Remediation:** Integrate lessons from past recovery exercises into formal documentation and procedures.
+**Remediation:** After each DR test or real incident, assess what worked and revise recover plans accordingly.
 
 ### RC.CO-01 — Communications are coordinated during recovery
 

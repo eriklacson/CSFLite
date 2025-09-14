@@ -1,12 +1,9 @@
 templateID,csf_function,subcategory_id,subcategory_name,enabled
-networking/open-ports,Identify,ID.AM-02,Devices and systems inventoried,True
+networking/open-ports,Identify,ID.AM-02,Assets and systems inventoried,True
 exposures/git-auth-token,Identify,ID.RA-05,External information systems are cataloged,True
-default-logins/ssh-default-creds,Protect,PR.AC-01,Identities and credentials are managed,True
-auth/open-admin,Protect,PR.AC-03,Remote access is managed,True
+default-logins/ssh-default-creds,Protect,PR.AA-01,Identities and credentials are managed,True
+auth/open-admin,Protect,PR.AA-03,Remote access is managed,True
 headers/missing-content-type,Protect,PR.DS-01,Data-at-rest is protected,True
-misconfiguration/dir-listing,Protect,PR.DS-06,Integrity checking mechanisms are used,True
-ssl/self-signed,Protect,PR.PT-04,Communications and control networks are protected,True
-ssl/weak-cipher,Protect,PR.PT-04,Communications and control networks are protected,True
-ssl/heartbleed,Protect,PR.PT-04,Communications and control networks are protected,True
+misconfiguration/dir-listing,Protect,PR.DS-10,Integrity checking mechanisms are used,True
+ssl/self-signed,Protect,PR.IR-01,Communications and control networks are protected,True
 technologies/outdated-server-software,Detect,DE.CM-08,Vulnerability scans are performed,True
-cves/2021/CVE-2021-44228,Detect,DE.CM-08,Vulnerability scans are performed,True

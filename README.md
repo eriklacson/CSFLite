@@ -1,4 +1,4 @@
-# CSF-Lite Framework
+# CSFLite Framework
 
 A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automated scanning (via Nuclei) with manual governance checks to produce a fast, actionable security baseline.
 
@@ -6,7 +6,7 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 
 ## Vision
 
-**CSF-Lite** is designed for lean security operations. Instead of overwhelming organizations with the full CSF catalog, this framework focuses on:
+**CSFLite** is designed for lean security operations. Instead of overwhelming organizations with the full CSF catalog, this framework focuses on:
 
 - The **Top 25 most impactful subcategories** across all CSF Functions
 - What can be **automated via scan** (e.g., open ports, outdated software, misconfigurations)
@@ -18,7 +18,7 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 
 This repository contains:
 
-- ✅ Curated CSF-Lite **subcategories** list (top 25)
+- ✅ Curated CSFLite **subcategories** list (top 25)
 - ✅ Mapping of **Nuclei templates → CSF subcategories**
 - ✅ CSV/JSON **lookup tables** for automation
 - ✅ A **manual questionnaire** for non-automatable items

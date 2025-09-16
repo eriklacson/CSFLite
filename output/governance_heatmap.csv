@@ -1,4 +1,4 @@
-csf_subcategory_id,name,response,severity,weighted_score
+csf_subcategory_id,name,response,severity,gap_score
 RS.MI-01,Incidents are mitigated,No,high,1.50
 RS.RP-01,Response plan is executed,No,high,1.50
 GV.RR-01,"Governance roles, policies, and processes are established",No,high,1.20

@@ -307,15 +307,20 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
         governance_checklist_df["response"].map(response_score).astype(float)
     )
 
-    # Calculate weighted score
-    governance_score_df["weighted_score"] = (
+    # Calculate assessment and gap score
+    governance_score_df["assessment_score"] = (
         governance_score_df["score"] * governance_score_df["weight"]
     )
 
-    # format weighted score to 2 decimal places
-    governance_score_df["weighted_score"] = governance_score_df["weighted_score"].map(
+    governance_score_df["gap_score"] = (
+        governance_score_df["weight"] - governance_score_df["assessment_score"]
+    )
+
+    # format scores to 2 decimal places
+    governance_score_df["assessment_score"] = governance_score_df["assessment_score"].map(
         lambda x: f"{x:.2f}"
     )
+    governance_score_df["gap_score"] = governance_score_df["gap_score"].map(lambda x: f"{x:.2f}")
 
     # shape + return relevant columns
     columns = [
@@ -325,7 +330,8 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
         "score",
         "weight",
         "recommendation",
-        "weighted_score",
+        "assessment_score",
+        "gap_score",
     ]
 
     # return list of findings with heatmap weight and recommendation

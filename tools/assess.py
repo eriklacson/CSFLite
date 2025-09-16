@@ -358,7 +358,7 @@ def generate_governance_heatmap(governance_assessment):
     df["weight"] = df["weight"].astype(float)
     df["assessment_score"] = df["weighted_score"].astype(float)
 
-    # determine heat level from weighted score
+    # determine heat level from asessment score
     def score_to_sev(row):
         if row["assessment_score"] <= 0:
             return "high"
@@ -371,7 +371,6 @@ def generate_governance_heatmap(governance_assessment):
 
     # compute gap score (higher means bigger governance gap)
     df["gap_score"] = df["weight"] - df["assessment_score"]
-    df["weighted_score"] = df["gap_score"].map(lambda x: f"{x:.2f}")
 
     # prepare final shape
     df["name"] = df["csf_subcategory_name"]
@@ -380,12 +379,13 @@ def generate_governance_heatmap(governance_assessment):
         "name",
         "response",
         "severity",
-        "weighted_score",
+        "gap_score",
     ]
 
-    governance_heatmap = df.sort_values(
-        ["gap_score", "csf_subcategory_id"], ascending=[False, True]
-    )[heatmap_columns].to_dict(orient="records")
+    df = df.sort_values(["gap_score", "csf_subcategory_id"], ascending=[False, True])
+    df["gap_score"] = df["gap_score"].map(lambda x: f"{x:.2f}")
+
+    governance_heatmap = df[heatmap_columns].to_dict(orient="records")
 
     return governance_heatmap
 

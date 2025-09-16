@@ -330,6 +330,6 @@ def test_generate_governance_heatmap():
     assert len(result) == 2
     assert result[0]["csf_subcategory_id"] == "GV.P0-01"
     assert result[0]["severity"] == "high"
-    assert result[0]["weighted_score"] == "1.00"
+    assert result[0]["gap_score"] == "1.00"
     assert result[1]["severity"] == "low"
-    assert result[1]["weighted_score"] == "0.00"
+    assert result[1]["gap_score"] == "0.00"

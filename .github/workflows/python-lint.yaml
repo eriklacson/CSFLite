@@ -2,7 +2,7 @@ name: Python Lint (Poetry)
 
 on:
   push:
-  branches: [main]
+   branches: [master]
   pull_request:
   workflow_dispatch:  # adds a "Run workflow" button in the UI
 

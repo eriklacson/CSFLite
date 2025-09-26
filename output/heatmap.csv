@@ -1,9 +1,0 @@
-csf_subcategory_id,name,count,max_severity,weighted_score
-DE.CM-08,Vulnerability scans are performed,1,critical,7.04
-PR.PT-04,Communications and control networks are protected,2,critical,6.12
-PR.AC-01,Identities and credentials are managed,1,high,5.54
-PR.AC-03,Remote access is managed,1,high,4.43
-ID.RA-05,External information systems are cataloged,1,high,3.69
-PR.DS-06,Integrity checking mechanisms are used,1,medium,2.69
-PR.DS-01,Data-at-rest is protected,1,low,1.69
-ID.AM-02,Devices and systems inventoried,1,info,0.83

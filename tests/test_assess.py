@@ -300,9 +300,11 @@ def test_generate_governance_assessment():
 
     assert len(result) == 2
     result_by_id = {r["csf_subcategory_id"]: r for r in result}
-    assert result_by_id["ID.AM-02"]["weighted_score"] == "2.00"
+    assert result_by_id["ID.AM-02"]["assessment_score"] == "2.00"
+    assert result_by_id["ID.AM-02"]["gap_score"] == "0.00"
     assert result_by_id["PR.AA-03"]["recommendation"] == "Enforce access control"
-    assert result_by_id["PR.AA-03"]["weighted_score"] == "0.50"
+    assert result_by_id["PR.AA-03"]["assessment_score"] == "0.50"
+    assert result_by_id["PR.AA-03"]["gap_score"] == "0.50"
 
 
 def test_generate_governance_heatmap():
@@ -312,14 +314,14 @@ def test_generate_governance_heatmap():
         {
             "csf_subcategory_id": "GV.P0-01",
             "csf_subcategory_name": "Governance roles",
-            "response": "Yes",
+            "response": "No",
             "weight": 1.0,
             "weighted_score": "0.00",
         },
         {
             "csf_subcategory_id": "PR.AA-01",
             "csf_subcategory_name": "Access control",
-            "response": "No",
+            "response": "Yes",
             "weight": 2.0,
             "weighted_score": "2.00",
         },
@@ -330,6 +332,6 @@ def test_generate_governance_heatmap():
     assert len(result) == 2
     assert result[0]["csf_subcategory_id"] == "GV.P0-01"
     assert result[0]["severity"] == "high"
-    assert result[0]["weighted_score"] == "1.00"
+    assert result[0]["gap_score"] == "1.00"
     assert result[1]["severity"] == "low"
-    assert result[1]["weighted_score"] == "0.00"
+    assert result[1]["gap_score"] == "0.00"

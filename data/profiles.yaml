@@ -1,0 +1,113 @@
+version: 1
+profiles:
+  # ——— IDENTIFY ———
+  inventory_external:
+    # ID.AM-02, ID.RA-05  (+ weak signal for ID.AM-05 via tags you can triage later)
+    tags: [tech, cloud, discovery]
+    severity: [info, low]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_inventory.jsonl
+    notes: "Tech fingerprinting + cloud/service discovery = evidence for ID.AM-02 and external deps (ID.RA-05)."
+
+  # ——— PROTECT (CONFIG & PATCH) ———
+  baseline_web:
+    # PR.AA-01, PR.DS-01, PR.AA-03  (+ signals for PR.IR-01 via TLS/HSTS headers)
+    tags: [misconfig, headers, cors, ssl, tls, exposure, backup, secret, default-login]
+    severity: [medium, high, critical]
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: data/nuclei_baseline.jsonl
+    notes: "High-signal posture checks: headers, CORS, TLS config, exposed secrets/backups, default creds."
+
+  patch_cve:
+    # PR.PS-02, DE.CM-08
+    tags: [cve, wordpress, confluence, jira, gitlab, jenkins, grafana, kibana, drupal, magento]
+    severity: [high, critical]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_cves.jsonl
+    notes: "Known-vuln sweeps for common stacks. Also serves as vuln-monitoring evidence (DE.CM-08)."
+
+  identity_remote_access:
+    # PR.AA-01, PR.AA-03
+    tags: [default-login, auth, admin-panel, exposure]
+    severity: [high, critical]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_identity.jsonl
+    notes: "Default creds, weak auth surfaces, exposed admin consoles; remote access discipline."
+
+  data_protection:
+    # PR.DS-01, PR.DS-10 (signal), PR.DS-11 (cloud/backups)
+    tags: [secret, exposure, backup, s3, cloud, git, env, token]
+    severity: [medium, high, critical]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_data.jsonl
+    notes: "Secrets/.env/.git, public buckets/backups. Integrity (PR.DS-10) is mostly governance; Nuclei flags risky exposures."
+
+  transport_security:
+    # PR.IR-01
+    tags: [ssl, tls, headers, hsts]
+    severity: [medium, high]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_transport.jsonl
+    notes: "TLS versions/ciphers, HSTS, secure transport indications."
+
+  # ——— API & THIRD-PARTY ———
+  api_openapi:
+    # ID.RA-05, PR.AA-01, PR.DS-01 (API)
+    tags: [api, misconfig, exposure, auth]
+    severity: [medium, high, critical]
+    input_mode: openapi
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_api.jsonl
+    notes: "Feed with OpenAPI 3 spec; checks auth, sensitive endpoints, misconfig, secret exposure."
+
+  burp_replay:
+    # PR.AA-01, PR.AA-03, PR.DS-01 (inside auth flows)
+    tags: [auth, misconfig, exposure, cve]
+    severity: [medium, high, critical]
+    input_mode: burp
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_burp.jsonl
+    notes: "Replay captured authenticated traffic for deep checks behind login."
+
+  # ——— DETECT ———
+  vuln_monitoring:
+    # DE.CM-08 (explicit “scan monitoring” profile)
+    tags: [cve]
+    severity: [high, critical]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_detect_vuln.jsonl
+    notes: "Use on a cadence; forms the evidence for ‘vulnerability scans are performed’."
+
+  change_drift_signals:
+    # DE.CM-07 (signal only)
+    tags: [exposure, dir-listing, backup, env, git, misconfig]
+    severity: [medium, high]
+    rate_limit: 3
+    concurrency: 2
+    output: data/nuclei_change.jsonl
+    notes: "Heuristics for drift (new directories exposed, backups appear, configs loosened). True change monitoring is governance+telemetry."
+
+  # ——— GOVERN / RESPOND / RECOVER ———
+  # These are governance-led; keep as placeholders to remind the pipeline they are scored via governance checks.
+  govern_placeholders:
+    tags: []
+    severity: [info]
+    output: data/nuclei_govern_placeholder.jsonl
+    notes: "GV.P0-01, GV.SC-01, GV.RR-01 are policy/process. Capture via governance_checks.csv, not Nuclei."
+
+  respond_recover_placeholders:
+    tags: []
+    severity: [info]
+    output: data/nuclei_rr_placeholder.jsonl
+    notes: "RS.* and RC.* are exercised/tested processes; evidence from drills and docs, not Nuclei."

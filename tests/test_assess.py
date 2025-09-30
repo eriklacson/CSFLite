@@ -13,32 +13,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 def test_get_paths():
     from tools.assess import get_paths
 
-    expected_paths = {  # Input Data
-        #
-        # scan results
-        "scan_input_json": "../scans/sample_output.json",
-        # governance checklist answer questionaire
-        "governance_checklist": "../scans/governance_checks.csv",
-        # Reference Data
-        #
-        # nuclie to csf lookup - map of nuclie template to CSF Sub-category
-        "lookup_csv": "../data/nuclei_csf_lookup.csv",
-        # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
-        "heatmap_lookup": "../data/heat_map_lookup.csv",
-        # map of CSF sub-category to with score weight and recommendations
-        "csf_lookup": "../data/csf_lookup.csv",
-        # Output Data
-        #
-        # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
-        "output_csv": "../output/scan-findings.csv",
-        "output_json": "../output/scan-findings.json",
-        # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
-        "heatmap_csv": "../output/scan_heatmap.csv",
-        # governance assessment - governance assessment derived from governance checklist and csf lookup
-        "governance_assessment_csv": "../output/governance_assessment.csv",
-        # governance heatmap - heatmap data derived from governance assessment
-        "governance_heatmap_csv": "../output/governance_heatmap.csv",
-    }
+    config_path = Path(__file__).resolve().parent.parent / "config" / "path_config.json"
+
+    with open(config_path, encoding="utf-8") as config_file:
+        expected_paths = json.load(config_file)
 
     assert get_paths() == expected_paths
 

@@ -12,6 +12,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 def test_load_profile():
+    """Test the load_profile function with a mock YAML file."""
+
     # Mock YAML content
     mock_yaml_content = """
     version: 1

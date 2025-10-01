@@ -4,13 +4,13 @@ import json
 
 
 # Local Helper Module
-from nuclei_helpers import load_profile  # noqa: F401
+from nuclei_helpers import load_profiles  # noqa: F401
 from assess import get_paths  # noqa: F401
 
 
 def main():
     paths = get_paths()
-    profile = load_profile(paths["nuclei_profile"])
+    profile = load_profiles(paths["nuclei_profile"])
 
     print(json.dumps(profile, indent=4))
 

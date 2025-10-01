@@ -9,5 +9,5 @@
     "heatmap_csv": "../output/scan_heatmap.csv",
     "governance_assessment_csv": "../output/governance_assessment.csv",
     "governance_heatmap_csv": "../output/governance_heatmap.csv",
-    "nuclei_profile": "../profiles.yaml"
+    "nuclei_profile": "../data/profiles.yaml"
 }

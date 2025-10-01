@@ -9,7 +9,7 @@ import yaml
 from typing import Any, Dict
 
 
-def load_profile(profile_path: str) -> Dict[str, Any]:
+def load_profiles(profile_path: str) -> Dict[str, Any]:
     """Load profiles from a YAML file."""
     with open(profile_path, "r") as file:
         profiles = yaml.safe_load(file)

@@ -10,6 +10,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
+# test get_paths function
 def test_get_paths():
     from tools.assess import get_paths
 

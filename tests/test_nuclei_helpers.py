@@ -1,14 +1,17 @@
 # Unit test for nuclei_helpers.py
 
 import sys
-import yaml
 import os
-import pytest  # noqa: F401
-from unittest.mock import mock_open, patch
 
 # ensure project root is on the import path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# Import necessary modules
+import yaml
+import pytest  # noqa: F401
+from unittest.mock import mock_open, patch
+
+# Local Helper Module
 from tools.nuclei_helpers import load_profiles
 
 

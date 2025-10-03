@@ -1,10 +1,11 @@
-from unittest.mock import mock_open, patch
-from pathlib import Path
-import pytest
-import json
 import csv
+import json
 import os
 import sys
+from pathlib import Path
+from unittest.mock import mock_open, patch
+
+import pytest
 
 # ensure project root is on the import path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -162,8 +163,9 @@ def test_write_to_json_no_data(tmp_path: Path):
 
 
 def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
-    from tools.assess import generate_scan_heatmap
     import numpy as np
+
+    from tools.assess import generate_scan_heatmap
 
     mapped = [
         {"csf_subcategory_id": "ID.AM-02", "severity": "critical"},
@@ -172,8 +174,7 @@ def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
 
     lookup_csv = tmp_path / "heatmap_lookup.csv"
     lookup_csv.write_text(
-        "csf_subcategory_id,csf_subcategory_name,weight\n"
-        "ID.AM-02,Devices and systems inventoried,1.0\n"
+        "csf_subcategory_id,csf_subcategory_name,weight\nID.AM-02,Devices and systems inventoried,1.0\n"
     )
 
     result = generate_scan_heatmap(mapped, lookup_csv)
@@ -190,9 +191,7 @@ def test_get_csf_lookup(tmp_path: Path):
     from tools.assess import get_csf_lookup
 
     csv_content = (
-        "csf_subcategory_id,weight,recommendation\n"
-        "ID.AM-02,1,Assess assets\n"
-        "PR.AA-03,2,Enforce access control\n"
+        "csf_subcategory_id,weight,recommendation\nID.AM-02,1,Assess assets\nPR.AA-03,2,Enforce access control\n"
     )
     lookup_path = tmp_path / "csf_lookup.csv"
     lookup_path.write_text(csv_content)
@@ -240,7 +239,7 @@ def test_get_governance_checklist_results_missing_columns(tmp_path: Path):
     checklist_path = tmp_path / "checklist.csv"
     checklist_path.write_text(checklist_content)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"Missing required columns: {'csf_subcategory_name'}"):
         get_governance_checklist_results(checklist_path)
 
 

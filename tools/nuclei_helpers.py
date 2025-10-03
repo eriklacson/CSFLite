@@ -4,9 +4,11 @@ nuclei_profiles.py — helpers for building nuclei commands from profiles.yml
 """
 
 from __future__ import annotations
+
 import os  # noqa: F401
-import yaml
 from typing import Any, Dict
+
+import yaml
 
 
 def load_profiles(profile_path: str) -> Dict[str, Any]:
@@ -18,18 +20,20 @@ def load_profiles(profile_path: str) -> Dict[str, Any]:
     return profiles
 
 
-def get_profile(profiles: dict, profile: str, default=None, allow_null=False):
+def get_profile(profiles_data: dict, profile_name: str, default=None, allow_null=False):
     """
     Retrieve a specific profile from profiles dict using the profile name,
     """
 
-    if not isinstance(profiles, dict):
+    if not isinstance(profiles_data, dict):
         raise TypeError("Expected a dictionary as 'data'.")
 
-    if profile not in profiles:
+    profiles = profiles_data.get("profiles", {})
+
+    if profile_name not in profiles:
         return default
 
-    profile = profiles[profile]
+    profile = profiles.get(profile_name)
 
     if profile is None and not allow_null:
         return default

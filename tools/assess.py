@@ -1,8 +1,9 @@
-from pathlib import Path
-import json
-import pandas as pd
-import numpy as np
 import csv
+import json
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 
 def get_paths():
@@ -78,12 +79,8 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
                     "description": f.get("description"),  # Description of the finding
                     "csf_function": match.iloc[0]["csf_function"],  # CSF function from the lookup
                     "csf_subcategory_id": match.iloc[0]["subcategory_id"],  # CSF subcategory ID
-                    "csf_subcategory_name": match.iloc[0][
-                        "subcategory_name"
-                    ],  # CSF subcategory name
-                    "recommended_remediation": match.iloc[0][
-                        "recommended_remediation"
-                    ],  # Suggested remediation steps
+                    "csf_subcategory_name": match.iloc[0]["subcategory_name"],  # CSF subcategory name
+                    "recommended_remediation": match.iloc[0]["recommended_remediation"],  # Suggested remediation steps
                 }
             )
 
@@ -155,9 +152,7 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
     #
     # refactor flag: provide check for missing or invalid data
     mapped_df["csf_subcategory_id"] = mapped_df["csf_subcategory_id"].astype(str).str.strip()
-    mapped_df["sev_w"] = (
-        mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w).fillna(0)
-    )
+    mapped_df["sev_w"] = mapped_df["severity"].astype(str).str.strip().str.lower().map(sev_w).fillna(0)
 
     # If the DataFrame is empty after filtering, return an empty list
     if mapped_df.empty:
@@ -194,9 +189,7 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 
     pd_heatmap["name"] = pd_heatmap["name"].fillna(pd_heatmap["csf_subcategory_id"])
     pd_heatmap["weight"] = pd_heatmap["weight"].fillna(1.0)
-    pd_heatmap["score"] = pd_heatmap["weight"] * (
-        pd_heatmap["max_w"] + np.log1p(pd_heatmap["count"])
-    )
+    pd_heatmap["score"] = pd_heatmap["weight"] * (pd_heatmap["max_w"] + np.log1p(pd_heatmap["count"]))
     pd_heatmap["max_severity"] = pd_heatmap["max_w"].map(sev_by_w).fillna("info")
     pd_heatmap["weighted_score"] = pd_heatmap["score"].map(lambda x: f"{x:.2f}")
 
@@ -248,9 +241,9 @@ def get_governance_checklist_results(governance_checklist_path):
         "response",
     ]
 
-    governance_checklist_results = governance_checklist_result_df.sort_values(
-        ["csf_subcategory_id"], ascending=False
-    )[governance_checklist_result_columns].to_dict(orient="records")
+    governance_checklist_results = governance_checklist_result_df.sort_values(["csf_subcategory_id"], ascending=False)[
+        governance_checklist_result_columns
+    ].to_dict(orient="records")
 
     # return checklist
     return governance_checklist_results
@@ -280,23 +273,15 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
     )
 
     # Add a 'score' column based on the 'response' column
-    governance_score_df["score"] = (
-        governance_checklist_df["response"].map(response_score).astype(float)
-    )
+    governance_score_df["score"] = governance_checklist_df["response"].map(response_score).astype(float)
 
     # Calculate assessment and gap score
-    governance_score_df["assessment_score"] = (
-        governance_score_df["score"] * governance_score_df["weight"]
-    )
+    governance_score_df["assessment_score"] = governance_score_df["score"] * governance_score_df["weight"]
 
-    governance_score_df["gap_score"] = (
-        governance_score_df["weight"] - governance_score_df["assessment_score"]
-    )
+    governance_score_df["gap_score"] = governance_score_df["weight"] - governance_score_df["assessment_score"]
 
     # format scores to 2 decimal places
-    governance_score_df["assessment_score"] = governance_score_df["assessment_score"].map(
-        lambda x: f"{x:.2f}"
-    )
+    governance_score_df["assessment_score"] = governance_score_df["assessment_score"].map(lambda x: f"{x:.2f}")
     governance_score_df["gap_score"] = governance_score_df["gap_score"].map(lambda x: f"{x:.2f}")
 
     # shape + return relevant columns
@@ -403,9 +388,7 @@ def main():
     write_to_csv(scan_heatmap, paths["heatmap_csv"])
 
     # write governance assessment
-    governance_assessment = generate_governance_assessement(
-        governance_checklist_results, csf_lookup
-    )
+    governance_assessment = generate_governance_assessement(governance_checklist_results, csf_lookup)
     write_to_csv(governance_assessment, paths["governance_assessment_csv"])
 
     goverance_heatmap = generate_governance_heatmap(governance_assessment)

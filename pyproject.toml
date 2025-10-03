@@ -34,14 +34,18 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 100
+line-length = 120
+target-version = ["py312"]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "B"]
+select = ["E", "F", "B", "I", "S", "PT"]
 ignore = ["E501"]
+
+# Allow asserts in tests
+per-file-ignores = { "tests/**.py" = ["S101"] }
 
 [tool.bandit]
 skips = ["B101"]    # assert-used outside tests

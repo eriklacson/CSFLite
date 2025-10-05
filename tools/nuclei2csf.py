@@ -20,12 +20,14 @@ def main():
 
     print("\nGet specific profile:\n")
 
-    baseline_web = nuclei_helpers.get_profile(profiles, "web", allow_null=True)
+    baseline_web = nuclei_helpers.get_profile(profiles, "baseline_web", allow_null=True)
     print(baseline_web)
 
+    """ 
     print("\nBuild nuclei command from profile:\n")
     cmd = nuclei_helpers.build_nuclei_cmd(baseline_web)
     print(cmd)
+    """
 
 
 if __name__ == "__main__":

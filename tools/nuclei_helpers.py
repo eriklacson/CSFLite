@@ -53,25 +53,14 @@ def build_nuclei_cmd(profile: dict) -> str:
     # Start with the base nuclei command
     cmd = "nuclei"
 
-    # Append tags if they exist
-    tags = profile.get("tags")
-    if tags:
-        if isinstance(tags, list):  # multiple tags
-            tags_str = ",".join(tags)
-        else:  # single tag
-            tags_str = str(tags)
-        cmd += f" -tags {tags_str}"
-
-    severity = profile.get("severity")
-    if severity:
-        if isinstance(severity, list):
-            severity_str = ",".join(severity)
-        else:
-            severity_str = str(severity)
-        cmd += f" -severity {severity_str}"
-
-    output = profile.get("output")
-    if output:
-        cmd += f" -o {output}"
+    # Extract profile settings with defaults
+    tags = profile.get("tags", [])  # noqa: F841
+    severity = profile.get("severity", [])  # noqa: F841
+    rate_limit = profile.get("rate_limit", 3)  # noqa: F841
+    concurrency = profile.get("concurrency", 2)  # noqa: F841
+    retries = profile.get("retries", 2)  # noqa: F841
+    timeout = profile.get("timeout", 5)  # noqa: F841
+    out_path = profile.get("output", "data/nuclei_raw.jsonl")  # noqa: F841
+    input_mode = profile.get("input_mode")  # noqa: F841
 
     return cmd

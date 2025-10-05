@@ -7,6 +7,9 @@ profiles:
     severity: [info, low]
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
+    input_mode": "list"
     output: data/nuclei_inventory.jsonl
     notes: "Tech fingerprinting + cloud/service discovery = evidence for ID.AM-02 and external deps (ID.RA-05)."
 
@@ -15,6 +18,7 @@ profiles:
     # PR.AA-01, PR.DS-01, PR.AA-03  (+ signals for PR.IR-01 via TLS/HSTS headers)
     tags: [misconfig, headers, cors, ssl, tls, exposure, backup, secret, default-login]
     severity: [medium, high, critical]
+    input_mode: list
     rate_limit: 3
     concurrency: 2
     retries: 2
@@ -26,8 +30,11 @@ profiles:
     # PR.PS-02, DE.CM-08
     tags: [cve, wordpress, confluence, jira, gitlab, jenkins, grafana, kibana, drupal, magento]
     severity: [high, critical]
+    input_mode: list
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
     output: data/nuclei_cves.jsonl
     notes: "Known-vuln sweeps for common stacks. Also serves as vuln-monitoring evidence (DE.CM-08)."
 
@@ -35,8 +42,11 @@ profiles:
     # PR.AA-01, PR.AA-03
     tags: [default-login, auth, admin-panel, exposure]
     severity: [high, critical]
+    input_mode: list
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
     output: data/nuclei_identity.jsonl
     notes: "Default creds, weak auth surfaces, exposed admin consoles; remote access discipline."
 
@@ -44,8 +54,12 @@ profiles:
     # PR.DS-01, PR.DS-10 (signal), PR.DS-11 (cloud/backups)
     tags: [secret, exposure, backup, s3, cloud, git, env, token]
     severity: [medium, high, critical]
+    input_mode: list
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
+    input_mode": "list"
     output: data/nuclei_data.jsonl
     notes: "Secrets/.env/.git, public buckets/backups. Integrity (PR.DS-10) is mostly governance; Nuclei flags risky exposures."
 
@@ -53,8 +67,11 @@ profiles:
     # PR.IR-01
     tags: [ssl, tls, headers, hsts]
     severity: [medium, high]
+    input_mode: list
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
     output: data/nuclei_transport.jsonl
     notes: "TLS versions/ciphers, HSTS, secure transport indications."
 
@@ -66,6 +83,8 @@ profiles:
     input_mode: openapi
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
     output: data/nuclei_api.jsonl
     notes: "Feed with OpenAPI 3 spec; checks auth, sensitive endpoints, misconfig, secret exposure."
 
@@ -76,6 +95,8 @@ profiles:
     input_mode: burp
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
     output: data/nuclei_burp.jsonl
     notes: "Replay captured authenticated traffic for deep checks behind login."
 
@@ -84,8 +105,11 @@ profiles:
     # DE.CM-08 (explicit “scan monitoring” profile)
     tags: [cve]
     severity: [high, critical]
+    input_mode: list
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
     output: data/nuclei_detect_vuln.jsonl
     notes: "Use on a cadence; forms the evidence for ‘vulnerability scans are performed’."
 
@@ -95,6 +119,9 @@ profiles:
     severity: [medium, high]
     rate_limit: 3
     concurrency: 2
+    retries: 2
+    timeout: 5
+    input_mode: list
     output: data/nuclei_change.jsonl
     notes: "Heuristics for drift (new directories exposed, backups appear, configs loosened). True change monitoring is governance+telemetry."
 

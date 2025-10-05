@@ -39,3 +39,39 @@ def get_profile(profiles_data: dict, profile_name: str, default=None, allow_null
         return default
 
     return profile
+
+
+def build_nuclei_cmd(profile: dict) -> str:
+    """
+    Build a nuclei command string based on the base command and profile settings.
+    """
+
+    # validate profile is a dict
+    if not isinstance(profile, dict):
+        raise TypeError("Expected a dictionary as 'profile'")
+
+    # Start with the base nuclei command
+    cmd = "nuclei"
+
+    # Append tags if they exist
+    tags = profile.get("tags")
+    if tags:
+        if isinstance(tags, list):  # multiple tags
+            tags_str = ",".join(tags)
+        else:  # single tag
+            tags_str = str(tags)
+        cmd += f" -tags {tags_str}"
+
+    severity = profile.get("severity")
+    if severity:
+        if isinstance(severity, list):
+            severity_str = ",".join(severity)
+        else:
+            severity_str = str(severity)
+        cmd += f" -severity {severity_str}"
+
+    output = profile.get("output")
+    if output:
+        cmd += f" -o {output}"
+
+    return cmd

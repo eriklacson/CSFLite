@@ -93,7 +93,7 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     return cmd
 
 
-def run(cmd: List[str], timeout: int = None) -> subprocess.CompletedProcess:
+def run_nuclei(cmd: List[str], timeout: int = None) -> subprocess.CompletedProcess:
     """
     launch the nuclei process and wait for it to finish.
     nuclei writes JSON to file so output is not captured. pipe stderr to surface errors.

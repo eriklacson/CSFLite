@@ -216,3 +216,21 @@ def test_build_nuclei_cmd_missing_targets():
 
     with pytest.raises(ValueError, match="A valid target must be provided"):
         nuclei_helpers.build_nuclei_cmd({}, "   ")
+
+
+"""test run_nuclei function"""
+
+
+def test_run_nuclei():
+    """should delegate to subprocess.run_nuclei with the correct options."""
+
+    cmd = ["nuclei", "-version"]
+    sentinel_result = object()
+
+    with patch("tools.nuclei_helpers.subprocess.run") as mock_run_nuclei:
+        mock_run_nuclei.return_value = sentinel_result
+
+        result = nuclei_helpers.run_nuclei(cmd, timeout=15)
+
+    mock_run_nuclei.assert_called_once_with(cmd, check=True, timeout=15)
+    assert result is sentinel_result

@@ -202,3 +202,17 @@ def test_build_nuclei_cmd_valid_profile(tmp_path):
         "-jle",
         str(output_file.parent),
     ]
+
+
+def test_build_nuclei_cmd_invalid_profile_type():
+    """passing a non-dict profile should raise a TypeError."""
+
+    with pytest.raises(TypeError, match="Expected a dictionary as 'profile'"):
+        nuclei_helpers.build_nuclei_cmd([], "targets.txt")
+
+
+def test_build_nuclei_cmd_missing_targets():
+    """an empty or whitespace target string should raise a ValueError."""
+
+    with pytest.raises(ValueError, match="A valid target must be provided"):
+        nuclei_helpers.build_nuclei_cmd({}, "   ")

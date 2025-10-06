@@ -6,6 +6,7 @@ nuclei_profiles.py — helpers for building nuclei commands from profiles.yml
 from __future__ import annotations
 
 import os  # noqa: F401
+import subprocess
 from typing import Any, Dict, List
 
 import yaml
@@ -90,3 +91,11 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     cmd += ["-jle", output_path]
 
     return cmd
+
+
+def run(cmd: List[str], timeout: int = None) -> subprocess.CompletedProcess:
+    """
+    launch the nuclei process and wait for it to finish.
+    nuclei writes JSON to file so output is not captured. pipe stderr to surface errors.
+    """
+    return subprocess.run(cmd, check=True, timeout=timeout)  # noqa: S603

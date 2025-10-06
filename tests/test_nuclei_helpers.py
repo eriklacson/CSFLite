@@ -154,3 +154,51 @@ def test_get_profile_invalid_profiles():
     profiles = ["not", "a", "dict"]
     with pytest.raises(TypeError, match="Expected a dictionary as 'data'."):
         nuclei_helpers.get_profile(profiles, "test_profile")
+
+
+"""tests for build_nuclei_cmd"""
+
+
+def test_build_nuclei_cmd_valid_profile(tmp_path):
+    """build a command using all supported profile options."""
+
+    output_file = tmp_path / "reports" / "results.json"
+    profile = {
+        "tags": ["web", "default"],
+        "severity": ["medium", "high"],
+        "rate_limit": 10,
+        "concurrency": 5,
+        "retries": 4,
+        "timeout": 30,
+        "output": str(output_file),
+        "input_mode": "list",
+    }
+
+    targets = str(tmp_path / "targets.txt")
+
+    with patch("tools.nuclei_helpers.os.makedirs") as mock_makedirs:
+        cmd = nuclei_helpers.build_nuclei_cmd(profile, targets)
+
+    mock_makedirs.assert_called_once_with(str(output_file.parent), exist_ok=True)
+
+    assert cmd == [
+        "nuclei",
+        "-l",
+        targets,
+        "-im",
+        "list",
+        "-tags",
+        "web,default",
+        "-s",
+        "medium,high",
+        "-rl",
+        "10",
+        "-c",
+        "5",
+        "-retries",
+        "4",
+        "-timeout",
+        "30",
+        "-jle",
+        str(output_file.parent),
+    ]

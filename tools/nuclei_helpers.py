@@ -6,7 +6,7 @@ nuclei_profiles.py — helpers for building nuclei commands from profiles.yml
 from __future__ import annotations
 
 import os  # noqa: F401
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import yaml
 
@@ -41,17 +41,20 @@ def get_profile(profiles_data: dict, profile_name: str, default=None, allow_null
     return profile
 
 
-def build_nuclei_cmd(profile: dict) -> str:
+def build_nuclei_cmd(profile: dict, targets: str) -> str:
     """
-    Build a nuclei command string based on the base command and profile settings.
+    build a nuclei command string based on the base command and profile settings.
     """
 
+    """parameter validation"""
     # validate profile is a dict
     if not isinstance(profile, dict):
         raise TypeError("Expected a dictionary as 'profile'")
 
-    # Start with the base nuclei command
-    cmd = "nuclei"
+    if targets is None or targets.strip() == "":
+        raise ValueError("A valid target must be provided")
+
+    """prepare command components"""
 
     # Extract profile settings with defaults
     tags = profile.get("tags", [])  # noqa: F841
@@ -60,7 +63,30 @@ def build_nuclei_cmd(profile: dict) -> str:
     concurrency = profile.get("concurrency", 2)  # noqa: F841
     retries = profile.get("retries", 2)  # noqa: F841
     timeout = profile.get("timeout", 5)  # noqa: F841
-    out_path = profile.get("output", "data/nuclei_raw.jsonl")  # noqa: F841
+    output_path = profile.get("output", "data/nuclei_raw.jsonl")  # noqa: F841
     input_mode = profile.get("input_mode")  # noqa: F841
+
+    # insure output directory exists - default to current directory if none specified
+    # and create directory
+    output_path = os.path.dirname(output_path) or "."
+    os.makedirs(output_path, exist_ok=True)
+
+    """build the command string"""
+    # base nuclei command
+    cmd: List[str] = ["nuclei", "-l", targets]
+
+    # add profile settings to the command
+    if input_mode:
+        cmd += ["-im", input_mode]
+    if tags:
+        cmd += ["-tags", ",".join(map(str, tags))]
+    if severity:
+        cmd += ["-s", ",".join(map(str, severity))]
+
+    # sane throttles
+    cmd += ["-rl", str(rate_limit), "-c", str(concurrency), "-retries", str(retries), "-timeout", str(timeout)]
+
+    # CSFLite expects JSONL output
+    cmd += ["-jle", output_path]
 
     return cmd

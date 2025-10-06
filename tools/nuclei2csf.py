@@ -27,7 +27,7 @@ def main():
 
     # sanity check - build nuclei command from profile
     print("\nBuild nuclei command from profile:\n")
-    cmd = nuclei_helpers.build_nuclei_cmd(baseline_web)
+    cmd = nuclei_helpers.build_nuclei_cmd(baseline_web, "scanme.sh")
     print(cmd)
 
 

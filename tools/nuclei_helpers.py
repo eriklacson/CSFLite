@@ -69,8 +69,8 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
 
     # insure output directory exists - default to current directory if none specified
     # and create directory
-    output_path = os.path.dirname(output_path) or "."
-    os.makedirs(output_path, exist_ok=True)
+    output_dir = os.path.dirname(output_path) or "."
+    os.makedirs(output_dir, exist_ok=True)
 
     """build the command string"""
     # base nuclei command
@@ -88,7 +88,7 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     cmd += ["-rl", str(rate_limit), "-c", str(concurrency), "-retries", str(retries), "-timeout", str(timeout)]
 
     # CSFLite expects JSONL output
-    cmd += ["-jle", output_path]
+    cmd += ["-omit-raw", "-jle", output_path]
 
     return cmd
 

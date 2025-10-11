@@ -23,7 +23,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: scans/nuclei_baseline_web.json
+    output: 'scans/nuclei_baseline_web.json'
     notes: "High-signal posture checks: headers, CORS, TLS config, exposed secrets/backups, default_creds."
 
   patch_cve:

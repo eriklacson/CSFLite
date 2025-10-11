@@ -199,8 +199,9 @@ def test_build_nuclei_cmd_valid_profile(tmp_path):
         "4",
         "-timeout",
         "30",
+        "-omit-raw",
         "-jle",
-        str(output_file.parent),
+        str(output_file),
     ]
 
 

@@ -3,14 +3,14 @@ profiles:
   # ——— IDENTIFY ———
   inventory_external:
     # ID.AM-02, ID.RA-05  (+ weak signal for ID.AM-05 via tags you can triage later)
-    tags: [tech, cloud, discovery]
+    tags: [tech, cloud]
     severity: [info, low]
     rate_limit: 3
     concurrency: 2
     retries: 2
     timeout: 5
-    input_mode": "list"
-    output: data/nuclei_inventory.jsonl
+    input_mode": list
+    output: scans/nuclei_inventory.jsonl
     notes: "Tech fingerprinting + cloud/service discovery = evidence for ID.AM-02 and external deps (ID.RA-05)."
 
   # ——— PROTECT (CONFIG & PATCH) ———
@@ -23,8 +23,8 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_baseline.jsonl
-    notes: "High-signal posture checks: headers, CORS, TLS config, exposed secrets/backups, default creds."
+    output: scans/nuclei_baseline_web.json
+    notes: "High-signal posture checks: headers, CORS, TLS config, exposed secrets/backups, default_creds."
 
   patch_cve:
     # PR.PS-02, DE.CM-08
@@ -35,7 +35,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_cves.jsonl
+    output: output/nuclei_cves.jsonl
     notes: "Known-vuln sweeps for common stacks. Also serves as vuln-monitoring evidence (DE.CM-08)."
 
   identity_remote_access:
@@ -115,7 +115,7 @@ profiles:
 
   change_drift_signals:
     # DE.CM-07 (signal only)
-    tags: [exposure, dir-listing, backup, env, git, misconfig]
+    tags: [exposure, directory-listing, backup, env, git, misconfig]
     severity: [medium, high]
     rate_limit: 3
     concurrency: 2

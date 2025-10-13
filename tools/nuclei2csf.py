@@ -27,8 +27,11 @@ def main():
 
     # sanity check - build nuclei command from profile
     print("\nBuild nuclei command from profile:\n")
-    cmd = nuclei_helpers.build_nuclei_cmd(baseline_web, "scanme.sh")
+    cmd = nuclei_helpers.build_nuclei_cmd(baseline_web, "data/targets.txt")
     print(cmd)
+
+    cmd_string = " ".join(cmd)
+    print(cmd_string)
 
 
 if __name__ == "__main__":

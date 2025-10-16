@@ -5,7 +5,7 @@ from pathlib import Path  # noqa: F401
 from typing import Any, Dict, List, Mapping, Sequence, Union
 
 
-def _normalize_raw_entries(raw: Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]) -> List[Dict[str, Any]]:
+def normalize_raw_entries(raw: Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]) -> List[Dict[str, Any]]:
     """
     Normalize the raw JSON structure into a list of dictionaries.
 

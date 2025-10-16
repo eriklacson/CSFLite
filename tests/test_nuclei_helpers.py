@@ -1,8 +1,6 @@
 # Unit test for nuclei_helpers.py
 
 # Standard Library Modules
-import os
-import sys
 from textwrap import dedent
 from unittest.mock import mock_open, patch
 
@@ -13,9 +11,6 @@ import yaml
 
 # Local Helper Module
 import tools.nuclei_helpers as nuclei_helpers
-
-# ensure project root is on the import path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 def test_load_profile_valid():

@@ -10,6 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # Local Helper Module
 import tools.assess as assess
 import tools.nuclei_helpers as nuclei_helpers
+import tools.nuclei_json_converter as nuclei_json_converter
 
 
 def main():
@@ -32,6 +33,9 @@ def main():
 
     cmd_string = " ".join(cmd)
     print(cmd_string)
+
+    results = nuclei_json_converter.convert_nuclei_raw_file("sample_nuclei.json")
+    print(results)
 
 
 if __name__ == "__main__":

@@ -1,25 +1,9 @@
 """Utilities for normalizing Nuclei scan JSON output.
 
-This module exposes helpers to convert the verbose JSON emitted by
-Nuclei scans into the simplified structure consumed by CSFLite.  The
-simplified structure mirrors the example stored in
+Helpers to convert the raw JSON from Nuclei scans into the simplified structure consumed by CSFLite. The sample structure is shown in
 ``scans/sample_output.json``.
 
-Why the seemingly elaborate normalisation helpers?
-    The raw JSON produced by Nuclei is not consistently shaped.  A scan
-    can emit a single object or a stream/array of objects depending on
-    how it was invoked, and individual entries may omit or rename
-    fields (``host`` vs ``url``) across versions of the tool.  Rather
-    than forcing each caller to re-implement brittle conditionals, the
-    converter centralises the heuristics for
 
-    * accepting both singleton objects and arrays,
-    * keeping the output resilient to missing optional fields, and
-    * cleaning up free-form text so that reports render nicely.
-
-    The helpers therefore look a little more involved than a naïve
-    field mapping, but in practice they keep the calling code and tests
-    straightforward because the edge-cases are handled in one place.
 """
 
 from __future__ import annotations

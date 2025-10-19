@@ -1,9 +1,14 @@
 """Tool for assessing security posture based on scan findings and governance manual governance checklist."""
 
-import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# import standard libraries
+from pathlib import Path
+
+# adjust path for relative imports when executed as script
+if __package__ in (None, ""):
+    sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 
 # import assess helper libraries
 import tools.assess_helpers as assess

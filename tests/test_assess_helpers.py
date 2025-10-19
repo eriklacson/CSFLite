@@ -24,6 +24,7 @@ def test_get_paths():
 
 
 def test_read_scan_json_valid():
+    """tests reading valid scan JSON"""
     from tools.assess_helpers import read_scan_json
 
     # Mock JSON content
@@ -38,13 +39,14 @@ def test_read_scan_json_valid():
 
 
 def test_read_scan_json_invalid():
+    """test handling of invalid scan JSON"""
+    from tools.assess_helpers import read_scan_json
+
     # Mock invalid JSON content
     mock_json_content = '{"key": "value"'
 
     # Mock the open function and patch it
     with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        from tools.assess_helpers import read_scan_json
-
         # Assert that a JSONDecodeError is raised
         try:
             read_scan_json("mock_file.json")

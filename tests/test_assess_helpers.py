@@ -103,7 +103,7 @@ def test_map_scan_to_csf(mock_lookup_csv):
 
 def test_write_with_data(tmp_path):
     # import necessary functions
-    from tools.assess_helpers import write_to_csv
+    from tools.global_helpers import write_to_csv
 
     test_data = [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]
     path = tmp_path / "test.csv"
@@ -122,7 +122,7 @@ def test_write_with_data(tmp_path):
 
 def test_write_no_data(tmp_path):
     # import necessary functions
-    from tools.assess_helpers import write_to_csv
+    from tools.global_helpers import write_to_csv
 
     path = tmp_path / "empty.csv"
     status = write_to_csv([], str(path))
@@ -132,7 +132,7 @@ def test_write_no_data(tmp_path):
 
 def test_write_to_json_with_data(tmp_path: Path):
     # Import necessary functions
-    from tools.assess_helpers import write_to_json
+    from tools.global_helpers import write_to_json
 
     # prep test data and file
     data = [{"a": 1, "b": 2}]
@@ -150,7 +150,7 @@ def test_write_to_json_with_data(tmp_path: Path):
 
 def test_write_to_json_no_data(tmp_path: Path):
     # import necessary functions
-    from tools.assess_helpers import write_to_json
+    from tools.global_helpers import write_to_json
 
     # prep test data and file
     data = []

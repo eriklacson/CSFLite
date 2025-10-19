@@ -2,7 +2,6 @@
 Helper functions for the assess tool.
 """
 
-import csv
 import json
 from pathlib import Path
 
@@ -83,32 +82,6 @@ def map_scan_to_csf(scan_results, lookup_csv_path):
 
     # Return the list of mapped findings
     return mapped_scan
-
-
-def write_to_csv(dataset, output_path):
-    print("writing mapped results to CSV...")
-    if dataset:
-        keys = dataset[0].keys()
-        with open(output_path, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=keys)
-            writer.writeheader()
-            writer.writerows(dataset)
-        status = f"Dataset written to: {output_path}"
-    else:
-        status = "No data to write."
-
-    return status
-
-
-def write_to_json(dataset, output_path):
-    print("writing dataset to JSON...")
-    if dataset:
-        with open(output_path, "w") as f:
-            json.dump(dataset, f, indent=4)
-        status = f"Dataset written to: {output_path}"
-    else:
-        status = "No data to write."
-    return status
 
 
 def generate_scan_heatmap(mapped, heatmap_lookup):
@@ -361,8 +334,6 @@ __all__ = [
     "get_csf_lookup",
     "read_scan_json",
     "map_scan_to_csf",
-    "write_to_csv",
-    "write_to_json",
     "generate_scan_heatmap",
     "get_governance_checklist_results",
     "generate_governance_assessement",

@@ -10,15 +10,6 @@ import numpy as np
 import pandas as pd
 
 
-def get_paths():
-    """Return the paths for input, reference, and output datasets."""
-
-    config_path = Path(__file__).resolve().parent.parent / "config" / "path_config.json"
-
-    with open(config_path, encoding="utf-8") as config_file:
-        return json.load(config_file)
-
-
 def get_csf_lookup(csf_lookup_path):
     """Read the CSF lookup CSV file and return a dictionary."""
 
@@ -367,7 +358,6 @@ def generate_governance_heatmap(governance_assessment):
 
 
 __all__ = [
-    "get_paths",
     "get_csf_lookup",
     "read_scan_json",
     "map_scan_to_csf",

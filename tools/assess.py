@@ -2,6 +2,7 @@
 
 # import assess helper libraries
 import tools.assess_helpers as assess
+import tools.global_helpers as global_helpers
 
 # import functions
 __all__ = [*assess.__all__, "main"]
@@ -29,19 +30,19 @@ def main():
     # generate governance assessment
 
     # write scan findings
-    assess.write_to_csv(mapped_scan, paths["output_csv"])
-    assess.write_to_json(mapped_scan, paths["output_json"])
+    global_helpers.write_to_csv(mapped_scan, paths["output_csv"])
+    global_helpers.write_to_json(mapped_scan, paths["output_json"])
 
     # write scan heatmap
     scan_heatmap = assess.generate_scan_heatmap(mapped_scan, paths["heatmap_lookup"])
-    assess.write_to_csv(scan_heatmap, paths["heatmap_csv"])
+    global_helpers.write_to_csv(scan_heatmap, paths["heatmap_csv"])
 
     # write governance assessment
     governance_assessment = assess.generate_governance_assessement(governance_checklist_results, csf_lookup)
-    assess.write_to_csv(governance_assessment, paths["governance_assessment_csv"])
+    global_helpers.write_to_csv(governance_assessment, paths["governance_assessment_csv"])
 
     goverance_heatmap = assess.generate_governance_heatmap(governance_assessment)
-    assess.write_to_csv(goverance_heatmap, paths["governance_heatmap_csv"])
+    global_helpers.write_to_csv(goverance_heatmap, paths["governance_heatmap_csv"])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,10 @@
 """Tool for assessing security posture based on scan findings and governance manual governance checklist."""
 
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # import assess helper libraries
 import tools.assess_helpers as assess
 import tools.global_helpers as global_helpers
@@ -9,7 +14,7 @@ __all__ = [*assess.__all__, "main"]
 
 
 def main():
-    paths = assess.get_paths()
+    paths = global_helpers.get_paths()
 
     """get input data"""
     # nuclei scan outputt

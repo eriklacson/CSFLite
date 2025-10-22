@@ -34,7 +34,7 @@ def main():
     cmd_string = " ".join(cmd)
     print(cmd_string)
 
-    results = nuclei_json_converter.convert_nuclei_raw_file("../scans/nuclei_baseline_web.json")
+    results = nuclei_json_converter.convert_nuclei_raw_file("../scans/juice_shop_baseline_web.json")
 
     global_helpers.write_to_json(results, paths["nuclei_scan_findings.json"])
 

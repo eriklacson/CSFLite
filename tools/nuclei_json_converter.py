@@ -1,9 +1,8 @@
 """Utilities for normalizing Nuclei scan JSON output.
 
-Helpers to convert the raw JSON from Nuclei scans into the simplified structure consumed by CSFLite. The sample structure is shown in
+Helpers to convert the raw JSON from Nuclei scans into the simplified structure
+consumed by CSFLite. The sample structure is shown in
 ``scans/sample_output.json``.
-
-
 """
 
 from __future__ import annotations

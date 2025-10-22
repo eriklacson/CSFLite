@@ -7,14 +7,14 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-# Local Helper Module
-import tools.assess as assess
+# Local Helper Modules
+import tools.global_helpers as global_helpers
 import tools.nuclei_helpers as nuclei_helpers
 import tools.nuclei_json_converter as nuclei_json_converter
 
 
 def main():
-    paths = assess.get_paths()
+    paths = global_helpers.get_paths()
 
     # sanity check - load profiles
     print("\nGet profiles_set:\n")
@@ -35,7 +35,8 @@ def main():
     print(cmd_string)
 
     results = nuclei_json_converter.convert_nuclei_raw_file("../scans/nuclei_baseline_web.json")
-    print(results)
+
+    global_helpers.write_to_json(results, paths["nuclei_scan_findings.json"])
 
 
 if __name__ == "__main__":

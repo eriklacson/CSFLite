@@ -16,12 +16,12 @@ import tools.nuclei_json_converter as nuclei_json_converter
 def main():
     paths = global_helpers.get_paths()
 
-    # sanity check - load profiles
+    # load profiles
     print("\nGet profiles_set:\n")
     profiles = nuclei_helpers.load_profiles(paths["nuclei_profile"])
     print(profiles)
 
-    # sanity check - get specific profile
+    # get specific profile
     print("\nGet specific profile:\n")
     baseline_web = nuclei_helpers.get_profile(profiles, "baseline_web", allow_null=True)
     print(baseline_web)

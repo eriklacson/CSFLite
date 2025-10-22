@@ -1,6 +1,7 @@
 # Unit test for nuclei_helpers.py
 
 # Standard Library Modules
+import subprocess
 from textwrap import dedent
 from unittest.mock import mock_open, patch
 
@@ -218,15 +219,22 @@ def test_build_nuclei_cmd_missing_targets():
 
 
 def test_run_nuclei():
-    """should delegate to subprocess.run_nuclei with the correct options."""
+    """should delegate to subprocess.run with stderr piped and text enabled."""
 
     cmd = ["nuclei", "-version"]
-    sentinel_result = object()
+    sentinel_result = subprocess.CompletedProcess(cmd, 0)
 
     with patch("tools.nuclei_helpers.subprocess.run") as mock_run_nuclei:
         mock_run_nuclei.return_value = sentinel_result
 
         result = nuclei_helpers.run_nuclei(cmd, timeout=15)
 
-    mock_run_nuclei.assert_called_once_with(cmd, check=True, timeout=15)
-    assert result is sentinel_result
+        mock_run_nuclei.assert_called_once_with(
+            cmd,
+            check=True,
+            timeout=15,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+
+        assert result is sentinel_result

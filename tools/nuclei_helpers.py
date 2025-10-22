@@ -7,7 +7,8 @@ from __future__ import annotations
 
 import os  # noqa: F401
 import subprocess
-from typing import Any, Dict, List
+import sys
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -93,9 +94,36 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     return cmd
 
 
+def _emit_stderr(message: Optional[str]) -> None:
+    """Write stderr output to the active stderr stream."""
+
+    if not message:
+        return
+
+    if not message.endswith("\n"):
+        message = f"{message}\n"
+
+    sys.stderr.write(message)
+    sys.stderr.flush()
+
+
 def run_nuclei(cmd: List[str], timeout: int = None) -> subprocess.CompletedProcess:
     """
     launch the nuclei process and wait for it to finish.
     nuclei writes JSON to file so output is not captured. pipe stderr to surface errors.
     """
-    return subprocess.run(cmd, check=True, timeout=timeout)  # noqa: S603
+    try:
+        result = subprocess.run(  # noqa: S603
+            cmd,
+            check=True,
+            timeout=timeout,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except subprocess.CalledProcessError as error:
+        _emit_stderr(error.stderr)
+        raise
+
+    _emit_stderr(result.stderr)
+
+    return result

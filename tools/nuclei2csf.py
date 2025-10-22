@@ -36,7 +36,7 @@ def main():
 
     results = nuclei_json_converter.convert_nuclei_raw_file("../scans/juice_shop_baseline_web.json")
 
-    global_helpers.write_to_json(results, paths["nuclei_scan_findings.json"])
+    global_helpers.write_to_json(results, paths["nuclei_scan_findings"])
 
 
 if __name__ == "__main__":

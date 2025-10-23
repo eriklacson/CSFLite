@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # Local Helper Modules
 import tools.global_helpers as global_helpers
 import tools.nuclei_helpers as nuclei_helpers
-import tools.nuclei_json_converter as nuclei_json_converter
+import tools.nuclei_json_converter as nuclei_json_converter  # noqa: F401
 
 
 def main():
@@ -32,11 +32,7 @@ def main():
     print(cmd)
 
     cmd_string = " ".join(cmd)
-    print(cmd_string)
-
-    results = nuclei_json_converter.convert_nuclei_raw_file("../scans/juice_shop_baseline_web.json")
-
-    global_helpers.write_to_json(results, paths["nuclei_scan_findings"])
+    nuclei_helpers.run_nuclei(cmd_string)
 
 
 if __name__ == "__main__":

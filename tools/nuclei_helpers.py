@@ -6,11 +6,15 @@ nuclei_profiles.py — helpers for building nuclei commands from profiles.yml
 from __future__ import annotations
 
 import os  # noqa: F401
+import shlex
 import subprocess
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 import yaml
+
+# Type alias for command representation
+Command = Union[str, Iterable[str]]
 
 
 def load_profiles(profile_path: str) -> Dict[str, Any]:
@@ -107,23 +111,61 @@ def _emit_stderr(message: Optional[str]) -> None:
     sys.stderr.flush()
 
 
-def run_nuclei(cmd: List[str], timeout: int = None) -> subprocess.CompletedProcess:
+def _normalize_command(cmd: Command) -> List[str]:
+    """Convert a nuclei command into the argv list expected by subprocess."""
+
+    if isinstance(cmd, str):
+        return shlex.split(cmd)
+
+    if isinstance(cmd, Iterable):
+        argv = list(cmd)
+        if not all(isinstance(arg, str) for arg in argv):
+            raise TypeError("Command arguments must be strings")
+        return argv
+
+    raise TypeError("Command must be a string or an iterable of arguments")
+
+
+def _normalize_command(cmd: Command) -> List[str]:
+    """Convert a nuclei command into the argv list expected by subprocess."""
+
+    if isinstance(cmd, str):
+        return shlex.split(cmd)
+
+    if isinstance(cmd, Iterable):
+        argv = list(cmd)
+        if not all(isinstance(arg, str) for arg in argv):
+            raise TypeError("Command arguments must be strings")
+        return argv
+
+    raise TypeError("Command must be a string or an iterable of arguments")
+
+
+def run_nuclei(cmd: Command, timeout: int = None) -> subprocess.CompletedProcess:
+    """Run the nuclei CLI using a command string or iterable of arguments.
+
+    nuclei writes JSON to file so stdout is not captured; stderr is piped so errors
+    are surfaced to the caller.
     """
-    launch the nuclei process and wait for it to finish.
-    nuclei writes JSON to file so output is not captured. pipe stderr to surface errors.
-    """
+    argv = _normalize_command(cmd)
+
     try:
         result = subprocess.run(  # noqa: S603
-            cmd,
+            argv,
             check=True,
             timeout=timeout,
             stderr=subprocess.PIPE,
             text=True,
         )
+    except FileNotFoundError as error:
+        command_display = cmd if isinstance(cmd, str) else " ".join(argv)
+        raise RuntimeError(
+            f"Failed to execute nuclei command '{command_display}'. "
+            "Ensure nuclei is installed and available on the PATH."
+        ) from error
     except subprocess.CalledProcessError as error:
         _emit_stderr(error.stderr)
         raise
 
     _emit_stderr(result.stderr)
-
     return result

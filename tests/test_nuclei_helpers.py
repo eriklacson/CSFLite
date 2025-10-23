@@ -1,6 +1,7 @@
 # Unit test for nuclei_helpers.py
 
 # Standard Library Modules
+import io
 import subprocess
 from textwrap import dedent
 from unittest.mock import mock_open, patch
@@ -238,3 +239,92 @@ def test_run_nuclei():
         )
 
         assert result is sentinel_result
+
+        mock_run_nuclei.assert_called_once_with(
+            cmd,
+            check=True,
+            timeout=15,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    assert result is sentinel_result
+
+
+def test_run_nuclei_accepts_command_string():
+    """string commands should be split and passed to subprocess.run."""
+
+    cmd = "nuclei -version"
+    sentinel_result = subprocess.CompletedProcess(["nuclei", "-version"], 0)
+
+    with patch("tools.nuclei_helpers.subprocess.run") as mock_run_nuclei:
+        mock_run_nuclei.return_value = sentinel_result
+        result = nuclei_helpers.run_nuclei(cmd)
+
+    mock_run_nuclei.assert_called_once_with(
+        ["nuclei", "-version"],
+        check=True,
+        timeout=None,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    assert result is sentinel_result
+
+
+def test_run_nuclei_rejects_invalid_command_type():
+    """non-iterables or non-strings should raise a TypeError."""
+
+    with pytest.raises(TypeError, match="Command must be a string"):
+        nuclei_helpers.run_nuclei(123)  # type: ignore[arg-type]
+
+
+def test_run_nuclei_rejects_non_string_arguments():
+    """iterables containing non-string args should raise a TypeError."""
+
+    with pytest.raises(TypeError, match="Command arguments must be strings"):
+        nuclei_helpers.run_nuclei(["nuclei", 1])  # type: ignore[list-item]
+
+
+def test_run_nuclei_surfaces_stderr_output():
+    """stderr emitted by nuclei should be forwarded to sys.stderr."""
+
+    cmd = ["nuclei", "-version"]
+    completed = subprocess.CompletedProcess(cmd, 0, stderr="warning")
+
+    with (
+        patch("tools.nuclei_helpers.subprocess.run", return_value=completed),
+        patch("sys.stderr", new_callable=io.StringIO) as fake_stderr,
+    ):
+        nuclei_helpers.run_nuclei(cmd)
+
+    assert fake_stderr.getvalue() == "warning\n"
+
+
+def test_run_nuclei_surfaces_stderr_on_error():
+    """stderr emitted when nuclei fails should be written before re-raising."""
+
+    cmd = ["nuclei", "-version"]
+    error = subprocess.CalledProcessError(1, cmd, stderr="boom")
+
+    with (
+        patch("tools.nuclei_helpers.subprocess.run", side_effect=error),
+        patch("sys.stderr", new_callable=io.StringIO) as fake_stderr,
+    ):
+        with pytest.raises(subprocess.CalledProcessError):
+            nuclei_helpers.run_nuclei(cmd)
+
+    assert fake_stderr.getvalue() == "boom\n"
+
+
+def test_run_nuclei_reports_missing_binary():
+    """missing nuclei executable should raise a helpful runtime error."""
+
+    cmd = ["nuclei", "-version"]
+
+    with (
+        patch("tools.nuclei_helpers.subprocess.run", side_effect=FileNotFoundError),
+        pytest.raises(RuntimeError, match="Failed to execute nuclei command") as excinfo,
+    ):
+        nuclei_helpers.run_nuclei(cmd)
+
+    assert "Ensure nuclei is installed" in str(excinfo.value)

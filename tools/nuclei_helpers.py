@@ -9,12 +9,15 @@ import os  # noqa: F401
 import shlex
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
 import yaml
 
 # Type alias for command representation
 Command = Union[str, Iterable[str]]
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def load_profiles(profile_path: str) -> Dict[str, Any]:
@@ -47,6 +50,26 @@ def get_profile(profiles_data: dict, profile_name: str, default=None, allow_null
     return profile
 
 
+def _resolve_targets_path(targets: str) -> str:
+    """Resolve nuclei targets to an absolute filesystem path."""
+
+    target_path = Path(targets)
+    candidate_paths = []
+
+    if target_path.is_absolute():
+        candidate_paths.append(target_path)
+    else:
+        candidate_paths.append((Path.cwd() / target_path).resolve())
+        candidate_paths.append((PROJECT_ROOT / target_path).resolve())
+
+    for candidate in candidate_paths:
+        if candidate.exists():
+            return str(candidate)
+
+    searched = ", ".join(str(path) for path in candidate_paths) or str(target_path)
+    raise FileNotFoundError(f"Targets file '{targets}' was not found. Checked the following locations: {searched}.")
+
+
 def build_nuclei_cmd(profile: dict, targets: str) -> str:
     """
     build a nuclei command string based on the base command and profile settings.
@@ -72,14 +95,21 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     output_path = profile.get("output", "data/nuclei_raw.jsonl")  # noqa: F841
     input_mode = profile.get("input_mode")  # noqa: F841
 
-    # insure output directory exists - default to current directory if none specified
+    # normalize important filesystem paths
+    resolved_targets = _resolve_targets_path(targets)
+    resolved_output_path = (
+        (PROJECT_ROOT / output_path).resolve() if not os.path.isabs(output_path) else Path(output_path).resolve()
+    )
+
+    # ensure output directory exists - default to current directory if none specified
     # and create directory
-    output_dir = os.path.dirname(output_path) or "."
+
+    output_dir = resolved_output_path.parent
     os.makedirs(output_dir, exist_ok=True)
 
     """build the command string"""
     # base nuclei command
-    cmd: List[str] = ["nuclei", "-l", targets]
+    cmd: List[str] = ["nuclei", "-l", resolved_targets]
 
     # add profile settings to the command
     if input_mode:
@@ -93,7 +123,7 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     cmd += ["-rl", str(rate_limit), "-c", str(concurrency), "-retries", str(retries), "-timeout", str(timeout)]
 
     # CSFLite expects JSONL output
-    cmd += ["-omit-raw", "-jle", output_path]
+    cmd += ["-omit-raw", "-jle", str(resolved_output_path)]
 
     return cmd
 
@@ -109,21 +139,6 @@ def _emit_stderr(message: Optional[str]) -> None:
 
     sys.stderr.write(message)
     sys.stderr.flush()
-
-
-def _normalize_command(cmd: Command) -> List[str]:
-    """Convert a nuclei command into the argv list expected by subprocess."""
-
-    if isinstance(cmd, str):
-        return shlex.split(cmd)
-
-    if isinstance(cmd, Iterable):
-        argv = list(cmd)
-        if not all(isinstance(arg, str) for arg in argv):
-            raise TypeError("Command arguments must be strings")
-        return argv
-
-    raise TypeError("Command must be a string or an iterable of arguments")
 
 
 def _normalize_command(cmd: Command) -> List[str]:

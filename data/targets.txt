@@ -1,1 +1,1 @@
-http://emr-dev.ava-healthcare.com/
+https://juice-shop.herokuapp.com/#/

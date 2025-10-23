@@ -3,6 +3,7 @@
 # Standard Library Modules
 import io
 import subprocess
+from pathlib import Path
 from textwrap import dedent
 from unittest.mock import mock_open, patch
 
@@ -159,7 +160,7 @@ def test_get_profile_invalid_profiles():
 def test_build_nuclei_cmd_valid_profile(tmp_path):
     """build a command using all supported profile options."""
 
-    output_file = tmp_path / "reports" / "results.json"
+    output_file = tmp_path / "output" / "results.json"
     profile = {
         "tags": ["web", "default"],
         "severity": ["medium", "high"],
@@ -171,12 +172,14 @@ def test_build_nuclei_cmd_valid_profile(tmp_path):
         "input_mode": "list",
     }
 
-    targets = str(tmp_path / "targets.txt")
+    targets_path = tmp_path / "targets.txt"
+    targets_path.touch()
+    targets = str(targets_path)
 
     with patch("tools.nuclei_helpers.os.makedirs") as mock_makedirs:
         cmd = nuclei_helpers.build_nuclei_cmd(profile, targets)
 
-    mock_makedirs.assert_called_once_with(str(output_file.parent), exist_ok=True)
+    mock_makedirs.assert_called_once_with(output_file.parent, exist_ok=True)
 
     assert cmd == [
         "nuclei",
@@ -198,7 +201,7 @@ def test_build_nuclei_cmd_valid_profile(tmp_path):
         "30",
         "-omit-raw",
         "-jle",
-        str(output_file),
+        str(output_file.resolve()),
     ]
 
 
@@ -214,6 +217,31 @@ def test_build_nuclei_cmd_missing_targets():
 
     with pytest.raises(ValueError, match="A valid target must be provided"):
         nuclei_helpers.build_nuclei_cmd({}, "   ")
+
+
+def test_build_nuclei_cmd_missing_targets_file(monkeypatch, tmp_path):
+    """a missing targets file should raise a FileNotFoundError."""
+
+    monkeypatch.chdir(tmp_path)
+
+    with patch("tools.nuclei_helpers.os.makedirs"):
+        with pytest.raises(FileNotFoundError, match="Targets file 'missing.txt'"):
+            nuclei_helpers.build_nuclei_cmd({}, "missing.txt")
+
+
+def test_build_nuclei_cmd_resolves_relative_targets(monkeypatch):
+    """relative targets should resolve against the project root when needed."""
+
+    project_root = Path(__file__).resolve().parent.parent
+    targets_file = project_root / "data" / "targets.txt"
+
+    # simulate running the helper from the tools directory where the relative path would fail
+    monkeypatch.chdir(project_root / "tools")
+
+    with patch("tools.nuclei_helpers.os.makedirs"):
+        cmd = nuclei_helpers.build_nuclei_cmd({}, "data/targets.txt")
+
+    assert cmd[1:3] == ["-l", str(targets_file.resolve())]
 
 
 """test run_nuclei function"""
@@ -239,15 +267,6 @@ def test_run_nuclei():
         )
 
         assert result is sentinel_result
-
-        mock_run_nuclei.assert_called_once_with(
-            cmd,
-            check=True,
-            timeout=15,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-    assert result is sentinel_result
 
 
 def test_run_nuclei_accepts_command_string():

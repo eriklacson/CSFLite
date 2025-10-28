@@ -70,9 +70,9 @@ def _resolve_targets_path(targets: str) -> str:
     raise FileNotFoundError(f"Targets file '{targets}' was not found. Checked the following locations: {searched}.")
 
 
-def build_nuclei_cmd(profile: dict, targets: str) -> str:
+def build_nuclei_cmd(profile: dict, targets: str, output_path: Optional[str] = None) -> str:
     """
-    build a nuclei command string based on the base command and profile settings.
+    Build a nuclei command string based on the base command and profile settings.
     """
 
     """parameter validation"""
@@ -92,8 +92,9 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     concurrency = profile.get("concurrency", 2)  # noqa: F841
     retries = profile.get("retries", 2)  # noqa: F841
     timeout = profile.get("timeout", 5)  # noqa: F841
-    output_path = profile.get("output", "data/nuclei_raw.jsonl")  # noqa: F841
-    input_mode = profile.get("input_mode")  # noqa: F841
+
+    # Use the provided output_path parameter or fallback to the profile's output setting
+    output_path = output_path or profile.get("output", "scans/nuclei_raw_scan.jsonl")
 
     # normalize important filesystem paths
     resolved_targets = _resolve_targets_path(targets)
@@ -112,8 +113,8 @@ def build_nuclei_cmd(profile: dict, targets: str) -> str:
     cmd: List[str] = ["nuclei", "-l", resolved_targets]
 
     # add profile settings to the command
-    if input_mode:
-        cmd += ["-im", input_mode]
+    if profile.get("input_mode"):
+        cmd += ["-im", profile["input_mode"]]
     if tags:
         cmd += ["-tags", ",".join(map(str, tags))]
     if severity:

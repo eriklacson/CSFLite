@@ -6,7 +6,7 @@ GV.RM-01,Risk management activities are reviewed and adjusted based on exercises
 ID.AM-02,Assets and systems are inventoried,1.2,"Maintain an up-to-date asset inventory including devices, VMs, and containers."
 ID.AM-03,Baseline of operations/data flows established & managed,1.2,Establish and maintain an up-to-date baseline of operations and data flows to detect and manage anomalies effectively.
 ID.AM-04,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."
-ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",1,Classify assets by criticality and apply appropriate protection levels.
+ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",1.5,Classify assets by criticality and apply appropriate protection levels.
 ID.RA-01,Vulnerability scans are performed,1.5,Schedule regular internal/external vulnerability scans and track remediation.
 PR.AA-01,Identities and credentials are managed,1.5,Enforce strong password policies and implement MFA.
 PR.AA-03,Users/services/hardware are authenticated,1.2,"Use strong, multi-factor authentication to verify all users, services, and devices before granting access."
@@ -17,10 +17,10 @@ DE.CM-01,The network is monitored to detect potential cybersecurity events,1.2,I
 DE.CM-07,Monitoring for unauthorized changes in external systems is performed,1.2,Monitor and detect unauthorized changes in external systems.
 RS.MA-01,Response plan is executed,1.5,Create and rehearse a documented incident response plan.
 RS.CO-02,Public relations are managed during incidents,1,Prepare public statements and designate a PR spokesperson.
-RS.CO-03,Incident response information is shared with stakeholders.,1,Establish clear communication channels to promptly share incident details with internal teams and external partners
+RS.CO-03,Incident response information is shared with stakeholders.,1.2,Establish clear communication channels to promptly share incident details with internal teams and external partners
 RS.MI-01,Incidents are mitigated,1.5,Contain threats immediately using playbooks and escalation procedures.
-RS.MA-02,Response plans are improved following lessons learned,1,Conduct post-mortems and update incident response playbooks.
-RC.RP-01,Recovery plan is executed,1,Test backups and rehearse system restoration procedures.
-RC.RP-02,Recovery policies and procedures established and maintained,1,Document findings from incidents and integrate them into recovery plans.
-RC.RP-05,Integrity of restored assets verified; systems/services restored; normal ops confirmed,1,Predefine roles and contact lists for recovery communication.
-RC.C0-03,Recovery policies and procedures are established,1.2,Maintain formal documentation for recovery roles and timelines.
+RS.M1-02,Threats are eliminated,1.5,Immediately and conduct documented post-mortems.
+RC.RP-01,Recovery plan is executed,1.5,Test backups and rehearse system restoration procedures.
+RC.RP-02,Recovery policies and procedures established and maintained,1.2,Document findings from incidents and integrate them into recovery plans.
+RC.RP-05,Integrity of restored assets verified; systems/services restored; normal ops confirmed,1,Verify restored systems and data integrity before returning to normal operations.
+RC.C0-03,Share recovery status and progress updates with key internal and external stakeholders.,1.2,Set up a communication plan to keep stakeholders informed during recovery.

@@ -1,6 +1,6 @@
 # CSF-Lite: Top 25 NIST CSF v2.0 Subcategories
 
-These are the 25 most impactful and practical subcategories from the NIST CSF v2.0, selected for inclusion in the CSF-Lite framework. They span all six CSF Functions and are prioritized for SME environments.
+These are the 25 most impactful and practical subcategories from the NIST CSF v2.0, selected for inclusion in the CSFLite framework. They span all six CSF Functions and are prioritized for SME environments.
 Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ---
@@ -20,6 +20,11 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Clear cybersecurity roles ensure accountability for managing risk.
 
+### GV.RM-01 — Risk management activities are reviewed and adjusted. 
+
+> Risk management practices improves through regular review and adjustment.
+
+
 
 ---
 
@@ -29,13 +34,18 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > You can’t secure what you don’t know. This ensures visibility into physical and cloud-based assets.
 
+### ID.AM-03 — Baseline of operations/data flows established & managed
+
+> Normal system and data flow patterns are defined and maintained to spot unusual activity.
+
+### ID.AM-04 — External information systems are cataloged
+
+> Third-party APIs and SaaS dependencies must be tracked as part of your risk surface.
+
 ### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value.
 
 > Prioritizing critical assets helps focus limited security resources for maximum impact.
 
-### ID.RA-05 — External information systems are cataloged
-
-> Third-party APIs and SaaS dependencies must be tracked as part of your risk surface.
 
 
 
@@ -45,11 +55,11 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ### PR.AA-01 — Identities and credentials are managed
 
-> Default credentials are a common attack vector—manage them with intent.
+> Default credentials are a common attack and should be vector—managed with intent.
 
-### PR.AA-03 — Remote access is managed
+### PR.AA-03 — Users/services/hardware are authenticated
 
-> Unrestricted admin interfaces expose critical systems to external threat actors.
+> Only verified entities should interact with systems, reducing the risk of unauthorized access.
 
 ### PR.DS-01 — Data-at-rest is protected
 
@@ -61,7 +71,12 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 ### PR.IR-01 — Communications and control networks are protected
 
-> Ensuring encrypted, trusted communications is critical to security posture.
+> Secure networks prevents unauthorized access and maintains system integrity.
+
+### ID.RA-01 — Vulnerability scans are performed
+
+> Routine scanning detects outdated components and known issues.
+
 
 ---
 
@@ -75,19 +90,11 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > File or configuration drift detection is a key indicator of compromise.
 
-### DE.CM-08 — Vulnerability scans are performed
-
-> Routine scanning detects outdated components and known issues.
-
-### DE.AE-01 — A baseline of network operations and expected data flows for users and systems is established and managed
-
-> Establishing baselines for network operations and expected data flows helps detect anomalies
-
 ---
 
 ## Respond
 
-### RS.RP-01 — Response plan is executed
+### RS.MA-01 — Response plan is executed
 
 > Testing your IR plan ensures you're ready when incidents occur.
 
@@ -95,17 +102,17 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Clear external communication reduces panic and damage during incidents.
 
-### RS.CO-03 — Legal and regulatory requirements are managed
+### RS.CO-03 — Incident response information is shared with stakeholders
 
-> Responding to incidents must follow laws, contracts, and disclosure rules.
+> Communicating incident details with stakeholders ensures coordinated actions.
 
 ### RS.MI-01 — Incidents are mitigated
 
 > Effective mitigation limits the impact of breaches.
 
-### RS.IM-01 — Response plans are improved following lessons learned
+### RS.IM-02 — Threats are eliminated
 
-> Every incident should help improve future response capability.
+> Removing threats restores normal operations and prevents recurrence.
 
 ---
 
@@ -115,20 +122,16 @@ Each subcategory includes its ID, Function, and a plain-language rationale.
 
 > Restoration procedures must be tested and reliable.
 
-### RC.IM-01 — Recovery strategies are improved following exercises
+### RC.RP-02 — Recovery policies and procedures established and maintained
 
-> Practice reveals gaps and improves speed of recovery.
+> Systems are restored systems quickly and consistently after an incident following a clearly defined process.
 
-### RC.IM-02 — Recovery plans incorporate lessons learned
+### RC.RP-05 — Integrity of restored assets should be verified after recovery.
 
-> Continuously refining recovery plans strengthens resilience.
+> Operations can resume safely when restored assets are verfied as uncompromised, 
 
-### RC.CO-01 — Communications are coordinated during recovery
+### RC.CO-03 — Recovery status is communicated with stakeholders.
 
-> Internal clarity and external updates are critical during restoration.
-
-### RC.GV-01 — Recovery policies and procedures are established
-
-> Documentation ensures everyone knows their role post-incident.
+> Recovery effort is coordinated effectively when stakeholders are informed`.
 
 ---

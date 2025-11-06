@@ -1,8 +1,8 @@
 # CSF-Lite Manual Questionnaire – Remediation (Markdown)
 
-This markdown file provides actionable remediation guidance for each non-automated subcategory in the CSF-Lite Manual Questionnaire.
+Actionable remediation guidance for each non-automated subcategory in the CSF-Lite Manual Questionnaire.
 
-Use these recommendations as follow-up actions after identifying governance or process gaps.
+Use as follow-up actions after identifying governance or process gaps.
 
 ---
 ## Govern
@@ -21,6 +21,8 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 **Evidence:** Organizational chart, role descriptions, RACI matrix
 
+### GV.RM-01 — Risk management activities are reviewed and adjusted based on exercises or incidents
+**Remediation:** Schedule regular reviews after incidents or tests and update risk registers, treatment plans, and controls accordingly.
 
 ---
 
@@ -29,8 +31,6 @@ Use these recommendations as follow-up actions after identifying governance or p
 ### ID.AM-05 — Resources are prioritized based on classification, criticality, and business value
 
 **Remediation:** Establish and maintain a critical asset inventory with priority ratings based on business impact.
-
-
 
 ---
 
@@ -82,4 +82,4 @@ Use these recommendations as follow-up actions after identifying governance or p
 
 ---
 
-These remediation actions complement the manual checklist and should be reflected in your final CSF-Lite report.
+These remediation actions complement the manual checklist and should be reflected in your final CSFLite report.

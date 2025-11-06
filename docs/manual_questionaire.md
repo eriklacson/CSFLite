@@ -1,11 +1,11 @@
-# CSF-Lite Manual Questionnaire (Markdown)
+# CSFLite Manual Questionnaire (Markdown)
 
-This questionnaire covers CSF v2.0 subcategories from the CSF-Lite Top 25 that require manual validation. It is designed to be used alongside automated scan results for a complete assessment.
+Questionnaire covering CSF v2.0 subcategories from the CSF-Lite Top 25 that require manual validation. Designed to be used along automated scan results for a comprehensive assessment.
 
 Each question includes:
 
 * The CSF Function and Subcategory ID
-* A plain-language yes/no question
+* Plain-language yes/no question
 * Examples of acceptable evidence
 
 ---
@@ -17,17 +17,19 @@ Each question includes:
 **Question:** Has a formal cybersecurity policy been established and communicated to the organization?
 **Evidence:** Security policy document, communication or training records
 
-
 ### GV.SC-01 — Supply chain agreements are managed
 
 **Question:** Do you maintain security-related agreements with key vendors or partners?
 **Evidence:** Vendor contracts, SLAs, third-party risk assessments
 
-
 ### GV.RR-01 — Roles and responsibilities are assigned
 
 **Question:** Are cybersecurity roles, responsibilities, and authorities formally defined and communicated?
 **Evidence:** Organizational chart, role descriptions, RACI matrix
+
+# GV.RM-01 — Risk management activities are reviewed and adjusted based on exercises or incidents
+**Question:** Do you revisit and adjust risk management practices after incidents, tests, or tabletop exercises?
+**Evidence:** Post-incident reviews, tabletop exercise reports, updated risk registers
 
 ---
 
@@ -37,7 +39,6 @@ Each question includes:
 
 **Question:** Do you maintain a prioritized list of critical assets or data systems?
 **Evidence:** Asset inventory with risk ranking or business criticality tags
-
 ---
 
 ## Respond
@@ -52,21 +53,18 @@ Each question includes:
 **Question:** Do you have a process for communicating security incidents to external parties?
 **Evidence:** Crisis communication plan, draft templates
 
-### RS.CO-03 — Legal and regulatory requirements are managed
-
-**Question:** Do you identify and review relevant security-related laws or regulations?
-**Evidence:** Compliance tracking log, legal/regulatory register
+### RS.CO-03 — Incident response information is shared with stakeholders
+**Question:** Do you have defined communication channels to share incident details with key stakeholders?
+**Evidence:** Stakeholder contact matrix, incident communication procedures
 
 ### RS.MI-01 — Incidents are mitigated
 
 **Question:** Do you document and review mitigation steps taken during security incidents?
 **Evidence:** Incident logs with mitigation steps
 
-### RS.IM-01 — Response plans are improved following lessons learned
-
-**Question:** Do you update your response plan based on past incidents or exercises?
-**Evidence:** Version history of IR plan, postmortem reviews
-
+### RS.MI-02 — Threats are eliminated
+**Question:** Are threat removal activities tracked and verified after each incident?
+**Evidence:** Eradication removal, post-mitigation validation reports
 ---
 
 ## Recover
@@ -76,25 +74,17 @@ Each question includes:
 **Question:** Have you tested your system/data recovery procedures in the last 12 months?
 **Evidence:** Backup restore logs, DR exercise report
 
-### RC.IM-01 — Recovery strategies are improved following exercises
+### RC.RP-02 — Recovery policies and procedures established and maintained
+**Question:** Are recovery policies and procedures documented and regularly updated?
+**Evidence:** Recovery policy documents, change logs
 
-**Question:** Do you update recovery strategies based on lessons from past recovery drills?
-**Evidence:** Meeting notes, plan revision logs
+### RC.RP-05 — Integrity of restored assets verified; systems/services restored; normal ops confirmed
+**Question:** Do you verify system integrity and confirm normal operations after recovery activities?
+**Evidence:** Post-recovery validation checklists, service restoration sign-offs
 
-### RC.IM-02 — Recovery plans incorporate lessons learned.
-
-**Question:** Do you document lessons learned from real or simulated recovery events?
-**Evidence:** After-action reports, recovery plan change logs
-
-### RC.CO-01 — Communications are coordinated during recovery
-
-**Question:** Is there a documented communication plan for recovery operations?
-**Evidence:** DR comms plan, team contact trees
-
-### RC.GV-01 — Recovery policies and procedures are established
-
-**Question:** Do you have formal recovery policies and procedures in place?
-**Evidence:** Recovery policy documents, DR runbooks
+### RC.CO-03 — Share recovery status and progress updates with key internal and external stakeholders
+**Question:** Is there a documented communication plan for sharing recovery status updates?
+**Evidence:** DR communication plan, stakeholder status reports
 
 ---
 

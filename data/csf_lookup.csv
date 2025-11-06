@@ -19,8 +19,8 @@ RS.MA-01,Response plan is executed,1.5,Create and rehearse a documented incident
 RS.CO-02,Public relations are managed during incidents,1,Prepare public statements and designate a PR spokesperson.
 RS.CO-03,Incident response information is shared with stakeholders.,1.2,Establish clear communication channels to promptly share incident details with internal teams and external partners
 RS.MI-01,Incidents are mitigated,1.5,Contain threats immediately using playbooks and escalation procedures.
-RS.M1-02,Threats are eliminated,1.5,Immediately and conduct documented post-mortems.
+RS.M1-02,Threats are eliminated,1.5,Immediately remove threats and conduct documented post-mortems.
 RC.RP-01,Recovery plan is executed,1.5,Test backups and rehearse system restoration procedures.
 RC.RP-02,Recovery policies and procedures established and maintained,1.2,Document findings from incidents and integrate them into recovery plans.
-RC.RP-05,Integrity of restored assets verified; systems/services restored; normal ops confirmed,1,Verify restored systems and data integrity before returning to normal operations.
-RC.C0-03,Share recovery status and progress updates with key internal and external stakeholders.,1.2,Set up a communication plan to keep stakeholders informed during recovery.
+RC.RP-05,Integrity of restored assets should be verified after recovery.,1,Verify restored systems and data integrity before returning to normal operations.
+RC.C0-03,Share recovery status and progress updates with stakeholders.,1.2,Set up a communication plan to keep stakeholders informed during recovery.

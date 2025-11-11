@@ -14,7 +14,7 @@ profiles:
     output: scans/nuclei_inventory.jsonl
     notes: "Tech fingerprinting + cloud/service discovery = evidence for ID.AM-02 and external deps (ID.RA-04)."
 
-change_drift_signals:
+  change_drift_signals:
     # ID.AM-03 (signal only)
     tags: [exposure, directory-listing, backup, env, git, misconfig]
     severity: [medium, high]
@@ -26,7 +26,6 @@ change_drift_signals:
     input_mode: list
     output: data/nuclei_change.jsonl
     notes: "Heuristics for drift (new directories exposed, backups appear, configs loosened). True change monitoring is governance+telemetry."
-
 
 
   # ——— PROTECT (CONFIG & PATCH) ———

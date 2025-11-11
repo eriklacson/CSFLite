@@ -38,6 +38,22 @@ def write_to_json(dataset, output_path):
     return status
 
 
+def load_json_file(file_path):
+    """
+    Loads a JSON file and returns its content as a Python object.
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+    except json.JSONDecodeError as e:
+        print(f"Error: Failed to decode JSON. {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+
 __all__ = [
     "get_paths",
     "write_to_csv",

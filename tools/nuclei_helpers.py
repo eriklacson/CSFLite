@@ -70,7 +70,30 @@ def _resolve_targets_path(targets: str) -> str:
     raise FileNotFoundError(f"Targets file '{targets}' was not found. Checked the following locations: {searched}.")
 
 
-def build_nuclei_cmd(profile: dict, targets: str, output_path: Optional[str] = None) -> str:
+def _resolve_output_path(profile_output: str, scan_directory: Optional[str]) -> Path:
+    """Resolve the nuclei output path taking into account optional scan directory overrides."""
+
+    output_path = Path(profile_output)
+
+    if scan_directory:
+        output_dir = Path(scan_directory)
+        if not output_dir.is_absolute():
+            output_dir = (Path.cwd() / output_dir).resolve()
+        return (output_dir / output_path.name).resolve()
+
+    if output_path.is_absolute():
+        return output_path.resolve()
+
+    return (PROJECT_ROOT / output_path).resolve()
+
+
+def build_nuclei_cmd(
+    profile: dict,
+    targets: str,
+    output_path: Optional[str] = None,
+    *,
+    scan_directory: Optional[str] = None,
+) -> List[str]:
     """
     Build a nuclei command string based on the base command and profile settings.
     """
@@ -94,13 +117,11 @@ def build_nuclei_cmd(profile: dict, targets: str, output_path: Optional[str] = N
     timeout = profile.get("timeout", 5)  # noqa: F841
 
     # Use the provided output_path parameter or fallback to the profile's output setting
-    output_path = output_path or profile.get("output", "scans/nuclei_raw_scan.jsonl")
+    profile_output = output_path or profile.get("output", "scans/nuclei_raw_scan.jsonl")
 
     # normalize important filesystem paths
     resolved_targets = _resolve_targets_path(targets)
-    resolved_output_path = (
-        (PROJECT_ROOT / output_path).resolve() if not os.path.isabs(output_path) else Path(output_path).resolve()
-    )
+    resolved_output_path = _resolve_output_path(profile_output, scan_directory)
 
     # ensure output directory exists - default to current directory if none specified
     # and create directory

@@ -205,6 +205,28 @@ def test_build_nuclei_cmd_valid_profile(tmp_path):
     ]
 
 
+def test_build_nuclei_cmd_scan_directory_override(tmp_path):
+    """overriding the scan directory should relocate the output file while keeping the filename."""
+
+    profile = {"output": "scans/custom_scan.jsonl"}
+    targets_path = tmp_path / "targets.txt"
+    targets_path.touch()
+
+    custom_dir = tmp_path / "custom-output"
+
+    with patch("tools.nuclei_helpers.os.makedirs") as mock_makedirs:
+        cmd = nuclei_helpers.build_nuclei_cmd(
+            profile,
+            str(targets_path),
+            scan_directory=str(custom_dir),
+        )
+
+    mock_makedirs.assert_called_once_with(custom_dir.resolve(), exist_ok=True)
+
+    expected_output = custom_dir / "custom_scan.jsonl"
+    assert cmd[-2:] == ["-jle", str(expected_output.resolve())]
+
+
 def test_build_nuclei_cmd_invalid_profile_type():
     """passing a non-dict profile should raise a TypeError."""
 

@@ -60,14 +60,11 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
     )
     print(cmd)
 
-
-"""
     print("\nNuclei command string:\n")
     cmd_string = " ".join(cmd)
     print(cmd_string)
 
     nuclei_helpers.run_nuclei(cmd_string)
-"""
 
 
 if __name__ == "__main__":

@@ -200,7 +200,7 @@ def test_build_nuclei_cmd_valid_profile(tmp_path):
         "-timeout",
         "30",
         "-omit-raw",
-        "-jle",
+        "-je",
         str(output_file.resolve()),
     ]
 
@@ -224,7 +224,7 @@ def test_build_nuclei_cmd_scan_directory_override(tmp_path):
     mock_makedirs.assert_called_once_with(custom_dir.resolve(), exist_ok=True)
 
     expected_output = custom_dir / "custom_scan.jsonl"
-    assert cmd[-2:] == ["-jle", str(expected_output.resolve())]
+    assert cmd[-2:] == ["-je", str(expected_output.resolve())]
 
 
 def test_build_nuclei_cmd_invalid_profile_type():

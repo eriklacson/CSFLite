@@ -145,7 +145,7 @@ def build_nuclei_cmd(
     cmd += ["-rl", str(rate_limit), "-c", str(concurrency), "-retries", str(retries), "-timeout", str(timeout)]
 
     # CSFLite expects JSONL output
-    cmd += ["-omit-raw", "-jle", str(resolved_output_path)]
+    cmd += ["-omit-raw", "-je", str(resolved_output_path)]
 
     return cmd
 

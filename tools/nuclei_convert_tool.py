@@ -5,34 +5,19 @@
 Script to convert Nuclei JSON output to a simplified summary format.
 """
 
-import argparse
-import logging
+import os
 import sys
 
-from tools.nuclei_json_converter import convert_nuclei_raw_file
+# ensure project root is on the import path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-
-def parse_arguments():
-    """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(description="Convert Nuclei JSON output to a simplified format.")
-    parser.add_argument("input_file", type=str, help="Path to the Nuclei JSON file to be converted.")
-
-    parser.add_argument("output_file", type=str, help="Path to save the converted output file.")
-    return parser.parse_args()
+import tools.nuclei_json_converter as converter
 
 
 def main():
     """Main function."""
-    args = parse_arguments()
-
-    try:
-        # Convert the Nuclei JSON file
-        converted_data = convert_nuclei_raw_file(args.input_file)
-        print(converted_data)
-    except Exception as e:
-        logging.error("An error occurred during conversion: %s", e)
-        return 1
-    return 0
+    converted_data = converter.convert_nuclei_raw_file("../scans/nuclei_inventory.json")
+    print(converted_data)
 
 
 if __name__ == "__main__":

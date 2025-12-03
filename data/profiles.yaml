@@ -11,7 +11,7 @@ profiles:
     retries: 2
     timeout: 5
     input_mode": list
-    output: scans/nuclei_inventory.jsonl
+    output: scans/nuclei_inventory.json
     notes: "Tech fingerprinting + cloud/service discovery = evidence for ID.AM-02 and external deps (ID.RA-04)."
 
   change_drift_signals:
@@ -24,7 +24,7 @@ profiles:
     retries: 2
     timeout: 5
     input_mode: list
-    output: data/nuclei_change.jsonl
+    output: data/nuclei_change.json
     notes: "Heuristics for drift (new directories exposed, backups appear, configs loosened). True change monitoring is governance+telemetry."
 
 
@@ -39,7 +39,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: scans/nuclei_baseline_web.jsonl
+    output: scans/nuclei_baseline_web.json
     notes: "High-signal posture checks: headers, CORS, TLS config, exposed secrets/backups, default_creds."
 
   patch_cve:
@@ -52,7 +52,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: output/nuclei_cves.jsonl
+    output: output/nuclei_cves.json
     notes: "Known-vuln sweeps for common stacks. Also serves as vuln-monitoring evidence (DE.CM-08)."
 
   identity_remote_access:
@@ -65,7 +65,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_identity.jsonl
+    output: data/nuclei_identity.json 
     notes: "Default creds, weak auth surfaces, exposed admin consoles; remote access discipline."
 
   data_protection:
@@ -79,7 +79,7 @@ profiles:
     retries: 2
     timeout: 5
     input_mode": "list"
-    output: data/nuclei_data.jsonl
+    output: data/nuclei_data.json
     notes: "Secrets/.env/.git, public buckets/backups. Integrity (PR.DS-10) is mostly governance; Nuclei flags risky exposures."
 
   transport_security:
@@ -92,7 +92,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_transport.jsonl
+    output: data/nuclei_transport.json
     notes: "TLS versions/ciphers, HSTS, secure transport indications."
 
    # ——— PROTECT ——— OWASP T10 FOCUSED PROFILES
@@ -119,7 +119,7 @@ profiles:
     retries: 2
     timeout: 10
     input_mode: single
-    output: scans/owasp_top10_extended.jsonl
+    output: scans/owasp_top10_extended.json
     notes: "Extends core with uploads, panels, API schemas, pollution, CRLF, rate limiting. PR.IP, PR.DS, PR.AC; useful context for A04/A09 symptoms."
 
   owasp_top10_headless:
@@ -146,7 +146,7 @@ profiles:
     retries: 2
     timeout: 10
     input_mode: list
-    output: scans/owasp_top10_paths.jsonl
+    output: scans/owasp_top10_paths.json
     notes: "Use with -l data/paths.txt (e.g., /#/login, /#/search, /rest/*). Improves hit rate on templated routes."
 
 # ——— OPTIONAL TECH-SPECIFIC (enable per target) ———
@@ -160,7 +160,7 @@ profiles:
     retries: 2
     timeout: 10
     input_mode: single
-    output: scans/owasp_top10_tech_addons.jsonl
+    output: scans/owasp_top10_tech_addons.json
     notes: "(Vulnerable/Outdated Components) signals; stack-specific misconfigs and CVEs. Use selectively."
  
   # ——— API & THIRD-PARTY ———
@@ -174,7 +174,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_api.jsonl
+    output: data/nuclei_api.json
     notes: "Feed with OpenAPI 3 spec; checks auth, sensitive endpoints, misconfig, secret exposure."
 
   burp_replay:
@@ -187,7 +187,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_burp.jsonl
+    output: data/nuclei_burp.json
     notes: "Replay captured authenticated traffic for deep checks behind login."
 
   # ——— DETECT ———
@@ -201,7 +201,7 @@ profiles:
     concurrency: 2
     retries: 2
     timeout: 5
-    output: data/nuclei_detect_vuln.jsonl
+    output: data/nuclei_detect_vuln.json
     notes: "Use on a cadence; forms the evidence for ‘vulnerability scans are performed’."
 
   # ——— GOVERN / RESPOND / RECOVER ———
@@ -209,11 +209,11 @@ profiles:
   govern_placeholders:
     tags: []
     severity: [info]
-    output: data/nuclei_govern_placeholder.jsonl
+    output: data/nuclei_govern_placeholder.json
     notes: "GV.P0-01, GV.SC-01, GV.RR-01 are policy/process. Capture via governance_checks.csv, not Nuclei."
 
   respond_recover_placeholders:
     tags: []
     severity: [info]
-    output: data/nuclei_rr_placeholder.jsonl
+    output: data/nuclei_rr_placeholder.json
     notes: "RS.* and RC.* are exercised/tested processes; evidence from drills and docs, not Nuclei."

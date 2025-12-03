@@ -17,7 +17,7 @@ import tools.nuclei_json_converter as converter
 
 def main():
     """Main function."""
-    converted_data = converter.convert_nuclei_raw_file("../scans/nuclei_inventory.json")
+    converted_data = converter.convert_nuclei_raw_file("../scans/nuclei_inventory.jsonl")
     print(converted_data)
     global_helpers.write_to_json(converted_data, "../output/nuclei_inventory_converted.json")
 

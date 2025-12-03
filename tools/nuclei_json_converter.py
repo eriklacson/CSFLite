@@ -90,7 +90,7 @@ def convert_nuclei_raw(raw_data: Union[Mapping[str, Any], Sequence[Mapping[str, 
     return [_convert_entry(item) for item in entries]
 
 
-def the(path: Union[str, Path]) -> List[Dict[str, str]]:
+def convert_nuclei_raw_file(path: Union[str, Path]) -> List[Dict[str, str]]:
     """Load a raw Nuclei JSON file and convert it to the summary format.
 
     Parameters

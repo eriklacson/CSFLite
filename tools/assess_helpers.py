@@ -181,6 +181,8 @@ def generate_scan_heatmap(mapped, heatmap_lookup):
 def get_governance_checklist_results(governance_checklist_path):
     """Guards for early failure when loading the governance checklist."""
 
+    print("reading governance checklist from:", governance_checklist_path)
+
     # Convert governance checklist path to a path object
     governance_checklist_path = Path(governance_checklist_path)
 

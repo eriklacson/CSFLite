@@ -64,10 +64,12 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
         # write governance assessment score
         governance_assessment = assess.generate_governance_assessement(governance_checklist_results, csf_lookup)
         global_helpers.write_to_csv(governance_assessment, governance_assessment_csv)
+        print(f"Governance assessment written to: {governance_assessment_csv}")
 
         # write governance assessment heatmap
         governance_heatmap = assess.generate_governance_heatmap(governance_assessment)
         global_helpers.write_to_csv(governance_heatmap, governance_heatmap)
+        print(f"Governance assessment heatmap written to: {governance_heatmap}")
 
     except ValueError as ve:
         print(f"Argument Error: {ve}", file=sys.stderr)

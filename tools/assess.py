@@ -1,4 +1,7 @@
-"""Tool for assessing security posture based on scan findings and governance manual governance checklist."""
+"""
+Tool for consolidate assessment of security posture based on scan findings and governance manual governance checklist.
+Will be depracated in subsequent versions.
+"""
 
 import sys
 

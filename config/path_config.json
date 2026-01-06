@@ -1,0 +1,14 @@
+{
+    "governance_checklist": "../scans/governance_checks.csv",
+    "lookup_csv": "../data/nuclei_csf_lookup.csv",
+    "heatmap_lookup": "../data/heat_map_lookup.csv",
+    "csf_lookup": "../data/csf_lookup.csv",
+    "output_csv": "../output/scan-findings.csv",
+    "output_json": "../output/scan-findings.json",
+    "heatmap_csv": "../output/scan_heatmap.csv",
+    "governance_assessment_csv": "../output/governance_assessment.csv",
+    "governance_heatmap_csv": "../output/governance_heatmap.csv",
+    "nuclei_profile": "../data/profiles.yaml",
+    "nuclei_scan_findings": "../output/nuclei_scan_findings.json"
+
+}

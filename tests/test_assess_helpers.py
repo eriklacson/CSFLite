@@ -1,70 +1,51 @@
-from unittest.mock import mock_open, patch
-from pathlib import Path
-import pytest
 import json
-import csv
 import os
 import sys
+from pathlib import Path
+from unittest.mock import mock_open, patch
+
+import pytest
 
 # ensure project root is on the import path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
+# test get_paths function
 def test_get_paths():
-    from tools.assess import get_paths
+    from tools.global_helpers import get_paths
 
-    expected_paths = {  # Input Data
-        #
-        # scan results
-        "scan_input_json": "../scans/sample_output.json",
-        # governance checklist answer questionaire
-        "governance_checklist": "../scans/governance_checks.csv",
-        # Reference Data
-        #
-        # nuclie to csf lookup - map of nuclie template to CSF Sub-category
-        "lookup_csv": "../data/nuclei_csf_lookup.csv",
-        # heatmap lookup - map of CSF Sub-category to weight and human-friendly name
-        "heatmap_lookup": "../data/heat_map_lookup.csv",
-        # map of CSF sub-category to with score weight and recommendations
-        "csf_lookup": "../data/csf_lookup.csv",
-        # Output Data
-        #
-        # mapped findings - nuclie findings mapped to CSF Sub-category (json and csv)
-        "output_csv": "../output/scan-findings.csv",
-        "output_json": "../output/scan-findings.json",
-        # heatmap - heatmap data derived from mapped findings refactor: rename to scan_heatmap_csv when governance heatmap is in place
-        "heatmap_csv": "../output/scan_heatmap.csv",
-        # governance assessment - governance assessment derived from governance checklist and csf lookup
-        "governance_assessment_csv": "../output/governance_assessment.csv",
-        # governance heatmap - heatmap data derived from governance assessment
-        "governance_heatmap_csv": "../output/governance_heatmap.csv",
-    }
+    config_path = Path(__file__).resolve().parent.parent / "config" / "path_config.json"
+
+    with open(config_path, encoding="utf-8") as config_file:
+        expected_paths = json.load(config_file)
 
     assert get_paths() == expected_paths
 
 
 def test_read_scan_json_valid():
+    """tests reading valid scan JSON"""
+    from tools.assess_helpers import read_scan_json
+
     # Mock JSON content
     mock_json_content = '{"key": "value"}'
     expected_result = {"key": "value"}
 
     # Mock the open function and patch it
     with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        from tools.assess import read_scan_json
-
         # Call the function and assert the result
         result = read_scan_json("mock_file.json")
         assert result == expected_result
 
 
 def test_read_scan_json_invalid():
+    """test handling of invalid scan JSON"""
+    from tools.assess_helpers import read_scan_json
+
     # Mock invalid JSON content
     mock_json_content = '{"key": "value"'
 
     # Mock the open function and patch it
     with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        from tools.assess import read_scan_json
-
         # Assert that a JSONDecodeError is raised
         try:
             read_scan_json("mock_file.json")
@@ -89,7 +70,7 @@ TEMPLATE-2,Protect,PR.AA-03,Access Control,Remediate template 2
 
 def test_map_scan_to_csf(mock_lookup_csv):
     # import necessary functions
-    from tools.assess import map_scan_to_csf
+    from tools.assess_helpers import map_scan_to_csf
 
     # Sample findings (must be list of dicts, not strings)
     test_findings = [
@@ -119,72 +100,10 @@ def test_map_scan_to_csf(mock_lookup_csv):
     assert "host" in result[1]
 
 
-def test_write_with_data(tmp_path):
-    # import necessary functions
-    from tools.assess import write_to_csv
-
-    test_data = [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]
-    path = tmp_path / "test.csv"
-
-    status = write_to_csv(test_data, str(path))
-
-    with open(path, newline="") as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
-
-    assert status == f"Dataset written to: {path}"
-    assert len(rows) == 2
-    assert rows[0]["name"] == "Alice"
-    assert rows[1]["age"] == "25"
-
-
-def test_write_no_data(tmp_path):
-    # import necessary functions
-    from tools.assess import write_to_csv
-
-    path = tmp_path / "empty.csv"
-    status = write_to_csv([], str(path))
-
-    assert status == "No data to write."
-
-
-def test_write_to_json_with_data(tmp_path: Path):
-    # Import necessary functions
-    from tools.assess import write_to_json
-
-    # prep test data and file
-    data = [{"a": 1, "b": 2}]
-    output_file = tmp_path / "out.json"
-
-    # call function
-    status = write_to_json(data, output_file)
-
-    # run test
-    assert output_file.exists()
-    written = json.loads(output_file.read_text())
-    assert written == data
-    assert f"Dataset written to: {output_file}" in status
-
-
-def test_write_to_json_no_data(tmp_path: Path):
-    # import necessary functions
-    from tools.assess import write_to_json
-
-    # prep test data and file
-    data = []
-    output_file = tmp_path / "out.json"
-
-    # call function
-    status = write_to_json(data, output_file)
-
-    # run test
-    assert not output_file.exists()
-    assert status == "No data to write."
-
-
 def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
-    from tools.assess import generate_scan_heatmap
     import numpy as np
+
+    from tools.assess_helpers import generate_scan_heatmap
 
     mapped = [
         {"csf_subcategory_id": "ID.AM-02", "severity": "critical"},
@@ -193,8 +112,7 @@ def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
 
     lookup_csv = tmp_path / "heatmap_lookup.csv"
     lookup_csv.write_text(
-        "csf_subcategory_id,csf_subcategory_name,weight\n"
-        "ID.AM-02,Devices and systems inventoried,1.0\n"
+        "csf_subcategory_id,csf_subcategory_name,weight\nID.AM-02,Devices and systems inventoried,1.0\n"
     )
 
     result = generate_scan_heatmap(mapped, lookup_csv)
@@ -208,12 +126,10 @@ def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
 
 
 def test_get_csf_lookup(tmp_path: Path):
-    from tools.assess import get_csf_lookup
+    from tools.assess_helpers import get_csf_lookup
 
     csv_content = (
-        "csf_subcategory_id,weight,recommendation\n"
-        "ID.AM-02,1,Assess assets\n"
-        "PR.AA-03,2,Enforce access control\n"
+        "csf_subcategory_id,weight,recommendation\nID.AM-02,1,Assess assets\nPR.AA-03,2,Enforce access control\n"
     )
     lookup_path = tmp_path / "csf_lookup.csv"
     lookup_path.write_text(csv_content)
@@ -225,14 +141,14 @@ def test_get_csf_lookup(tmp_path: Path):
 
 
 def test_get_csf_lookup_missing_file():
-    from tools.assess import get_csf_lookup
+    from tools.assess_helpers import get_csf_lookup
 
     with pytest.raises(FileNotFoundError):
         get_csf_lookup("missing.csv")
 
 
 def test_get_governance_checklist_results(tmp_path: Path):
-    from tools.assess import get_governance_checklist_results
+    from tools.assess_helpers import get_governance_checklist_results
 
     checklist_content = (
         "csf_function,csf_subcategory_id,csf_subcategory_name,notes,response\n"
@@ -248,25 +164,25 @@ def test_get_governance_checklist_results(tmp_path: Path):
 
 
 def test_get_governance_checklist_results_missing_file():
-    from tools.assess import get_governance_checklist_results
+    from tools.assess_helpers import get_governance_checklist_results
 
     with pytest.raises(FileNotFoundError):
         get_governance_checklist_results("no-file.csv")
 
 
 def test_get_governance_checklist_results_missing_columns(tmp_path: Path):
-    from tools.assess import get_governance_checklist_results
+    from tools.assess_helpers import get_governance_checklist_results
 
     checklist_content = "csf_function,csf_subcategory_id,response\nIdentify,ID.AM-02,yes\n"
     checklist_path = tmp_path / "checklist.csv"
     checklist_path.write_text(checklist_content)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"Missing required columns: {'csf_subcategory_name'}"):
         get_governance_checklist_results(checklist_path)
 
 
 def test_generate_governance_assessment():
-    from tools.assess import generate_governance_assessement
+    from tools.assess_helpers import generate_governance_assessement
 
     checklist = [
         {
@@ -308,7 +224,7 @@ def test_generate_governance_assessment():
 
 
 def test_generate_governance_heatmap():
-    from tools.assess import generate_governance_heatmap
+    from tools.assess_helpers import generate_governance_heatmap
 
     assessment = [
         {

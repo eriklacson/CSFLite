@@ -1,0 +1,128 @@
+[
+    {
+        "templateID": "tls-version",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "juice-shop.herokuapp.com:443",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:25:25.470768706+08:00",
+        "matcher-name": "TLS Version - Detect",
+        "description": "TLS version detection is a security process used to determine the version of the Transport Layer Security (TLS) protocol used by a computer or server. It is important to detect the TLS version in order to ensure secure communication between two computers or servers."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304475769+08:00",
+        "matcher-name": "cross-origin-opener-policy",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304482516+08:00",
+        "matcher-name": "content-security-policy",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.30448816+08:00",
+        "matcher-name": "permissions-policy",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.30449152+08:00",
+        "matcher-name": "referrer-policy",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304494759+08:00",
+        "matcher-name": "cross-origin-resource-policy",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304499252+08:00",
+        "matcher-name": "strict-transport-security",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304502331+08:00",
+        "matcher-name": "x-permitted-cross-domain-policies",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304508704+08:00",
+        "matcher-name": "clear-site-data",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "http-missing-security-headers",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:18.304514095+08:00",
+        "matcher-name": "cross-origin-embedder-policy",
+        "description": "This template searches for missing HTTP security headers. The impact of these missing headers can vary."
+    },
+    {
+        "templateID": "prometheus-metrics",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/metrics",
+        "severity": "medium",
+        "timestamp": "2025-10-09T15:28:32.615794464+08:00",
+        "matcher-name": "Prometheus Metrics - Detect",
+        "description": "Prometheus metrics page was detected."
+    },
+    {
+        "templateID": "ssl-issuer",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "juice-shop.herokuapp.com:443",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:46.510178443+08:00",
+        "matcher-name": "Detect SSL Certificate Issuer",
+        "description": "Extract the issuer's organization from the target's certificate. Issuers are entities which sign and distribute certificates."
+    },
+    {
+        "templateID": "ssl-dns-names",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "juice-shop.herokuapp.com:443",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:46.510593549+08:00",
+        "matcher-name": "SSL DNS Names",
+        "description": "Extract the Subject Alternative Name (SAN) from the target's certificate. SAN facilitates the usage of additional hostnames with the same certificate."
+    },
+    {
+        "templateID": "wildcard-tls",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "juice-shop.herokuapp.com:443",
+        "severity": "info",
+        "timestamp": "2025-10-09T15:28:46.510712485+08:00",
+        "matcher-name": "Wildcard TLS Certificate",
+        "description": "Checks a sites certificate to see if there are wildcard CN or SAN entries."
+    }
+]

@@ -1,0 +1,219 @@
+version: 1
+profiles:
+  # ——— IDENTIFY ———
+  inventory_external:
+    # ID.AM-02  (+ weak signal for ID.AM-05 via tags you can triage later)
+    tags: [tech, cloud]
+    severity: [info, low]
+    csf_subcategrory: [ID.AM-02, ID.AM-05]
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    input_mode": list
+    output: scans/nuclei_inventory.json
+    notes: "Tech fingerprinting + cloud/service discovery = evidence for ID.AM-02 and external deps (ID.RA-04)."
+
+  change_drift_signals:
+    # ID.AM-03 (signal only)
+    tags: [exposure, directory-listing, backup, env, git, misconfig]
+    severity: [medium, high]
+    csf_subcategory: [ID.AM-03]
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    input_mode: list
+    output: data/nuclei_change.json
+    notes: "Heuristics for drift (new directories exposed, backups appear, configs loosened). True change monitoring is governance+telemetry."
+
+
+  # ——— PROTECT (CONFIG & PATCH) ———
+  baseline_web:
+    # PR.AA-01, PR.DS-01, PR.AA-03  (+ signals for PR.IR-01 via TLS/HSTS headers)
+    tags: [misconfig, headers, cors, ssl, tls, exposure, backup, secret, default-login]
+    severity: [medium, high, critical]
+    csf_subcategory: [PR.AA-01, PR.DS-01, PR.AA-03, PR.IR-01]
+    input_mode: list
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: scans/nuclei_baseline_web.json
+    notes: "High-signal posture checks: headers, CORS, TLS config, exposed secrets/backups, default_creds."
+
+  patch_cve:
+    # PR.PS-01
+    tags: [cve, wordpress, confluence, jira, gitlab, jenkins, grafana, kibana, drupal, magento]
+    severity: [high, critical]
+    csf_subcategory: [PR.PS-01]
+    input_mode: list
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: output/nuclei_cves.json
+    notes: "Known-vuln sweeps for common stacks. Also serves as vuln-monitoring evidence (DE.CM-08)."
+
+  identity_remote_access:
+    # PR.AA-01, PR.AA-03
+    tags: [default-login, auth, admin-panel, exposure]
+    severity: [high, critical]
+    csf_subcategory: [PR.AA-01, PR.AA-03]
+    input_mode: list
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: data/nuclei_identity.json 
+    notes: "Default creds, weak auth surfaces, exposed admin consoles; remote access discipline."
+
+  data_protection:
+    # PR.DS-01
+    tags: [secret, exposure, backup, s3, cloud, git, env, token]
+    severity: [medium, high, critical]
+    csf_subcategory: [PR.DS-01]
+    input_mode: list
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    input_mode": "list"
+    output: data/nuclei_data.json
+    notes: "Secrets/.env/.git, public buckets/backups. Integrity (PR.DS-10) is mostly governance; Nuclei flags risky exposures."
+
+  transport_security:
+    # PR.IR-01
+    tags: [ssl, tls, headers, hsts]
+    severity: [medium, high]
+    csf_subcategory: [PR.IR-01]
+    input_mode: list
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: data/nuclei_transport.json
+    notes: "TLS versions/ciphers, HSTS, secure transport indications."
+
+   # ——— PROTECT ——— OWASP T10 FOCUSED PROFILES
+  owasp_top10_core:
+    # PR.PS-01 coverage (broad app vulns without niche stacks)
+    tags: [xss, sqli, ssrf, lfi, rfi, xxe, csrf, open-redirect, cmdi, ssti, template-injection, deserialization, path-traversal, traversal, auth, auth-bypass, jwt, default-login, weak-password, misconfig, exposure, disclosure, backup, secret, headers, cors, csp, ssl, tls]
+    severity: [info, low, medium, high, critical]
+    csf_subcategory: [PR.PS-01]  
+    rate_limit: 10
+    concurrency: 50
+    retries: 2
+    timeout: 10
+    input_mode: single
+    output: scans/owasp_top10_core.jsonl
+    notes: "Baseline OWASP T10 sweep. Map mainly to PR.AC, PR.DS, PR.MA, PR.PT; plenty of ‘info’ signals—keep them."
+
+  owasp_top10_extended:
+    # PR.PS-01
+    tags: [upload, file-upload, debug, admin, exposed-panel, graphql, swagger, prototype-pollution, crlf-injection, redirect, rate-limit]
+    severity: [info, low, medium, high, critical]
+    csf_subcategory: [PR.PS-01]
+    rate_limit: 8
+    concurrency: 40
+    retries: 2
+    timeout: 10
+    input_mode: single
+    output: scans/owasp_top10_extended.json
+    notes: "Extends core with uploads, panels, API schemas, pollution, CRLF, rate limiting. PR.IP, PR.DS, PR.AC; useful context for A04/A09 symptoms."
+
+  owasp_top10_headless:
+    # SPA flows and browser-required checks (auth/XSS/redirect UX paths)
+    tags: [xss, csrf, open-redirect, auth, auth-bypass]
+    severity: [info, low, medium, high, critical]
+    csf_subcategory: [PR.PS-01]
+    rate_limit: 5
+    concurrency: 10
+    retries: 2
+    timeout: 20
+    input_mode: single
+    output: scans/owasp_top10_headless.jsonl
+    notes: "Run this with -headless in your runner. Targets SPA routes; complements Core/Extended for A01/A03/A10."
+
+# ——— DETECT ———
+  owasp_top10_paths_helper:
+    # PR.PS-01 Optional: feed likely routes to boost pattern matches on SPAs/APIs
+    tags: [xss, sqli, ssrf, traversal, upload, jwt, open-redirect, auth, auth-bypass]
+    severity: [info, low, medium, high, critical]
+    csf_subcategory: [PR.PS-01]
+    rate_limit: 10
+    concurrency: 30
+    retries: 2
+    timeout: 10
+    input_mode: list
+    output: scans/owasp_top10_paths.json
+    notes: "Use with -l data/paths.txt (e.g., /#/login, /#/search, /rest/*). Improves hit rate on templated routes."
+
+# ——— OPTIONAL TECH-SPECIFIC (enable per target) ———
+  owasp_top10_tech_addons:
+    # PR-PS-01 Turn this on only when you know the stack
+    tags: [wordpress, laravel, spring, struts, rails, django, drupal, joomla]
+    severity: [info, low, medium, high, critical]
+    # PR-PS-01
+    rate_limit: 6
+    concurrency: 30
+    retries: 2
+    timeout: 10
+    input_mode: single
+    output: scans/owasp_top10_tech_addons.json
+    notes: "(Vulnerable/Outdated Components) signals; stack-specific misconfigs and CVEs. Use selectively."
+ 
+  # ——— API & THIRD-PARTY ———
+  api_openapi:
+    # PR.AA-01, PR.PS-01 PR.DS-01 (API)
+    tags: [api, misconfig, exposure, auth]
+    severity: [medium, high, critical]
+    csf_subcategory: [PR.AA-01, PR.PS-01, PR.DS-01]
+    input_mode: openapi
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: data/nuclei_api.json
+    notes: "Feed with OpenAPI 3 spec; checks auth, sensitive endpoints, misconfig, secret exposure."
+
+  burp_replay:
+    # PR.AA-01, PR.AA-03, PR.DS-01 (inside auth flows)
+    tags: [auth, misconfig, exposure, cve]
+    severity: [medium, high, critical]
+    csf_subcategory: [PR.AA-01, PR.AA-03, PR.DS-01]
+    input_mode: burp
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: data/nuclei_burp.json
+    notes: "Replay captured authenticated traffic for deep checks behind login."
+
+  # ——— DETECT ———
+  vuln_monitoring:
+    # PR.PS-01 (explicit “scan monitoring” profile)
+    tags: [cve]
+    severity: [high, critical]
+    csf_subcategory: [PR.PS-01]
+    input_mode: list
+    rate_limit: 3
+    concurrency: 2
+    retries: 2
+    timeout: 5
+    output: data/nuclei_detect_vuln.json
+    notes: "Use on a cadence; forms the evidence for ‘vulnerability scans are performed’."
+
+  # ——— GOVERN / RESPOND / RECOVER ———
+  # These are governance-led; keep as placeholders to remind the pipeline they are scored via governance checks.
+  govern_placeholders:
+    tags: []
+    severity: [info]
+    output: data/nuclei_govern_placeholder.json
+    notes: "GV.P0-01, GV.SC-01, GV.RR-01 are policy/process. Capture via governance_checks.csv, not Nuclei."
+
+  respond_recover_placeholders:
+    tags: []
+    severity: [info]
+    output: data/nuclei_rr_placeholder.json
+    notes: "RS.* and RC.* are exercised/tested processes; evidence from drills and docs, not Nuclei."

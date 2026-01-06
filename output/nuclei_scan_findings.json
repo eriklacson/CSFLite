@@ -1,0 +1,11 @@
+[
+    {
+        "templateID": "prometheus-metrics",
+        "host": "juice-shop.herokuapp.com",
+        "matched-at": "https://juice-shop.herokuapp.com/metrics",
+        "severity": "medium",
+        "timestamp": "2025-10-11T15:58:30.076533302+08:00",
+        "matcher-name": "Prometheus Metrics - Detect",
+        "description": "Prometheus metrics page was detected."
+    }
+]

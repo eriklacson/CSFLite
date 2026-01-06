@@ -23,7 +23,7 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(description="CSFLite governance baseline assessment tool")
     parser.add_argument("--governance_checklist", type=str, help="Governance checklist CSV File")
-    parser.add_argument("--governance_assessment", type=str, help="Governance assessment ouput the CSV")
+    parser.add_argument("--governance_assessment_csv", type=str, help="Governance assessment ouput the CSV")
     parser.add_argument("--governance_heatmap", type=str, help="Governance assessment heatmap ouput")
 
     return parser.parse_args(argv)
@@ -31,7 +31,7 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
 
 def validate_arguments(args: argparse.Namespace) -> None:
     """Validate that both arguments are provided."""
-    if not args.nuclei_raw or not args.csflite_out:
+    if not args.governance_checklist or not args.governance_assessment or not args.governance_heatmap:
         raise ValueError(
             "'--governance_checklist' '--governance_assessment' '--goverance_heatmap' arguments are required."
         )
@@ -49,7 +49,7 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
 
         # get command line params
         governance_checklist = args.governance_checklist
-        governance_assessment = args.governance_assessment
+        governance_assessment_csv = args.governance_assessment
         governance_heatmap = args.governance_heatmap
 
         # get CSF lookup reference
@@ -63,10 +63,10 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
         """generate governance assessment"""
         # write governance assessment score
         governance_assessment = assess.generate_governance_assessement(governance_checklist_results, csf_lookup)
-        global_helpers.write_to_csv(governance_assessment, governance_assessment)
+        global_helpers.write_to_csv(governance_assessment)
 
         # write governance assessment heatmap
-        governance_heatmap = assess.generate_governance_heatmap(governance_assessment)
+        governance_heatmap = assess.generate_governance_heatmap(governance_assessment, governance_assessment_csv)
         global_helpers.write_to_csv(governance_heatmap, governance_heatmap)
 
     except ValueError as ve:

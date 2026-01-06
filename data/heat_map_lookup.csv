@@ -1,26 +1,26 @@
-csf_subcategory_id,csf_subcategory_name,weight,,
-GV.P0-01,Organizational cybersecurity policy is established and communicated,1.5,,
-GV.SC-01,Supply chain agreements are managed,1,,
-GV.RR-01,Roles and responsibilities are assigned,1.2,,
-GV.RM-01,Risk management activities are reviewed and adjusted based on exercises and incidents.,1.5,,
-ID.AM-02,Assets and systems are inventoried,1.2,,
-ID.AM-03,Baseline of operations/data flows established & managed,1.2,,
-ID.AM-04,External information systems are cataloged,1,,
-ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",1.5,,
-ID.RA-01,Vulnerability scans are performed,1.5,,
-PR.AA-01,Identities and credentials are managed,1.5,,
-PR.AA-03,Users/services/hardware are authenticated,1.2,,
-PR.DS-01,Data-at-rest is protected,1,,
-PR.DS-10,Integrity checking mechanisms are used,1,,
-PR.IR-01,Communications and control networks are protected,1.2,,
-DE.CM-01,The network is monitored to detect potential cybersecurity events,1.2,,
-DE.CM-07,Monitoring for unauthorized changes in external systems is performed,1.2,,
-RS.MA-01,Response plan is executed,1.5,,
-RS.CO-02,Public relations are managed during incidents,1,,
-RS.CO-03,Incident response information is shared with stakeholders.,1.2,,
-RS.MI-01,Incidents are mitigated,1.5,,
-RS.MI-02,Threats are eliminated,1.5,,
-RC.RP-01,Recovery plan is executed,1.5,,
-RC.RP-02,Recovery policies and procedures established and maintained,1.2,,
-RC.RP-05,Integrity of restored assets should be verified after recovery.,1,,
-RC.C0-03,Recovery status is communicated with stakeholders.,1.2,,
+csf_subcategory_id,csf_subcategory_name,weight
+GV.PO-01,Policy for managing cybersecurity risks is established,1.5
+GV.RR-01,Organizational leadership is responsible and accountable for cybersecurity risk,1.2
+GV.RM-01,Risk management objectives are established and agreed to by stakeholders,1.5
+GV.SC-01,Cybersecurity supply chain risk management program is established,1.0
+ID.AM-01,Inventories of hardware managed by the organization are maintained,1.2
+ID.AM-02,Inventories of software and systems are maintained,1.2
+ID.AM-05,Assets are prioritized based on classification and criticality,1.5
+ID.RA-01,Vulnerabilities in assets are identified and recorded,1.5
+ID.RA-05,Threats and vulnerabilities inform risk prioritization,1.5
+PR.AA-01,Identities and credentials are managed,1.5
+PR.AA-03,Users and services are authenticated,1.2
+PR.DS-01,Data-at-rest is protected,1.0
+PR.DS-02,Data-in-transit is protected,1.2
+PR.DS-11,Backups are created and tested,1.5
+PR.IR-01,Networks are protected from unauthorized access,1.2
+DE.CM-01,Networks and services are monitored for adverse events,1.2
+DE.CM-09,Computing hardware and software are monitored for adverse events,1.2
+DE.AE-02,Potentially adverse events are analyzed,1.0
+DE.AE-08,Incidents are declared when criteria are met,1.0
+RS.MA-01,Incident response plan is executed,1.5
+RS.CO-02,Stakeholders are notified of incidents,1.0
+RS.MI-01,Incidents are contained,1.5
+RS.MI-02,Incidents are eradicated,1.5
+RC.RP-01,Recovery plan is executed,1.5
+RC.CO-03,Recovery progress is communicated to stakeholders,1.2

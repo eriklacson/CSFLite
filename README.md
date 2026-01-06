@@ -1,6 +1,6 @@
 # CSFLite Framework
 
-A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automated scanning (via Nuclei) with manual governance checks to produce a fast, actionable security baseline.
+A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automation tools with manual governance checks to produce a fast, actionable security baseline.
 
 ---
 
@@ -9,7 +9,7 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 **CSFLite** is designed for lean security operations. Instead of overwhelming organizations with the full CSF catalog, this framework focuses on:
 
 - The **Top 25 most impactful subcategories** across all CSF Functions
-- What can be **automated via scan** (e.g., open ports, outdated software, misconfigurations)
+- What can be **automated** (e.g., open ports, outdated software, misconfigurations)
 - What must be **validated manually** (e.g., policies, incident response plans, recovery strategies)
 
 ---
@@ -19,11 +19,12 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 This repository contains:
 
 - ✅ Curated CSFLite **subcategories** list (top 25)
+- ✅ A **manual questionnaire** for governance assessment
+- ✅ A **script** for processing the governance questionnaire results
 - ✅ Mapping of **Nuclei templates → CSF subcategories**
 - ✅ CSV/JSON **lookup tables** for automation
-- ✅ A **manual questionnaire** for non-automatable items
 - ✅ Suggested **remediation guidance**
-- ✅ Example **report templates**'
+- ✅ Example **policy, guides and reporting templates**
 - ✅ Python scripts for mappping scan outputs and manual questioinaire results to CSF subcategories.
 - ✅ Example **Nuclei scan configurations** for common environments
 

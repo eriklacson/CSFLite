@@ -1,9 +1,21 @@
 templateID,csf_function,subcategory_id,subcategory_name,enabled
-networking/open-ports,Identify,ID.AM-02,Assets and systems inventoried,True
-exposures/git-auth-token,Identify,ID.RA-05,External information systems are cataloged,True
+networking/open-ports,Identify,ID.AM-02,Inventories of software and systems are maintained,True
+exposures/git-auth-token,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True
+exposures/aws-credentials,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True
+exposures/env-file,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True
 default-logins/ssh-default-creds,Protect,PR.AA-01,Identities and credentials are managed,True
-auth/open-admin,Protect,PR.AA-03,Remote access is managed,True
-headers/missing-content-type,Protect,PR.DS-01,Data-at-rest is protected,True
-misconfiguration/dir-listing,Protect,PR.DS-10,Integrity checking mechanisms are used,True
-ssl/self-signed,Protect,PR.IR-01,Communications and control networks are protected,True
-technologies/outdated-server-software,Detect,DE.CM-08,Vulnerability scans are performed,True
+auth/open-admin,Protect,PR.AA-03,Users and services are authenticated,True
+network/ftp-anonymous,Protect,PR.AA-03,Users and services are authenticated,True
+headers/missing-content-type,Protect,PR.DS-02,Data-in-transit is protected,True
+headers/missing-hsts,Protect,PR.DS-02,Data-in-transit is protected,True
+headers/missing-csp,Protect,PR.DS-02,Data-in-transit is protected,True
+misconfiguration/dir-listing,Protect,PR.DS-01,Data-at-rest is protected,True
+misconfiguration/cors-misconfig,Protect,PR.DS-02,Data-in-transit is protected,True
+ssl/self-signed,Protect,PR.DS-02,Data-in-transit is protected,True
+ssl/expired-cert,Protect,PR.DS-02,Data-in-transit is protected,True
+ssl/weak-cipher,Protect,PR.DS-02,Data-in-transit is protected,True
+network/ssh-weak-algo,Protect,PR.DS-02,Data-in-transit is protected,True
+technologies/outdated-server-software,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True
+technologies/outdated-wordpress,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True
+technologies/outdated-plugin,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True
+cves/2021/CVE-2021-44228,Identify,ID.RA-01,Vulnerabilities in assets are identified and recorded,True

@@ -1,74 +1,182 @@
 [
   {
-    "templateID":"networking/open-ports",
-    "finding":"Open Ports Detected",
-    "csf_function":"Identify",
-    "subcategory_id":"ID.AM-02",
-    "subcategory_name":"Assets and systems inventoried",
-    "rationale":"Open ports reflect active assets and exposed services—critical to inventory.",
-    "recommended_remediation":"Close unnecessary ports or restrict access via firewall/security group."
+    "templateID": "networking/open-ports",
+    "finding": "Open Ports Detected",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.AM-02",
+    "subcategory_name": "Inventories of software and systems are maintained",
+    "rationale": "Open ports reflect active services that should be inventoried and assessed.",
+    "recommended_remediation": "Close unnecessary ports or restrict access via firewall/security group."
   },
   {
-    "templateID":"exposures/git-auth-token",
-    "finding":"Publicly Exposed Git Auth Token",
-    "csf_function":"Identify",
-    "subcategory_id":"ID.RA-05",
-    "subcategory_name":"External information systems are cataloged",
-    "rationale":"Leaked tokens indicate poor control over external systems and APIs.",
-    "recommended_remediation":"Revoke the token, rotate credentials, and apply `.gitignore` rules."
+    "templateID": "exposures/git-auth-token",
+    "finding": "Publicly Exposed Git Auth Token",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "Leaked credentials are critical vulnerabilities requiring immediate action.",
+    "recommended_remediation": "Revoke the token immediately, rotate credentials, and apply .gitignore rules."
   },
   {
-    "templateID":"default-logins/ssh-default-creds",
-    "finding":"SSH Default Credentials",
-    "csf_function":"Protect",
-    "subcategory_id":"PR.AA-01",
-    "subcategory_name":"Identities and credentials are managed",
-    "rationale":"Default or weak credentials are an easy entry point for attackers.",
-    "recommended_remediation":"Change default passwords and enforce key-based SSH authentication."
+    "templateID": "default-logins/ssh-default-creds",
+    "finding": "SSH Default Credentials",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.AA-01",
+    "subcategory_name": "Identities and credentials are managed",
+    "rationale": "Default credentials indicate failed credential management.",
+    "recommended_remediation": "Change default passwords and enforce key-based SSH authentication."
   },
   {
-    "templateID":"auth/open-admin",
-    "finding":"Unauthenticated Admin Panel",
-    "csf_function":"Protect",
-    "subcategory_id":"PR.AA-03",
-    "subcategory_name":"Remote access is managed",
-    "rationale":"Exposed admin interfaces without auth represent a major control gap.",
-    "recommended_remediation":"Restrict access with authentication, IP allowlists, or VPN."
+    "templateID": "auth/open-admin",
+    "finding": "Unauthenticated Admin Panel",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.AA-03",
+    "subcategory_name": "Users and services are authenticated",
+    "rationale": "Exposed admin interfaces without authentication are critical gaps.",
+    "recommended_remediation": "Restrict access with authentication, IP allowlists, or VPN."
   },
   {
-    "templateID":"headers\/missing-content-type",
-    "finding":"Missing X-Content-Type-Options Header",
-    "csf_function":"Protect",
-    "subcategory_id":"PR.DS-01",
-    "subcategory_name":"Data-at-rest is protected",
-    "rationale":"Lack of this header allows MIME-sniffing attacks, risking improper content execution.",
-    "recommended_remediation":"Add `X-Content-Type-Options: nosniff` to all server responses."
+    "templateID": "headers/missing-content-type",
+    "finding": "Missing X-Content-Type-Options Header",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Missing security headers enable MIME-sniffing attacks.",
+    "recommended_remediation": "Add X-Content-Type-Options: nosniff to all server responses."
   },
   {
-    "templateID":"misconfiguration/dir-listing",
-    "finding":"Open Directory Listing",
-    "csf_function":"Protect",
-    "subcategory_id":"PR.DS-10",
-    "subcategory_name":"Integrity checking mechanisms are used",
-    "rationale":"Directory listing exposes files and internal structure, violating data integrity and confidentiality.",
-    "recommended_remediation":"Disable directory listing in your web server (e.g., Apache\/NGINX)."
+    "templateID": "misconfiguration/dir-listing",
+    "finding": "Open Directory Listing",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-01",
+    "subcategory_name": "Data-at-rest is protected",
+    "rationale": "Directory listing exposes file structure and potentially sensitive data.",
+    "recommended_remediation": "Disable directory listing in web server configuration."
   },
   {
-    "templateID":"ssl/self-signed",
-    "finding":"Self-Signed SSL Certificate",
-    "csf_function":"Protect",
-    "subcategory_id":"PR.IR-01",
-    "subcategory_name":"Communications and control networks are protected",
-    "rationale":"Self-signed certs break trust boundaries, allowing MITM attacks.",
-    "recommended_remediation":"Replace with a valid certificate from a trusted CA (e.g., Let's Encrypt)."
+    "templateID": "ssl/self-signed",
+    "finding": "Self-Signed SSL Certificate",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Self-signed certs break trust chains and enable MITM attacks.",
+    "recommended_remediation": "Replace with a valid certificate from a trusted CA (e.g., Let's Encrypt)."
   },
   {
-    "templateID":"technologies/outdated-server-software",
-    "finding":"Outdated WordPress Plugin Detected",
-    "csf_function":"Detect",
-    "subcategory_id":"DE.CM-08",
-    "subcategory_name":"Vulnerability scans are performed",
-    "rationale":"Identifies outdated components with known CVEs—core to vuln management.",
-    "recommended_remediation":"Update the plugin to the latest secure version or disable it."
+    "templateID": "ssl/expired-cert",
+    "finding": "Expired SSL Certificate",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Expired certificates cause trust warnings and potential security bypasses.",
+    "recommended_remediation": "Renew the certificate before expiration; implement certificate monitoring."
+  },
+  {
+    "templateID": "ssl/weak-cipher",
+    "finding": "Weak SSL/TLS Cipher Suite",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Weak ciphers can be broken allowing traffic decryption.",
+    "recommended_remediation": "Configure server to use only strong cipher suites; disable SSLv3 and TLS 1.0/1.1."
+  },
+  {
+    "templateID": "technologies/outdated-server-software",
+    "finding": "Outdated Server Software Detected",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "Outdated software contains known vulnerabilities.",
+    "recommended_remediation": "Update to the latest secure version or migrate to supported software."
+  },
+  {
+    "templateID": "technologies/outdated-wordpress",
+    "finding": "Outdated WordPress Detected",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "WordPress core vulnerabilities are actively exploited.",
+    "recommended_remediation": "Update WordPress to the latest version; enable automatic security updates."
+  },
+  {
+    "templateID": "technologies/outdated-plugin",
+    "finding": "Outdated Plugin Detected",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "Plugin vulnerabilities are a primary attack vector.",
+    "recommended_remediation": "Update the plugin or remove if no longer maintained."
+  },
+  {
+    "templateID": "cves/2021/CVE-2021-44228",
+    "finding": "Log4Shell RCE Vulnerability",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "Critical RCE vulnerability with active exploitation.",
+    "recommended_remediation": "Patch immediately; update Log4j to 2.17.1+; apply mitigations if patching delayed."
+  },
+  {
+    "templateID": "network/ssh-weak-algo",
+    "finding": "SSH Weak Algorithm",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Weak SSH algorithms can be compromised.",
+    "recommended_remediation": "Configure SSH to use strong key exchange and encryption algorithms."
+  },
+  {
+    "templateID": "network/ftp-anonymous",
+    "finding": "Anonymous FTP Access",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.AA-03",
+    "subcategory_name": "Users and services are authenticated",
+    "rationale": "Anonymous access bypasses authentication controls.",
+    "recommended_remediation": "Disable anonymous FTP access; require authentication for all FTP connections."
+  },
+  {
+    "templateID": "exposures/aws-credentials",
+    "finding": "Exposed AWS Credentials",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "Exposed cloud credentials enable full account compromise.",
+    "recommended_remediation": "Revoke credentials immediately, rotate all keys, audit CloudTrail for unauthorized access."
+  },
+  {
+    "templateID": "exposures/env-file",
+    "finding": "Exposed Environment File",
+    "csf_function": "Identify",
+    "subcategory_id": "ID.RA-01",
+    "subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "rationale": "Environment files often contain database credentials and API keys.",
+    "recommended_remediation": "Remove public access, rotate all credentials found in the file."
+  },
+  {
+    "templateID": "misconfiguration/cors-misconfig",
+    "finding": "CORS Misconfiguration",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Overly permissive CORS allows unauthorized cross-origin requests.",
+    "recommended_remediation": "Restrict Access-Control-Allow-Origin to specific trusted domains."
+  },
+  {
+    "templateID": "headers/missing-hsts",
+    "finding": "Missing HSTS Header",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Without HSTS browsers may connect over HTTP enabling downgrade attacks.",
+    "recommended_remediation": "Add Strict-Transport-Security header with appropriate max-age."
+  },
+  {
+    "templateID": "headers/missing-csp",
+    "finding": "Missing Content-Security-Policy",
+    "csf_function": "Protect",
+    "subcategory_id": "PR.DS-02",
+    "subcategory_name": "Data-in-transit is protected",
+    "rationale": "Missing CSP increases XSS attack surface.",
+    "recommended_remediation": "Implement a Content-Security-Policy header appropriate to your application."
   }
 ]

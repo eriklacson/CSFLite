@@ -1,26 +1,26 @@
 csf_subcategory_id,csf_name,weight,recommendation
-GV.P0-01,Organizational cybersecurity policy is established and communicated,1.5,Define and document security responsibilities and enforcement processes.
-GV.SC-01,Supply chain agreements are managed,1,Ensure contracts with suppliers include security and risk requirements.
-GV.RR-01,Roles and responsibilities are assigned,1.2,"Document and communicate security roles, responsibilities, and authorities."
-GV.RM-01,Risk management activities are reviewed and adjusted based on exercises or incidents.,1.5,Incorporate post-incident reviews and tabletop exercise outcomes to refine risk management controls and procedures.
-ID.AM-02,Assets and systems are inventoried,1.2,"Maintain an up-to-date asset inventory including devices, VMs, and containers."
-ID.AM-03,Baseline of operations/data flows established & managed,1.2,Establish and maintain an up-to-date baseline of operations and data flows to detect and manage anomalies effectively.
-ID.AM-04,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."
-ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",1.5,Classify assets by criticality and apply appropriate protection levels.
-ID.RA-01,Vulnerability scans are performed,1.5,Schedule regular internal/external vulnerability scans and track remediation.
-PR.AA-01,Identities and credentials are managed,1.5,Enforce strong password policies and implement MFA.
-PR.AA-03,Users/services/hardware are authenticated,1.2,"Use strong, multi-factor authentication to verify all users, services, and devices before granting access."
-PR.DS-01,Data-at-rest is protected,1,Use full-disk encryption or encrypted file systems.
-PR.DS-10,Integrity checking mechanisms are used,1,Implement file integrity monitoring and version control.
-PR.IR-01,Communications and control networks are protected,1.2,Disable insecure protocols and enforce TLS 1.2+.
-DE.CM-01,The network is monitored to detect potential cybersecurity events,1.2,Implement network monitoring tools to detect anomalies and potential cybersecurity events.
-DE.CM-07,Monitoring for unauthorized changes in external systems is performed,1.2,Monitor and detect unauthorized changes in external systems.
-RS.MA-01,Response plan is executed,1.5,Create and rehearse a documented incident response plan.
-RS.CO-02,Public relations are managed during incidents,1,Prepare public statements and designate a PR spokesperson.
-RS.CO-03,Incident response information is shared with stakeholders.,1.2,Establish clear communication channels to promptly share incident details with internal teams and external partners
-RS.MI-01,Incidents are mitigated,1.5,Contain threats immediately using playbooks and escalation procedures.
-RS.M1-02,Threats are eliminated,1.5,Immediately remove threats and conduct documented post-mortems.
-RC.RP-01,Recovery plan is executed,1.5,Test backups and rehearse system restoration procedures.
-RC.RP-02,Recovery policies and procedures established and maintained,1.2,Document findings from incidents and integrate them into recovery plans.
-RC.RP-05,Integrity of restored assets should be verified after recovery.,1,Verify restored systems and data integrity before returning to normal operations.
-RC.C0-03,Share recovery status and progress updates with stakeholders.,1.2,Set up a communication plan to keep stakeholders informed during recovery.
+GV.PO-01,Policy for managing cybersecurity risks is established based on organizational context and priorities,1.5,Define and document a cybersecurity policy approved by leadership and communicated to all staff.
+GV.RR-01,Organizational leadership is responsible and accountable for cybersecurity risk,1.2,Assign explicit cybersecurity ownership to a named individual or role with documented authority.
+GV.RM-01,Risk management objectives are established and agreed to by organizational stakeholders,1.5,Document risk appetite and tolerance statements; review quarterly with leadership.
+GV.SC-01,A cybersecurity supply chain risk management program is established,1.0,Maintain a vendor inventory with security requirements in contracts and periodic reviews.
+ID.AM-01,Inventories of hardware managed by the organization are maintained,1.2,Maintain an up-to-date hardware asset inventory including all endpoints and network devices.
+ID.AM-02,Inventories of software and systems managed by the organization are maintained,1.2,Track all software installations including versions; flag unauthorized or end-of-life software.
+ID.AM-05,Assets are prioritized based on classification and criticality,1.5,Classify assets by business impact (critical/high/medium/low) and apply protection accordingly.
+ID.RA-01,Vulnerabilities in assets are identified and recorded,1.5,Schedule regular vulnerability scans and maintain a vulnerability register with remediation status.
+ID.RA-05,Threats and vulnerabilities are used to understand inherent risk and prioritize response,1.5,Use risk scoring (likelihood × impact) to prioritize remediation efforts.
+PR.AA-01,Identities and credentials for authorized users and services are managed,1.5,Enforce strong password policies; implement MFA for all privileged and remote access.
+PR.AA-03,Users and services are authenticated,1.2,Require authentication for all administrative interfaces; eliminate anonymous access.
+PR.DS-01,The confidentiality and integrity of data-at-rest are protected,1.0,Enable full-disk encryption on endpoints; encrypt sensitive data in databases and storage.
+PR.DS-02,The confidentiality and integrity of data-in-transit are protected,1.2,Enforce TLS 1.2+ for all network communications; disable insecure protocols.
+PR.DS-11,Backups of data are created and tested,1.5,Implement 3-2-1 backup strategy; test restoration quarterly; store backups offline or immutable.
+PR.IR-01,Networks and environments are protected from unauthorized logical access,1.2,Implement network segmentation; enforce firewall rules; disable unnecessary services and ports.
+DE.CM-01,Networks and network services are monitored to find potentially adverse events,1.2,Deploy network monitoring or IDS; review logs for anomalies; alert on suspicious traffic.
+DE.CM-09,Computing hardware and software are monitored to find potentially adverse events,1.2,Enable endpoint detection; monitor for unauthorized changes; correlate with vulnerability data.
+DE.AE-02,Potentially adverse events are analyzed to understand associated activities,1.0,Triage alerts within defined SLAs; document analysis findings; escalate as needed.
+DE.AE-08,Incidents are declared when adverse events meet defined incident criteria,1.0,Define clear incident criteria (severity thresholds); document declaration process.
+RS.MA-01,The incident response plan is executed in coordination with relevant third parties,1.5,Maintain and test an incident response plan; include contact lists and escalation procedures.
+RS.CO-02,Internal and external stakeholders are notified of incidents,1.0,Define communication templates and channels for incident notification; designate spokespersons.
+RS.MI-01,Incidents are contained,1.5,Develop containment playbooks; isolate affected systems rapidly; preserve evidence.
+RS.MI-02,Incidents are eradicated,1.5,Remove threat artifacts; patch exploited vulnerabilities; validate clean state before restoration.
+RC.RP-01,The recovery portion of the incident response plan is executed,1.5,Document recovery procedures; test backup restoration; define RTO/RPO targets.
+RC.CO-03,Recovery activities and progress are communicated to stakeholders,1.2,Provide regular status updates during recovery; document lessons learned post-incident.

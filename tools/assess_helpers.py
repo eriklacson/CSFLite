@@ -291,14 +291,14 @@ def generate_governance_heatmap(governance_assessment):
         "csf_subcategory_name",
         "response",
         "weight",
-        "weighted_score",
+        "assessment_score",
     }
     if not required.issubset(df.columns):
         return []
 
     # normalize numeric fields
     df["weight"] = df["weight"].astype(float)
-    df["assessment_score"] = df["weighted_score"].astype(float)
+    df["assessment_score"] = df["assessment_score"].astype(float)
 
     # determine heat level from asessment score
     def score_to_sev(row):

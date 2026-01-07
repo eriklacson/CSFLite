@@ -232,14 +232,14 @@ def test_generate_governance_heatmap():
             "csf_subcategory_name": "Governance roles",
             "response": "No",
             "weight": 1.0,
-            "weighted_score": "0.00",
+            "assessment_score": "0.00",
         },
         {
             "csf_subcategory_id": "PR.AA-01",
             "csf_subcategory_name": "Access control",
             "response": "Yes",
             "weight": 2.0,
-            "weighted_score": "2.00",
+            "assessment_score": "2.00",
         },
     ]
 

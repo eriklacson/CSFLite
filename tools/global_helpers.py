@@ -16,8 +16,8 @@ def write_to_csv(dataset, output_path):
     print("writing mapped results to CSV...")
     if dataset:
         keys = dataset[0].keys()
-        with open(output_path, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=keys)
+        with open(output_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=keys, quoting=csv.QUOTE_MINIMAL)
             writer.writeheader()
             writer.writerows(dataset)
         status = f"Dataset written to: {output_path}"

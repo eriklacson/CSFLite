@@ -68,7 +68,6 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
 
         # write governance assessment heatmap
         governance_heatmap_data = assess.generate_governance_heatmap(governance_assessment_data)
-        print(governance_heatmap_data)
         global_helpers.write_to_csv(governance_heatmap_data, governance_heatmap_csv)
         print(f"Governance assessment heatmap written to: {governance_heatmap_csv}")
 

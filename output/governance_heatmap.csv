@@ -1,0 +1,26 @@
+csf_subcategory_id,name,response,severity,gap_score
+GV.RM-01,Risk management objectives are established,No,high,1.50
+ID.AM-05,Assets are prioritized by criticality,No,high,1.50
+ID.RA-01,Vulnerabilities are identified and recorded,No,high,1.50
+ID.RA-05,Risk prioritization informs response,No,high,1.50
+RC.RP-01,Recovery plan is executed,No,high,1.50
+RS.MA-01,Incident response plan is executed,No,high,1.50
+RS.MI-01,Incidents are contained,No,high,1.50
+RS.MI-02,Incidents are eradicated,No,high,1.50
+DE.CM-01,Networks are monitored for adverse events,No,high,1.20
+GV.RR-01,Organizational leadership is responsible for cybersecurity risk,No,high,1.20
+RC.CO-03,Recovery progress is communicated,No,high,1.20
+DE.AE-02,Adverse events are analyzed,No,high,1.00
+DE.AE-08,Incidents are declared when criteria are met,No,high,1.00
+GV.SC-01,Supply chain risk management program is established,No,high,1.00
+PR.DS-01,Data-at-rest is protected,No,high,1.00
+RS.CO-02,Stakeholders are notified of incidents,No,high,1.00
+GV.PO-01,Policy for managing cybersecurity risks is established,Partial,medium,0.75
+PR.AA-01,Identities and credentials are managed,Partial,medium,0.75
+DE.CM-09,Computing systems are monitored for adverse events,Partial,medium,0.60
+ID.AM-01,Hardware inventories are maintained,Partial,medium,0.60
+ID.AM-02,Software and systems inventories are maintained,Partial,medium,0.60
+PR.IR-01,Networks are protected from unauthorized access,Partial,medium,0.60
+PR.AA-03,Users and services are authenticated,Yes,low,0.00
+PR.DS-02,Data-in-transit is protected,Yes,low,0.00
+PR.DS-11,Backups are created and tested,Yes,low,0.00

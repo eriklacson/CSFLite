@@ -50,7 +50,7 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
         # get command line params
         governance_checklist = args.governance_checklist
         governance_assessment_csv = args.governance_assessment_csv
-        governance_heatmap = args.governance_heatmap
+        governance_heatmap_csv = args.governance_heatmap
 
         # get CSF lookup reference
         csf_lookup = assess.get_csf_lookup(paths["csf_lookup"])
@@ -62,14 +62,15 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
 
         """generate governance assessment"""
         # write governance assessment score
-        governance_assessment = assess.generate_governance_assessement(governance_checklist_results, csf_lookup)
-        global_helpers.write_to_csv(governance_assessment, governance_assessment_csv)
+        governance_assessment_data = assess.generate_governance_assessement(governance_checklist_results, csf_lookup)
+        global_helpers.write_to_csv(governance_assessment_data, governance_assessment_csv)
         print(f"Governance assessment written to: {governance_assessment_csv}")
 
         # write governance assessment heatmap
-        governance_heatmap = assess.generate_governance_heatmap(governance_assessment)
-        global_helpers.write_to_csv(governance_heatmap, governance_heatmap)
-        print(f"Governance assessment heatmap written to: {governance_heatmap}")
+        governance_heatmap_data = assess.generate_governance_heatmap(governance_assessment_data)
+        print(governance_heatmap_data)
+        global_helpers.write_to_csv(governance_heatmap_data, governance_heatmap_csv)
+        print(f"Governance assessment heatmap written to: {governance_heatmap_csv}")
 
     except ValueError as ve:
         print(f"Argument Error: {ve}", file=sys.stderr)

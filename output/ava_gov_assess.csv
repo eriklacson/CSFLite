@@ -1,0 +1,26 @@
+csf_subcategory_id,csf_subcategory_name,response,score,weight,recommendation,assessment_score,gap_score
+RS.MI-02,Incidents are eradicated,No,0.0,1.5,Remove threat artifacts; patch exploited vulnerabilities; validate clean state before restoration.,0.00,1.50
+RS.MI-01,Incidents are contained,No,0.0,1.5,Develop containment playbooks; isolate affected systems rapidly; preserve evidence.,0.00,1.50
+RS.MA-01,Incident response plan is executed,No,0.0,1.5,Maintain and test an incident response plan; include contact lists and escalation procedures.,0.00,1.50
+RS.CO-02,Stakeholders are notified of incidents,No,0.0,1.0,Define communication templates and channels for incident notification; designate spokespersons.,0.00,1.00
+RC.RP-01,Recovery plan is executed,No,0.0,1.5,Document recovery procedures; test backup restoration; define RTO/RPO targets.,0.00,1.50
+RC.CO-03,Recovery progress is communicated,No,0.0,1.2,Provide regular status updates during recovery; document lessons learned post-incident.,0.00,1.20
+PR.IR-01,Networks are protected from unauthorized access,Yes,1.0,1.2,Implement network segmentation; enforce firewall rules; disable unnecessary services and ports.,1.20,0.00
+PR.DS-11,Backups are created and tested,Partial,0.5,1.5,Implement 3-2-1 backup strategy; test restoration quarterly; store backups offline or immutable.,0.75,0.75
+PR.DS-02,Data-in-transit is protected,Yes,1.0,1.2,Enforce TLS 1.2+ for all network communications; disable insecure protocols.,1.20,0.00
+PR.DS-01,Data-at-rest is protected,No,0.0,1.0,Enable full-disk encryption on endpoints; encrypt sensitive data in databases and storage.,0.00,1.00
+PR.AA-03,Users and services are authenticated,Yes,1.0,1.2,Require authentication for all administrative interfaces; eliminate anonymous access.,1.20,0.00
+PR.AA-01,Identities and credentials are managed,Yes,1.0,1.5,Enforce strong password policies; implement MFA for all privileged and remote access.,1.50,0.00
+ID.RA-05,Risk prioritization informs response,No,0.0,1.5,Use risk scoring (likelihood × impact) to prioritize remediation efforts.,0.00,1.50
+ID.RA-01,Vulnerabilities are identified and recorded,No,0.0,1.5,Schedule regular vulnerability scans and maintain a vulnerability register with remediation status.,0.00,1.50
+ID.AM-05,Assets are prioritized by criticality,No,0.0,1.5,Classify assets by business impact (critical/high/medium/low) and apply protection accordingly.,0.00,1.50
+ID.AM-02,Software and systems inventories are maintained,Partial,0.5,1.2,Track all software installations including versions; flag unauthorized or end-of-life software.,0.60,0.60
+ID.AM-01,Hardware inventories are maintained,Partial,0.5,1.2,Maintain an up-to-date hardware asset inventory including all endpoints and network devices.,0.60,0.60
+GV.SC-01,Supply chain risk management program is established,No,0.0,1.0,Maintain a vendor inventory with security requirements in contracts and periodic reviews.,0.00,1.00
+GV.RR-01,Organizational leadership is responsible for cybersecurity risk,No,0.0,1.2,Assign explicit cybersecurity ownership to a named individual or role with documented authority.,0.00,1.20
+GV.RM-01,Risk management objectives are established,No,0.0,1.5,Document risk appetite and tolerance statements; review quarterly with leadership.,0.00,1.50
+GV.PO-01,Policy for managing cybersecurity risks is established,Partial,0.5,1.5,Define and document a cybersecurity policy approved by leadership and communicated to all staff.,0.75,0.75
+DE.CM-09,Computing systems are monitored for adverse events,Yes,1.0,1.2,Enable endpoint detection; monitor for unauthorized changes; correlate with vulnerability data.,1.20,0.00
+DE.CM-01,Networks are monitored for adverse events,No,0.0,1.2,Deploy network monitoring or IDS; review logs for anomalies; alert on suspicious traffic.,0.00,1.20
+DE.AE-08,Incidents are declared when criteria are met,No,0.0,1.0,Define clear incident criteria (severity thresholds); document declaration process.,0.00,1.00
+DE.AE-02,Adverse events are analyzed,No,0.0,1.0,Triage alerts within defined SLAs; document analysis findings; escalate as needed.,0.00,1.00

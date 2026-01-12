@@ -44,6 +44,33 @@ def test_write_no_data(tmp_path):
     assert status == "No data to write."
 
 
+def test_write_with_commas_in_values(tmp_path):
+    # import necessary functions
+    from tools.global_helpers import write_to_csv
+
+    # Test data with commas in values
+    test_data = [
+        {"name": "Smith, John", "description": "Senior Developer, Team Lead"},
+        {"name": "Doe, Jane", "description": "Product Manager, Agile Coach"},
+    ]
+
+    path = tmp_path / "test_commas.csv"
+
+    status = write_to_csv(test_data, str(path))
+
+    # Read the CSV and verify commas are properly handled
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    assert status == f"Dataset written to: {path}"
+    assert len(rows) == 2
+    assert rows[0]["name"] == "Smith, John"
+    assert rows[0]["description"] == "Senior Developer, Team Lead"
+    assert rows[1]["name"] == "Doe, Jane"
+    assert rows[1]["description"] == "Product Manager, Agile Coach"
+
+
 def test_write_to_json_with_data(tmp_path: Path):
     # Import necessary functions
     from tools.global_helpers import write_to_json

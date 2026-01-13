@@ -1,6 +1,6 @@
 # Getting Started with CSFLite
 
-Welcome to CSFLite! This guide will help you set up and run your first NIST CSF assessment in under 10 minutes.
+Welcome to CSFLite! This guide will help you set up and run your first NIST CSF assessment.
 
 ## What You'll Accomplish
 

@@ -14,7 +14,7 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 
 ---
 
-## What’s Included
+## What's Included
 
 This repository contains:
 
@@ -27,6 +27,18 @@ This repository contains:
 - ✅ Example **policy, guides and reporting templates**
 - ✅ Python scripts for mappping scan outputs and manual questioinaire results to CSF subcategories.
 - ✅ Example **Nuclei scan configurations** for common environments
+
+---
+
+## 🚀 Getting Started
+
+Ready to run your first CSF assessment?
+
+**→ [Get Started in 10 Minutes](docs/GETTING_STARTED.md)**
+
+The Getting Started guide walks you through:
+- Installing dependencies (Python, Poetry, Nuclei)
+- Running a manual governance assessment worklfow
 
 ---
 
@@ -50,7 +62,7 @@ Contributors are welcome once the first working release is finalized.
 
 ## 📅 Roadmap
 
-See [`roadmap/development-roadmap.md`](roadmap/development_roadmap.md) for phased deliverables and progress tracking.
+See [`roadmap/development-roadmap.md`](doc/development_roadmap.md) for phased deliverables and progress tracking.
 
 ---
 
@@ -63,4 +75,3 @@ Released under the [MIT License](./LICENSE).
 ## 🙌 Contributions
 
 Interested in contributing templates, fixes, or feedback? Please wait until the project reaches its first release milestone, then check the upcoming `CONTRIBUTING.md`.
-

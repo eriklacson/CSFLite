@@ -1,6 +1,8 @@
 # CSFLite Framework
 
-A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF v2.0) for small tech teams, startups, and SMEs. Combines automation tools with manual governance checks to produce a fast, actionable security baseline.
+*⚠️ Early development (WIP) — Expect changes to structure, mappings, and outputs.*
+
+A lightweight NIST CSF v2.0 implementation for startups and SMEs that answers a simple question: do your foundational security capabilities exist at all?
 
 ---
 
@@ -12,59 +14,49 @@ A practical, lightweight implementation of the NIST Cybersecurity Framework (CSF
 - What can be **automated** (e.g., open ports, outdated software, misconfigurations)
 - What must be **validated manually** (e.g., policies, incident response plans, recovery strategies)
 
+CSFLite takes a governance-first approach: a manual checklist assesses whether foundational capabilities exist before any attempt at maturity scoring, risk quantification, or control prescriptions.
+
 ---
 
 ## What's Included
 
-This repository contains:
+### Framework Assets
+- Curated CSFLite **subcategories** list (Top 25)
+- Mapping of **Nuclei templates → CSF subcategories**
+- CSV/JSON **lookup tables** for automation
 
-- ✅ Curated CSFLite **subcategories** list (top 25)
-- ✅ A **manual questionnaire** for governance assessment
-- ✅ A **script** for processing the governance questionnaire results
-- ✅ Mapping of **Nuclei templates → CSF subcategories**
-- ✅ CSV/JSON **lookup tables** for automation
-- ✅ Suggested **remediation guidance**
-- ✅ Example **policy, guides and reporting templates**
-- ✅ Python scripts for mappping scan outputs and manual questioinaire results to CSF subcategories.
-- ✅ Example **Nuclei scan configurations** for common environments
+### Tooling
+- **Manual questionnaire** for governance assessment
+- **Scripts** for processing questionnaire results and mapping scan outputs to CSF subcategories
+- Example **Nuclei scan configurations** for common environments
+
+### Templates & Guidance
+- Suggested **remediation guidance**
+- Example **policy, guides, and reporting templates**
 
 ---
 
 ## Use Case
 
-This toolkit is for:
+This toolkit is for SMEs, startups, freelance consultants, and security-oriented DevOps teams who want structured risk insight without enterprise overhead.
 
-- **SMEs/startups** that want structured risk insight without enterprise overhead
-- **Freelancers/consultants** running lightweight assessments
-- **Security-oriented DevOps teams** bridging scanning and policy gaps
-
+---
 
 ## 🚀 Getting Started
 
 Ready to run your first CSF assessment?
 
-**→ [Get Started in 10 Minutes](docs/GETTING_STARTED.md)**
+**→ [Get Started](docs/GETTING_STARTED.md)**
 
 The Getting Started guide walks you through:
 - Installing dependencies (Python, Poetry, Nuclei)
-- Running a manual governance assessment worklfow
-
----
-
-
----
-
-## Status
-
-**This project is currently in early development (WIP).**  
-Expect changes to structure, mappings, and outputs.  
-Contributors are welcome once the first working release is finalized.
+- Running a manual governance assessment workflow
 
 ---
 
 ## 📅 Roadmap
 
-See [`roadmap/development-roadmap.md`](doc/development_roadmap.md) for phased deliverables and progress tracking.
+See [`doc/development_roadmap.md`](doc/development_roadmap.md) for phased deliverables and progress tracking.
 
 ---
 

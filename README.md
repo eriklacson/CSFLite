@@ -30,6 +30,15 @@ This repository contains:
 
 ---
 
+## Use Case
+
+This toolkit is for:
+
+- **SMEs/startups** that want structured risk insight without enterprise overhead
+- **Freelancers/consultants** running lightweight assessments
+- **Security-oriented DevOps teams** bridging scanning and policy gaps
+
+
 ## 🚀 Getting Started
 
 Ready to run your first CSF assessment?
@@ -42,13 +51,6 @@ The Getting Started guide walks you through:
 
 ---
 
-## Use Case
-
-This toolkit is for:
-
-- **SMEs/startups** that want structured risk insight without enterprise overhead
-- **Freelancers/consultants** running lightweight assessments
-- **Security-oriented DevOps teams** bridging scanning and policy gaps
 
 ---
 

@@ -332,10 +332,45 @@ def generate_governance_heatmap(governance_assessment):
     return governance_heatmap
 
 
+def map_scan_to_csf_rules(scan_results, mapping_rules_path, csf_lookup_path, template_cache_path=None):
+    """
+    Map scan results to CSF using rule-based mapping from mapping_rules.yaml.
+
+    This function uses the CSFRuleMapper to provide deterministic, rule-based
+    mapping of Nuclei findings to NIST CSF v2.0 subcategories.
+
+    Args:
+        scan_results: List of finding dictionaries
+        mapping_rules_path: Path to mapping_rules.yaml
+        csf_lookup_path: Path to csf_lookup.csv
+        template_cache_path: Optional path to template cache for tag enrichment
+
+    Returns:
+        List of mapped findings with CSF metadata
+    """
+    print("mapping scan results to CSF using rule-based mapper...")
+
+    # Import here to avoid circular dependencies
+    from csf_rule_mapper import CSFRuleMapper
+
+    # Initialize mapper
+    mapper = CSFRuleMapper(
+        mapping_rules_path=mapping_rules_path,
+        csf_lookup_path=csf_lookup_path,
+        template_cache_path=template_cache_path,
+    )
+
+    # Map findings
+    mapped_results = mapper.map_findings(scan_results)
+
+    return mapped_results
+
+
 __all__ = [
     "get_csf_lookup",
     "read_scan_json",
     "map_scan_to_csf",
+    "map_scan_to_csf_rules",
     "generate_scan_heatmap",
     "get_governance_checklist_results",
     "generate_governance_assessement",

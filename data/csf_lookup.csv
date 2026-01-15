@@ -1,4 +1,5 @@
 csf_subcategory_id,csf_name,weight,recommendation
+<<<<<<< HEAD
 GV.PO-01,Policy for managing cybersecurity risks is established based on organizational context and priorities,1.5,Define and document a cybersecurity policy approved by leadership and communicated to all staff.
 GV.RR-01,Organizational leadership is responsible and accountable for cybersecurity risk,1.2,Assign explicit cybersecurity ownership to a named individual or role with documented authority.
 GV.RM-01,Risk management objectives are established and agreed to by organizational stakeholders,1.5,Document risk appetite and tolerance statements; review quarterly with leadership.
@@ -24,3 +25,31 @@ RS.MI-01,Incidents are contained,1.5,Develop containment playbooks; isolate affe
 RS.MI-02,Incidents are eradicated,1.5,Remove threat artifacts; patch exploited vulnerabilities; validate clean state before restoration.
 RC.RP-01,The recovery portion of the incident response plan is executed,1.5,Document recovery procedures; test backup restoration; define RTO/RPO targets.
 RC.CO-03,Recovery activities and progress are communicated to stakeholders,1.2,Provide regular status updates during recovery; document lessons learned post-incident.
+=======
+GV.P0-01,Organizational cybersecurity policy is established and communicated,1.5,Define and document security responsibilities and enforcement processes.
+GV.SC-01,Supply chain agreements are managed,1,Ensure contracts with suppliers include security and risk requirements.
+GV.RR-01,Roles and responsibilities are assigned,1.2,"Document and communicate security roles, responsibilities, and authorities."
+GV.RM-01,Risk management activities are reviewed and adjusted based on exercises or incidents.,1.5,Incorporate post-incident reviews and tabletop exercise outcomes to refine risk management controls and procedures.
+ID.AM-02,Assets and systems are inventoried,1.2,"Maintain an up-to-date asset inventory including devices, VMs, and containers."
+ID.AM-03,Baseline of operations/data flows established & managed,1.2,Establish and maintain an up-to-date baseline of operations and data flows to detect and manage anomalies effectively.
+ID.AM-04,External information systems are cataloged,1,"Maintain a list of all external vendors, cloud services, and third-party tools."
+ID.AM-05,"Resources are prioritized based on classification, criticality, and business value.",1.5,Classify assets by criticality and apply appropriate protection levels.
+ID.RA-01,Vulnerability scans are performed,1.5,Schedule regular internal/external vulnerability scans and track remediation.
+PR.AA-01,Identities and credentials are managed,1.5,Enforce strong password policies and implement MFA.
+PR.AA-03,Users/services/hardware are authenticated,1.2,"Use strong, multi-factor authentication to verify all users, services, and devices before granting access."
+PR.DS-01,Data-at-rest is protected,1,Use full-disk encryption or encrypted file systems.
+PR.DS-10,Integrity checking mechanisms are used,1,Implement file integrity monitoring and version control.
+PR.IR-01,Communications and control networks are protected,1.2,Disable insecure protocols and enforce TLS 1.2+.
+DE.CM-01,The network is monitored to detect potential cybersecurity events,1.2,Implement network monitoring tools to detect anomalies and potential cybersecurity events.
+DE.CM-07,Monitoring for unauthorized changes in external systems is performed,1.2,Monitor and detect unauthorized changes in external systems.
+RS.MA-01,Response plan is executed,1.5,Create and rehearse a documented incident response plan.
+RS.CO-02,Public relations are managed during incidents,1,Prepare public statements and designate a PR spokesperson.
+RS.CO-03,Incident response information is shared with stakeholders.,1.2,Establish clear communication channels to promptly share incident details with internal teams and external partners
+RS.MI-01,Incidents are mitigated,1.5,Contain threats immediately using playbooks and escalation procedures.
+RS.M1-02,Threats are eliminated,1.5,Immediately remove threats and conduct documented post-mortems.
+RC.RP-01,Recovery plan is executed,1.5,Test backups and rehearse system restoration procedures.
+RC.RP-02,Recovery policies and procedures established and maintained,1.2,Document findings from incidents and integrate them into recovery plans.
+RC.RP-05,Integrity of restored assets should be verified after recovery.,1,Verify restored systems and data integrity before returning to normal operations.
+RC.C0-03,Share recovery status and progress updates with stakeholders.,1.2,Set up a communication plan to keep stakeholders informed during recovery.
+PR.PS-01,Platform security is managed,1.5,Establish and maintain secure configuration baselines for all platforms and systems.
+>>>>>>> 1bdd6af71000dafd5f7b4ec20e6ebaf665ac6aa3

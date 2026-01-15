@@ -5,7 +5,7 @@ defaults:
 rules:
   - name: "Transport security (TLS/HSTS/Headers)"
     when: { any_tag: [ssl, tls, hsts, headers], min_severity: medium }
-    map:  { csf_subcats: [PPR.IR-01], confidence: High,
+    map:  { csf_subcats: [PR.IR-01], confidence: High,
             rationale: "TLS config + secure transport signals" }
 
   - name: "Exposed backups & secrets"
@@ -38,17 +38,17 @@ rules:
 
   - name: "API/OpenAPI exposure posture"
     when: { any_tag: [api, openapi, auth, exposure, misconfig], min_severity: medium }
-    map:  { csf_subcats: [ID.PS-01, PR.DS-01,], confidence: Medium,
+    map:  { csf_subcats: [ID.RA-01, PR.DS-01], confidence: Medium,
             rationale: "API spec + exposure informs risk prioritization and protections" }
 
   - name: "CVE feed as lightweight threat intel"
     when: { any_tag: [cve], min_severity: high }
-    map:  { csf_subcats: [ID.RA-02], confidence: Low,
+    map:  { csf_subcats: [ID.RA-01], confidence: Low,
             rationale: "Templates encode CVE intel; full intel program is governance" }
 
   - name: "Adverse event analysis (correlation signal)"
     when: { any_tag: [cve, exposure, backup, secret, ssl, tls, headers], min_severity: medium }
-    map:  { csf_subcats: [ID.RA-03], confidence: Low,
+    map:  { csf_subcats: [ID.RA-01], confidence: Low,
             rationale: "Findings feed analysis; formal investigation is response process" }
 
 overrides:

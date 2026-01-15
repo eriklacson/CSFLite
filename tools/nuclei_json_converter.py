@@ -48,7 +48,7 @@ def _clean_text(value: Any) -> str:
     return str(value)
 
 
-def _convert_entry(entry: Mapping[str, Any]) -> Dict[str, str]:
+def _convert_entry(entry: Mapping[str, Any]) -> Dict[str, Any]:
     """Convert a single Nuclei JSON object into CSFLite's summary format.
 
     Field names in the raw payload have changed between historical
@@ -63,10 +63,12 @@ def _convert_entry(entry: Mapping[str, Any]) -> Dict[str, str]:
         severity = info.get("severity")
         description = info.get("description") or info.get("name")
         fallback_matcher = info.get("name")
+        tags = info.get("tags", [])
     else:
         severity = None
         description = None
         fallback_matcher = None
+        tags = []
 
     matcher_name = entry.get("matcher-name") or fallback_matcher
 
@@ -78,19 +80,20 @@ def _convert_entry(entry: Mapping[str, Any]) -> Dict[str, str]:
         "timestamp": _clean_text(entry.get("timestamp")),
         "matcher-name": _clean_text(matcher_name),
         "description": _clean_text(description),
+        "tags": tags if isinstance(tags, list) else [],
     }
 
     return result
 
 
-def convert_nuclei_raw(raw_data: Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]) -> List[Dict[str, str]]:
+def convert_nuclei_raw(raw_data: Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]) -> List[Dict[str, Any]]:
     """Convert in-memory Nuclei JSON data into the simplified summary format."""
 
     entries = _coerce_to_entries(raw_data)
     return [_convert_entry(item) for item in entries]
 
 
-def convert_nuclei_raw_file(path: Union[str, Path]) -> List[Dict[str, str]]:
+def convert_nuclei_raw_file(path: Union[str, Path]) -> List[Dict[str, Any]]:
     """Load a raw Nuclei JSON file and convert it to the summary format.
 
     Parameters

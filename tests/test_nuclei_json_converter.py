@@ -15,6 +15,7 @@ def test_convert_and_write_csv(tmp_path: Path) -> None:
                 "severity": "medium",
                 "description": "Example finding",
                 "name": "example-matcher",
+                "tags": ["ssl", "tls"],
             },
         }
     ]
@@ -35,5 +36,6 @@ def test_convert_and_write_csv(tmp_path: Path) -> None:
         "timestamp",
         "matcher-name",
         "description",
+        "tags",
     ]
     assert "tpl-1" in written[1]

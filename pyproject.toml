@@ -3,7 +3,7 @@ name = "csflite"
 version = "0.1.0"
 description = ""
 authors = ["Erik Lacson <elacson@gmail.com>"]
-license = "GNU Public License 3.0"
+license = "MIT License"
 readme = "README.md"
 package-mode = false
 

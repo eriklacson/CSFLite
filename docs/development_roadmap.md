@@ -141,16 +141,9 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 **Goal:** Polish the project for public consumption as `v0.1.0`.
 
 **Deliverables:**
-- [ ] Resolve license mismatch — `pyproject.toml` says GPL 3.0, README says MIT. Pick one.
-- [ ] Remove deprecation notice from `assess.py` docstring (or replace the tool)
-- [ ] Fix CI workflow — `bandit -r your_package` references a placeholder, should be `tools`
-- [ ] Fix CI Python version — workflow uses 3.10, `pyproject.toml` requires ^3.12
-- [ ] Add `pyproject.toml` description (currently empty)
 - [ ] Add example output files to `examples/` directory
 - [ ] Write `CONTRIBUTING.md`
 - [ ] Add GitHub issue templates (bug report, feature request)
-- [ ] Final README review — ensure all links resolve, no broken references
-- [ ] Tag `v0.1.0-alpha` release on GitHub
 
 **Acceptance criteria:**
 - `poetry install && poetry run pytest` passes on a clean clone
@@ -173,22 +166,6 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 - [ ] Add support for additional output formats (Markdown report, HTML dashboard)
 - [ ] Explore JSONL streaming support for large scan outputs
 - [ ] Community-submitted scan profiles for industry-specific environments
-
----
-
-## Known Technical Debt
-
-These items are not blocking release but should be addressed:
-
-| Item | Location | Impact |
-|------|----------|--------|
-| `assess.py` marked for deprecation in its own docstring | `tools/assess.py` | Confusing for contributors |
-| `path_config.json` uses relative paths with `../` prefix | `config/path_config.json` | Breaks if tools are run from unexpected working directory |
-| `numpy` in production dependencies | `pyproject.toml` | Only used by pandas; may not need explicit dependency |
-| `pytest` in both main and dev dependency groups | `pyproject.toml` | Should only be in dev |
-| CI Bandit target is `your_package` (placeholder) | `.github/workflows/python-lint.yaml` | Bandit scan isn't actually running against CSFLite code |
-| CI Python version (3.10) doesn't match project requirement (3.12+) | `.github/workflows/python-lint.yaml` | Tests may pass on CI but fail on target runtime |
-| `scan_input_json` key referenced in `assess.py` not in `path_config.json` | `tools/assess.py`, `config/path_config.json` | `assess.py` will fail on missing key |
 
 ---
 

@@ -141,7 +141,6 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 **Goal:** Polish the project for public consumption as `v0.1.0`.
 
 **Deliverables:**
-- [ ] Add example output files to `examples/` directory
 - [ ] Write `CONTRIBUTING.md`
 - [ ] Add GitHub issue templates (bug report, feature request)
 

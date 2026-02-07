@@ -14,7 +14,7 @@ A lightweight NIST CSF v2.0 implementation for startups and SMEs that answers a 
 - What can be **automated** (e.g., open ports, outdated software, misconfigurations)
 - What must be **validated manually** (e.g., policies, incident response plans, recovery strategies)
 
-CSFLite takes a governance-first approach: a manual checklist assesses whether foundational capabilities exist before any attempt at maturity scoring, risk quantification, or control prescriptions.
+CSFLite takes a governance-first approach: a manual checklist assesses whether foundational capabilities exist before any attempt at maturity scoring, risk quantification, or control prescriptions. See the [Assessment Philosophy](docs/assessment_philosophy.md) for the full design rationale.
 
 ---
 
@@ -87,6 +87,10 @@ Released under the [MIT License](./LICENSE).
 
 ---
 
-## 🙌 Contributions
+## 🙌 Contributing
 
-Interested in contributing templates, fixes, or feedback? Please wait until the project reaches its first stable release milestone, then check the upcoming `CONTRIBUTING.md`.
+Contributions are welcome. Please read **[CONTRIBUTING.md](CONTRIBUTING.md)** before submitting a pull request.
+
+High-value contributions right now include Nuclei template mappings, scan profiles for specific environments, bug fixes in the scan pipeline, and integration test coverage. Subcategory changes and scoring methodology changes require discussion first — see the contributing guide for details.
+
+All contributions must align with the [Assessment Philosophy](docs/assessment_philosophy.md).

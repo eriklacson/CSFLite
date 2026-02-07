@@ -89,7 +89,7 @@ Released under the [MIT License](./LICENSE).
 
 ## 🙌 Contributing
 
-Contributions are welcome. Please read **[CONTRIBUTING.md](CONTRIBUTING.md)** before submitting a pull request.
+Contributions are welcome. Please read **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** before submitting a pull request.
 
 High-value contributions right now include Nuclei template mappings, scan profiles for specific environments, bug fixes in the scan pipeline, and integration test coverage. Subcategory changes and scoring methodology changes require discussion first — see the contributing guide for details.
 

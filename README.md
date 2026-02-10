@@ -2,11 +2,13 @@
 
 **Lean Security Framework for Startups and SMEs**
 
-CSFLite is a proof-of-concept cybersecurity framework implementation based on NIST CSF v2.0, designed specifically for resource-constrained organizations. It combines automated vulnerability scanning with lightweight governance assessments to answer a fundamental question: **Do these security controls exist at all?**
+CSFLite is a lightweight cybersecurity framework implementation based on NIST CSF v2.0, designed specifically for resource-constrained organizations. It combines automated vulnerability scanning with governance assessments to answer a fundamental question: **Do these security controls exist at all?**
 
-This is not a compliance tool. CSFLite treats cybersecurity as governance under adversarial conditions — security emerges from embedded constraints, automation, and measurable outcomes, not documentation.
+This is not a compliance tool. CSFLite treats cybersecurity as governance under adversarial conditions. Security emerges from embedded constraints, automation, and measurable outcomes, not documentation.
 
 See the [Assessment Philosophy](docs/csflite-assessment-philosophy.md) for the full design rationale.
+
+**☕ Support CSFLite:** If this project helps you in any way consider [buying me a coffee](https://buymeacoffee.com/eriklacson). 
 
 ---
 
@@ -171,6 +173,8 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - **Issues:** Report bugs or request features via [GitHub Issues](https://github.com/eriklacson/CSFLite/issues)
 - **Discussions:** Not yet enabled (project too early)
 - **Security:** Email maintainer directly for vulnerability reports (see GitHub profile)
+- **Donations:** Help sustain development → [Buy Me a Coffee](https://buymeacoffee.com/eriklacson)
+
 
 ---
 
@@ -189,4 +193,3 @@ If you're spending more time on the framework than on fixing security gaps, we'v
 
 *Built with the philosophy that security is governance under adversarial conditions.*
 
-*Last updated: 2026-02-10*

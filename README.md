@@ -6,7 +6,7 @@ CSFLite is a lightweight cybersecurity framework implementation based on NIST CS
 
 This is not a compliance tool. CSFLite treats cybersecurity as governance under adversarial conditions. Security emerges from embedded constraints, automation, and measurable outcomes, not documentation.
 
-See the [Assessment Philosophy](docs/csflite-assessment-philosophy.md) for the full design rationale.
+See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full design rationale.
 
 **☕ Support CSFLite:** If this project helps you in any way consider [buying me a coffee](https://buymeacoffee.com/eriklacson). 
 

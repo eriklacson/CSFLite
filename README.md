@@ -111,6 +111,8 @@ Contributions are welcome. Please read **[CONTRIBUTING.md](docs/CONTRIBUTING.md)
 **Currently frozen:**
 - Nuclei template mappings (YAML migration in progress on feature branch)
 
+This project uses Claude Code for spec-driven development. See CLAUDE.md for context and conventions, and claude-project/ for spec templates and artifacts.
+
 **Requires discussion first:**
 - Subcategory changes
 - Scoring methodology changes
@@ -144,6 +146,7 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - [Automatable Subcategories](docs/reference/automatable_subcategories.md) — Automation classification
 - [Manual Remediation Guide](docs/reference/manual_remediation.md) — Step-by-step remediation for governance gaps
 - [Nuclei-to-CSF Mapping](docs/reference/nuclei_to_csf_mapping.md) — Template mapping rationale
+- [claude-project/](claude-project/) — Seed documents, spec templates, and ADRs for Claude Code workflows
 
 ---
 
@@ -155,6 +158,7 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - **Code Quality:** Black (formatting), Ruff (linting), Bandit (security)
 - **Scanning:** Nuclei (vulnerability detection)
 - **Data:** CSV/JSON (current), YAML (future)
+- **Claude Code:** Latest — AI-assisted spec execution
 
 ---
 

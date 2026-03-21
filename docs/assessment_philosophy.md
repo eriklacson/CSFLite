@@ -201,11 +201,11 @@ The Top 25 subcategories are distributed across all six CSF Functions to ensure 
 
 | Function | Count | Focus Areas |
 |----------|-------|-------------|
-| GOVERN | 5 | Risk strategy, roles, policy, oversight, supply chain |
-| IDENTIFY | 5 | Asset management, risk assessment, improvement |
-| PROTECT | 7 | Access control, awareness, data security, platform security |
-| DETECT | 3 | Continuous monitoring, adverse event analysis |
-| RESPOND | 3 | Incident management, analysis, mitigation |
+| GOVERN | 4 | Risk strategy, roles, policy, supply chain |
+| IDENTIFY | 5 | Asset management, risk assessment |
+| PROTECT | 6 | Access control, data security, platform security, resilience |
+| DETECT | 4 | Continuous monitoring, adverse event analysis |
+| RESPOND | 4 | Incident management, communication, mitigation |
 | RECOVER | 2 | Recovery execution, communication |
 
 This distribution ensures that CSFLite assessments do not over-index on any single aspect of cybersecurity.

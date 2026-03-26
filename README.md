@@ -21,6 +21,7 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 - **Top 25 subcategory framework** — Curated, validated against NIST CSWP 29
 - **Remediation guidance** — Actionable follow-up steps for every governance gap
 - **Governance questionnaire template** — Ready-to-use CSV covering all 25 subcategories with evidence requirements
+- **SOC 2 readiness assessment** — CSFLite-to-Trust Services Criteria crosswalk (CC1–CC9, A1, C1), supplement questionnaire for gap domains, gap analysis template, and executive summary template
 
 ### 🚧 In Preview
 
@@ -47,6 +48,10 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 - **Governance checklist template** — Pre-built CSV questionnaire for all 25 subcategories
 - **Remediation guidance** — Step-by-step actions for each governance gap
 - **Scan profiles** — Pre-configured Nuclei scan profiles (baseline_web, baseline_network, baseline_cloud, comprehensive)
+- **SOC 2 crosswalk** — Full mapping of Trust Services Criteria (CC1–CC9, A1, C1) to NIST CSF 2.0 subcategories with coverage ratings
+- **SOC 2 supplement questionnaire** — 28-question CSV covering five gap domains not addressed by the CSFLite 25 (change management, physical access, security awareness, business continuity, data disposal)
+- **SOC 2 gap analysis template** — Client-facing markdown template organized by SOC 2 category, pre-populated from the crosswalk
+- **SOC 2 executive summary template** — One-page client-facing summary with coverage score, criteria breakdown, and top remediation items
 
 ---
 
@@ -147,6 +152,14 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - [Manual Remediation Guide](docs/reference/manual_remediation.md) — Step-by-step remediation for governance gaps
 - [Nuclei-to-CSF Mapping](docs/reference/nuclei_to_csf_mapping.md) — Template mapping rationale
 - [claude-project/](claude-project/) — Seed documents, spec templates, and ADRs for Claude Code workflows
+
+### SOC 2 Readiness
+
+- [CSFLite-to-SOC 2 Crosswalk](docs/soc2/csflite-soc2-crosswalk.md) — Full TSC mapping with coverage ratings (full / partial / gap)
+- [SOC 2 Gap Analysis Template](docs/soc2/soc2-gap-analysis-template.md) — Client-facing findings template organized by Security, Availability, Confidentiality
+- [SOC 2 Executive Summary Template](docs/soc2/soc2-executive-summary-template.md) — One-page client-facing readiness summary
+- [SOC 2 Supplement Questionnaire](templates/soc2-supplement-questionnaire.csv) — Standalone CSV covering gap domains outside the CSFLite 25
+- [ADR-0001: Full CSF Crosswalk Decision](docs/adr/ADR-0001-full-csf-crosswalk.md) — Architectural decision record
 
 ---
 

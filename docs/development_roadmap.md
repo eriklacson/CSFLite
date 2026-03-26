@@ -178,7 +178,8 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 - [ ] Create discussion templates for subcategory nominations and mapping proposals
 - [ ] Merge YAML-based tag mapping system (from feature branch)
 - [ ] Expand Nuclei template mappings using YAML rules (target: 50+ templates covered)
-- [ ] Add compliance crosswalk documents (HIPAA, SOC 2, ISO 27001)
+- [x] Add SOC 2 compliance crosswalk and readiness assessment deliverables (crosswalk, supplement questionnaire, gap analysis template, executive summary — completed 2026-03-26)
+- [ ] Add compliance crosswalk documents (HIPAA, ISO 27001)
 - [ ] Add support for additional output formats (Markdown report, HTML dashboard)
 - [ ] Explore JSONL streaming support for large scan outputs
 - [ ] Accept and review community-submitted scan profiles for industry-specific environments
@@ -237,4 +238,4 @@ The transition from CSV to YAML-based mapping is tracked separately:
 
 ---
 
-*Last updated: 2026-02-10*
+*Last updated: 2026-03-26*

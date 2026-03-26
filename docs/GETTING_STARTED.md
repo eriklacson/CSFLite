@@ -71,11 +71,17 @@ poetry run python -c "import tools.global_helpers; print('CSFLite ready.')"
 ```
 CSFLite/
 ├── config/          # Configuration files (paths, settings)
+├── csflite/         # Framework validation artifacts
+│   └── controls.json  # Canonical 25-control reference
 ├── data/            # Reference data & CSF mappings
 │   ├── csf_lookup.csv
 │   ├── nuclei_csf_lookup.json
 │   ├── profiles.yaml
 │   └── targets.txt
+├── docs/
+│   ├── adr/         # Architectural decision records
+│   ├── reference/   # CSFLite framework reference docs
+│   └── soc2/        # SOC 2 readiness deliverables
 ├── templates/       # Input templates for assessments
 ├── scans/           # Nuclei scan outputs (generated)
 ├── output/          # Final assessment reports (generated)
@@ -195,6 +201,53 @@ CSFLite scores represent **coverage**, not maturity or risk.
 2. **High severity gaps** in PROTECT subcategories — these prevent or limit incident impact
 3. **Any "No" response** — a missing capability is always higher priority than a partial one
 4. **Partial responses** — improve these after addressing missing capabilities
+
+---
+
+## SOC 2 Readiness Assessment
+
+If your organization needs to demonstrate readiness for a SOC 2 examination, CSFLite includes a standalone set of deliverables that map your governance assessment results to AICPA Trust Services Criteria.
+
+> **Scope:** Security (CC1–CC9), Availability (A1), Confidentiality (C1). These deliverables are a readiness assessment only — they do not constitute SOC 2 compliance or an audit opinion.
+
+### Step 1: Complete the Governance Assessment First
+
+The SOC 2 deliverables are designed to be used after you have completed the standard governance assessment (see above). Your governance assessment results determine which SOC 2 criteria have coverage and which are gaps.
+
+### Step 2: Review the Crosswalk
+
+Open [`docs/soc2/csflite-soc2-crosswalk.md`](soc2/csflite-soc2-crosswalk.md) to see how your assessed controls map to each Trust Services Criterion. Each entry shows:
+
+- The SOC 2 criterion and its mapped NIST CSF 2.0 subcategory
+- Whether the subcategory is in the CSFLite 25 (`Yes` / `No`)
+- A coverage rating: `full`, `partial`, or `gap`
+- Notes on what is missing and which supplement questionnaire section addresses the gap
+
+### Step 3: Complete the Supplement Questionnaire
+
+For SOC 2 criteria that map to subcategories outside the CSFLite 25, complete the supplement questionnaire:
+
+```bash
+cp templates/soc2-supplement-questionnaire.csv templates/my_soc2_supplement.csv
+```
+
+Open the file and fill in the `response` column (Yes / Partial / No) along with any notes. The questionnaire covers five gap domains:
+
+| Domain | SOC 2 Criteria |
+|--------|----------------|
+| Security awareness and communication | CC2 |
+| Physical access controls | CC6.4 |
+| Change management | CC8 |
+| Business continuity planning | A1 |
+| Data disposal | C1.2 |
+
+### Step 4: Populate the Gap Analysis Template
+
+Open [`docs/soc2/soc2-gap-analysis-template.md`](soc2/soc2-gap-analysis-template.md) and fill in the **Current State** and **Evidence Assessed** columns for each SOC 2 criterion using your governance assessment output and supplement questionnaire responses. Coverage status and remediation recommendations are pre-populated from the crosswalk.
+
+### Step 5: Complete the Executive Summary
+
+Open [`docs/soc2/soc2-executive-summary-template.md`](soc2/soc2-executive-summary-template.md) and fill in the overall coverage score, criteria breakdown counts, and the top 3 priority remediation items identified in the gap analysis. This is the primary client-facing deliverable.
 
 ---
 

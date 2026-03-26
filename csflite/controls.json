@@ -1,0 +1,152 @@
+[
+  {
+    "csf_function": "Govern",
+    "csf_subcategory_id": "GV.PO-01",
+    "csf_subcategory_name": "Policy for managing cybersecurity risks is established based on organizational context and priorities",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Govern",
+    "csf_subcategory_id": "GV.RR-01",
+    "csf_subcategory_name": "Organizational leadership is responsible and accountable for cybersecurity risk",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Govern",
+    "csf_subcategory_id": "GV.RM-01",
+    "csf_subcategory_name": "Risk management objectives are established and agreed to by organizational stakeholders",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Govern",
+    "csf_subcategory_id": "GV.SC-01",
+    "csf_subcategory_name": "A cybersecurity supply chain risk management program is established",
+    "weight": 1.0
+  },
+  {
+    "csf_function": "Identify",
+    "csf_subcategory_id": "ID.AM-01",
+    "csf_subcategory_name": "Inventories of hardware managed by the organization are maintained",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Identify",
+    "csf_subcategory_id": "ID.AM-02",
+    "csf_subcategory_name": "Inventories of software and systems managed by the organization are maintained",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Identify",
+    "csf_subcategory_id": "ID.AM-05",
+    "csf_subcategory_name": "Assets are prioritized based on classification and criticality",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Identify",
+    "csf_subcategory_id": "ID.RA-01",
+    "csf_subcategory_name": "Vulnerabilities in assets are identified and recorded",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Identify",
+    "csf_subcategory_id": "ID.RA-05",
+    "csf_subcategory_name": "Threats and vulnerabilities are used to understand inherent risk and prioritize response",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Protect",
+    "csf_subcategory_id": "PR.AA-01",
+    "csf_subcategory_name": "Identities and credentials for authorized users and services are managed",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Protect",
+    "csf_subcategory_id": "PR.AA-03",
+    "csf_subcategory_name": "Users and services are authenticated",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Protect",
+    "csf_subcategory_id": "PR.DS-01",
+    "csf_subcategory_name": "The confidentiality and integrity of data-at-rest are protected",
+    "weight": 1.0
+  },
+  {
+    "csf_function": "Protect",
+    "csf_subcategory_id": "PR.DS-02",
+    "csf_subcategory_name": "The confidentiality and integrity of data-in-transit are protected",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Protect",
+    "csf_subcategory_id": "PR.DS-11",
+    "csf_subcategory_name": "Backups of data are created and tested",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Protect",
+    "csf_subcategory_id": "PR.IR-01",
+    "csf_subcategory_name": "Networks and environments are protected from unauthorized logical access",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Detect",
+    "csf_subcategory_id": "DE.CM-01",
+    "csf_subcategory_name": "Networks and network services are monitored to find potentially adverse events",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Detect",
+    "csf_subcategory_id": "DE.CM-09",
+    "csf_subcategory_name": "Computing hardware and software are monitored to find potentially adverse events",
+    "weight": 1.2
+  },
+  {
+    "csf_function": "Detect",
+    "csf_subcategory_id": "DE.AE-02",
+    "csf_subcategory_name": "Potentially adverse events are analyzed to understand associated activities",
+    "weight": 1.0
+  },
+  {
+    "csf_function": "Detect",
+    "csf_subcategory_id": "DE.AE-08",
+    "csf_subcategory_name": "Incidents are declared when adverse events meet defined incident criteria",
+    "weight": 1.0
+  },
+  {
+    "csf_function": "Respond",
+    "csf_subcategory_id": "RS.MA-01",
+    "csf_subcategory_name": "The incident response plan is executed in coordination with relevant third parties",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Respond",
+    "csf_subcategory_id": "RS.CO-02",
+    "csf_subcategory_name": "Internal and external stakeholders are notified of incidents",
+    "weight": 1.0
+  },
+  {
+    "csf_function": "Respond",
+    "csf_subcategory_id": "RS.MI-01",
+    "csf_subcategory_name": "Incidents are contained",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Respond",
+    "csf_subcategory_id": "RS.MI-02",
+    "csf_subcategory_name": "Incidents are eradicated",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Recover",
+    "csf_subcategory_id": "RC.RP-01",
+    "csf_subcategory_name": "The recovery portion of the incident response plan is executed",
+    "weight": 1.5
+  },
+  {
+    "csf_function": "Recover",
+    "csf_subcategory_id": "RC.CO-03",
+    "csf_subcategory_name": "Recovery activities and progress are communicated to stakeholders",
+    "weight": 1.2
+  }
+]

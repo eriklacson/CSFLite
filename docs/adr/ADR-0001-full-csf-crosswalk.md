@@ -11,7 +11,7 @@ Accepted
 ## Context
 
 CSFLite measures control coverage across 25 curated NIST CSF 2.0 subcategories selected for
-relevance to Philippine SMBs (20–200 employees). These 25 controls cover the highest-impact
+relevance to start-ups and SMBs (20–200 employees). These 25 controls cover the highest-impact
 areas for the target market and form the basis of the governance assessment pipeline.
 
 When extending CSFLite to support SOC 2 readiness gap analysis, a scoping decision was required:

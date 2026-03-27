@@ -60,7 +60,7 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 This toolkit is for SMEs, startups, freelance consultants, and security-oriented DevOps teams who want structured risk insight without enterprise overhead.
 
 **Who this is for:**
-- Startups preparing for SOC 2, ISO 27001, or customer security questionnaires
+- Startups preparing for SOC 2, HIPAA, or customer security questionnaires
 - Solo security practitioners or consultants serving multiple small clients
 - DevOps teams implementing security controls without dedicated security staff
 - Organizations that need evidence-based security assessments, not compliance theater

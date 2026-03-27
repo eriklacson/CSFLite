@@ -1,0 +1,147 @@
+# SOC 2 Readiness Assessment — Behavior Spec
+# Generated: 2026-03-26
+# Framework: CSFLite v1.0.0
+# Validated against: csflite/controls.json (25 controls)
+
+project:
+  name: soc2-readiness-assessment
+  domain: compliance
+  description: >-
+    SOC 2 readiness gap analysis mapping CSFLite governance assessments
+    to AICPA Trust Services Criteria with supplement questionnaires for
+    gap areas not covered by CSFLite's 25 controls.
+
+scope:
+  target_framework: SOC 2
+  controls_in_scope:
+    - all
+  # SOC 2 categories in scope:
+  #   - Security (CC1-CC9) — mandatory for all SOC 2 engagements
+  #   - Availability (A1) — included for Philippine SMB target market
+  #   - Confidentiality (C1) — included for data-handling service providers
+  # Excluded:
+  #   - Processing Integrity — situational, not default for target market
+  #   - Privacy — deferred to HIPAA readiness project for PHI-handling clients
+
+acceptance_criteria:
+  # Crosswalk completeness
+  - >-
+    Every SOC 2 Common Criteria point (CC1.1 through CC9.2) maps to at least
+    one NIST CSF 2.0 subcategory or is explicitly documented as having no
+    CSF equivalent
+  - >-
+    Every Availability criterion (A1.1 through A1.3) maps to at least one
+    NIST CSF 2.0 subcategory or is explicitly documented as having no
+    CSF equivalent
+  - >-
+    Every Confidentiality criterion (C1.1 through C1.2) maps to at least one
+    NIST CSF 2.0 subcategory or is explicitly documented as having no
+    CSF equivalent
+  - >-
+    Each crosswalk entry includes a coverage level of full, partial, or gap
+    relative to CSFLite's 25 controls
+
+  # Supplement questionnaire
+  - >-
+    Every CSF subcategory identified as a gap in the crosswalk has at least
+    one corresponding question in the supplement questionnaire
+  - >-
+    Supplement questionnaire uses the same CSV column schema as
+    templates/governance_checks_template.csv (csf_function, csf_subcategory_id,
+    csf_subcategory_name, question, evidence, notes, response)
+  - >-
+    Supplement questions reference real NIST CSF 2.0 subcategory IDs, not
+    invented pseudo-IDs
+
+  # Gap analysis template
+  - >-
+    Gap analysis template includes sections for each SOC 2 category in scope
+    (Security, Availability, Confidentiality)
+  - >-
+    Each gap entry includes the SOC 2 criterion ID, mapped CSF subcategory,
+    CSFLite coverage status, current state, and remediation recommendation
+  - >-
+    Gap analysis template does not use maturity language — findings are
+    expressed as coverage exists, coverage partial, or coverage missing
+
+  # Executive summary
+  - Executive summary is one page maximum
+  - >-
+    Executive summary includes overall CSFLite coverage score, count of
+    SOC 2 criteria fully covered vs partially covered vs gap, and top 3
+    priority remediation items
+  - >-
+    Executive summary states that this is a readiness assessment and does
+    not constitute SOC 2 compliance or certification
+
+  # Structural validation
+  - All CSFLite control IDs validated against csflite/controls.json
+  - All referenced NIST CSF 2.0 subcategory IDs validated against CSWP 29
+  - ADR-0001 is included documenting the full-CSF crosswalk decision
+
+constraints:
+  - "No maturity scoring — coverage only"
+  - "All documents in markdown"
+  - "Client data never committed to repo"
+  - >-
+    SOC 2 readiness assessment only — no compliance claims, no certification
+    language, no audit opinions
+  - >-
+    Crosswalk maps to full NIST CSF 2.0 subcategory set per ADR-0001, not
+    limited to CSFLite's 25 controls
+  - >-
+    Supplement questionnaire is standalone — does not modify existing
+    governance pipeline, scoring engine, or controls.json
+  - >-
+    Target audience is Philippine SMBs (20-200 employees) serving US clients
+    facing SOC 2 requirements from customers or partners
+  - >-
+    SOC 2 criteria references use 2017 Trust Services Criteria with revised
+    points of focus (2022) as the authoritative source
+  - >-
+    Deliverables use the term 'readiness assessment' or 'readiness gap
+    analysis' in all client-facing language
+
+deliverables:
+  - type: doc
+    subtype: mapping
+    description: >-
+      CSFLite-to-SOC 2 crosswalk mapping all in-scope Trust Services Criteria
+      (CC1-CC9, A1, C1) to their corresponding NIST CSF 2.0 subcategories.
+      Each entry shows the SOC 2 criterion, mapped CSF subcategory ID and name,
+      whether the subcategory is within CSFLite's 25 controls, and a coverage
+      rating (full, partial, or gap). Gap entries include notes identifying
+      what is missing and which supplement questions address the gap.
+
+  - type: doc
+    subtype: assessment-report
+    description: >-
+      Supplement questionnaire covering SOC 2 gap areas not addressed by
+      CSFLite's 25 controls. Covers five domains: change management (CC8),
+      physical access controls (CC6.4), security awareness and communication
+      (CC2), business continuity planning (A1), and data disposal (C1.2).
+      Questions are keyed to real NIST CSF 2.0 subcategory IDs and use the
+      same CSV column schema as the existing governance checklist template.
+      Delivered as a standalone checklist for Tier 1; engineered integration
+      into the scoring engine is deferred to Tier 2.
+
+  - type: doc
+    subtype: gap-analysis
+    description: >-
+      Client-facing SOC 2 readiness gap analysis template. Takes CSFLite
+      governance assessment results and supplement questionnaire responses
+      and presents findings organized by SOC 2 category (Security,
+      Availability, Confidentiality). Each finding shows the SOC 2 criterion,
+      current coverage status, evidence assessed, and a prioritized
+      remediation recommendation. Intended for delivery to the client as
+      the primary engagement artifact.
+
+  - type: doc
+    subtype: executive-summary
+    description: >-
+      One-page executive summary for client leadership and their US
+      customers or auditors. Includes overall CSFLite coverage score,
+      SOC 2 criteria coverage breakdown (covered, partial, gap), top
+      priority remediation items, and a readiness posture statement.
+      Explicitly states this is a readiness assessment, not a SOC 2
+      report or compliance certification.

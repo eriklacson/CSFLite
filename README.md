@@ -22,6 +22,7 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 - **Remediation guidance** — Actionable follow-up steps for every governance gap
 - **Governance questionnaire template** — Ready-to-use CSV covering all 25 subcategories with evidence requirements
 - **SOC 2 readiness assessment** — CSFLite-to-Trust Services Criteria crosswalk (CC1–CC9, A1, C1), supplement questionnaire for gap domains, gap analysis template, and executive summary template
+- **HIPAA readiness assessment** — CSFLite-to-HIPAA Security Rule crosswalk (§164.308, §164.310, §164.312) and Breach Notification Rule, 9-question supplement questionnaire for gap domains, gap analysis template, and executive summary template; scoped for Business Associates serving US healthcare Covered Entities
 
 ### 🚧 In Preview
 
@@ -52,6 +53,10 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 - **SOC 2 supplement questionnaire** — 28-question CSV covering five gap domains not addressed by the CSFLite 25 (change management, physical access, security awareness, business continuity, data disposal)
 - **SOC 2 gap analysis template** — Client-facing markdown template organized by SOC 2 category, pre-populated from the crosswalk
 - **SOC 2 executive summary template** — One-page client-facing summary with coverage score, criteria breakdown, and top remediation items
+- **HIPAA crosswalk** — Full mapping of HIPAA Security Rule (§164.308, §164.310, §164.312) and Breach Notification Rule to NIST CSF 2.0 subcategories with Required/Addressable designations and coverage ratings
+- **HIPAA supplement questionnaire** — 9-question CSV covering gap domains not addressed by the CSFLite 25 (physical safeguards, device disposal, security training, BAA existence, breach notification, contingency planning, workforce security, minimum necessary)
+- **HIPAA gap analysis template** — Client-facing markdown template organized by HIPAA safeguard category, scoped for Business Associates
+- **HIPAA executive summary template** — One-page BA-framed readiness summary
 
 ---
 
@@ -160,6 +165,13 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - [SOC 2 Executive Summary Template](docs/soc2/soc2-executive-summary-template.md) — One-page client-facing readiness summary
 - [SOC 2 Supplement Questionnaire](templates/soc2-supplement-questionnaire.csv) — Standalone CSV covering gap domains outside the CSFLite 25
 - [ADR-0001: Full CSF Crosswalk Decision](docs/adr/ADR-0001-full-csf-crosswalk.md) — Architectural decision record
+
+### HIPAA Readiness
+
+- [CSFLite-to-HIPAA Crosswalk](docs/hipaa/csflite-hipaa-crosswalk.md) — Full Security Rule and Breach Notification Rule mapping with Required/Addressable designations and coverage ratings (full / partial / gap)
+- [HIPAA Gap Analysis Template](docs/hipaa/hipaa-gap-analysis-template.md) — Client-facing findings template organized by Administrative, Physical, Technical Safeguards, and Breach Notification; scoped for Business Associates
+- [HIPAA Executive Summary Template](docs/hipaa/hipaa-executive-summary-template.md) — One-page BA-framed readiness summary
+- [HIPAA Supplement Questionnaire](templates/hipaa-supplement-questionnaire.csv) — 9-question standalone CSV covering gap domains outside the CSFLite 25
 
 ---
 

@@ -29,7 +29,7 @@ poetry run bandit -r tools --severity-level high
 poetry run pre-commit install
 ```
 
-CI runs Black → Ruff → Bandit → pytest in sequence on Python 3.12.
+CI runs Black → Ruff → Bandit → pytest in sequence on Python 3.12. pytest runs with `--maxfail=1` (stops at first failure). Ruff selects rules `E, F, B, I, S, PT` (S = security lints, PT = pytest style); `E501` is ignored. Bandit skips `B101` (assert statements).
 
 ## Architecture
 
@@ -62,12 +62,23 @@ There are two independent assessment tracks that can be combined:
 | `tools/assess_helpers.py` | Core scoring and heatmap logic for both tracks |
 | `tools/global_helpers.py` | Path resolution, CSV/JSON I/O utilities |
 | `tools/nuclei_helpers.py` | Nuclei profile loading, command building, subprocess management |
+| `tools/nuclei_convert_tool.py` | CLI entry point for converting Nuclei JSONL output |
+| `tools/mapping_helpers.py` | Supporting functions for Nuclei→CSF tag-based mapping |
+| `tools/map_nuclie_to_csf.py` | Legacy CSV-based mapping (superseded by `mapping_rules.yaml`) |
 | `config/path_config.json` | Centralized paths for all inputs/outputs |
 | `data/csf_lookup.csv` | The 25 CSFLite subcategories with weights and recommendations |
+| `data/heat_map_lookup.csv` | Same 25 subcategories with shortened display names for heatmap rendering (separate from `csf_lookup.csv`) |
+| `data/mapping_rules.yaml` | Tag-based rules for Nuclei→CSF mapping (migration target, replacing `nuclei_csf_lookup.csv`) |
 
 ### Test structure
 
 Tests in `tests/` mirror `tools/`. Fixtures live in `tests/fixtures/`. Integration tests in `tests/integration/` are pending (Phase 5).
+
+### Crosswalk supplements
+
+`templates/soc2-supplement-questionnaire.csv` is a delivered SOC 2 crosswalk supplement (28 questions covering 5 gap domains outside the core 25).
+
+`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `claude-project/project.yaml`.
 
 ## Known Issues
 

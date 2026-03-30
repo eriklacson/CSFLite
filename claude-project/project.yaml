@@ -1,147 +1,203 @@
-# SOC 2 Readiness Assessment — Behavior Spec
-# Generated: 2026-03-26
+# HIPAA Readiness Assessment — Behavior Spec
+# Generated: 2026-03-27
 # Framework: CSFLite v1.0.0
 # Validated against: csflite/controls.json (25 controls)
 
 project:
-  name: soc2-readiness-assessment
+  name: hipaa-readiness-assessment
   domain: compliance
   description: >-
-    SOC 2 readiness gap analysis mapping CSFLite governance assessments
-    to AICPA Trust Services Criteria with supplement questionnaires for
-    gap areas not covered by CSFLite's 25 controls.
+    HIPAA readiness gap analysis mapping CSFLite governance assessments
+    to HIPAA Security Rule safeguards and Breach Notification Rule
+    requirements, with supplement questionnaires for gap areas not
+    covered by CSFLite's 25 controls.
 
 scope:
-  target_framework: SOC 2
+  target_framework: HIPAA
   controls_in_scope:
     - all
-  # SOC 2 categories in scope:
-  #   - Security (CC1-CC9) — mandatory for all SOC 2 engagements
-  #   - Availability (A1) — included for Philippine SMB target market
-  #   - Confidentiality (C1) — included for data-handling service providers
+  # HIPAA scope includes:
+  #   - Administrative Safeguards (§164.308)
+  #   - Physical Safeguards (§164.310)
+  #   - Technical Safeguards (§164.312)
+  #   - Organizational Requirements (§164.314) — BAA provisions only
+  #   - Documentation Requirements (§164.316) — as constraint, not assessed
+  #   - Breach Notification Rule (§164.400-414) — included for BA obligations
+  #
   # Excluded:
-  #   - Processing Integrity — situational, not default for target market
-  #   - Privacy — deferred to HIPAA readiness project for PHI-handling clients
+  #   - Privacy Rule (§164.500 series) — out of scope for security readiness
+  #   - §164.308(a)(8) Periodic Evaluation — this engagement satisfies it
+  #   - §164.316(b) Document Retention — noted as constraint, not assessed
 
 acceptance_criteria:
   # Crosswalk completeness
   - >-
-    Every SOC 2 Common Criteria point (CC1.1 through CC9.2) maps to at least
-    one NIST CSF 2.0 subcategory or is explicitly documented as having no
-    CSF equivalent
-  - >-
-    Every Availability criterion (A1.1 through A1.3) maps to at least one
+    Every HIPAA Security Rule standard in §164.308 (Administrative),
+    §164.310 (Physical), and §164.312 (Technical) maps to at least one
     NIST CSF 2.0 subcategory or is explicitly documented as having no
     CSF equivalent
   - >-
-    Every Confidentiality criterion (C1.1 through C1.2) maps to at least one
-    NIST CSF 2.0 subcategory or is explicitly documented as having no
-    CSF equivalent
+    Every Breach Notification Rule requirement (§164.400-414) relevant
+    to Business Associate obligations maps to at least one NIST CSF 2.0
+    subcategory or is explicitly documented as HIPAA-specific
   - >-
-    Each crosswalk entry includes a coverage level of full, partial, or gap
-    relative to CSFLite's 25 controls
+    Each crosswalk entry includes a coverage level of full, partial, or
+    gap relative to CSFLite's 25 controls
+  - >-
+    Crosswalk distinguishes between Required and Addressable
+    implementation specifications per HIPAA Security Rule designations
 
   # Supplement questionnaire
   - >-
-    Every CSF subcategory identified as a gap in the crosswalk has at least
-    one corresponding question in the supplement questionnaire
+    Supplement questionnaire contains exactly 9 questions covering:
+    PHI data flow mapping, physical safeguards (facility/workstation),
+    physical safeguards (device/media disposal), security awareness and
+    training, BAA existence, breach notification procedures, contingency
+    planning, workforce security, and minimum necessary standard
+  - >-
+    Physical safeguards facility/workstation question includes a
+    remote/hybrid qualifier that adjusts expected evidence based on
+    workforce model (on-site, remote, or hybrid)
   - >-
     Supplement questionnaire uses the same CSV column schema as
-    templates/governance_checks_template.csv (csf_function, csf_subcategory_id,
-    csf_subcategory_name, question, evidence, notes, response)
+    templates/governance_checks_template.csv (csf_function,
+    csf_subcategory_id, csf_subcategory_name, question, evidence,
+    notes, response)
   - >-
-    Supplement questions reference real NIST CSF 2.0 subcategory IDs, not
-    invented pseudo-IDs
+    Supplement questions reference real NIST CSF 2.0 subcategory IDs,
+    not invented pseudo-IDs
+  - >-
+    PHI data flow mapping is the first question in the supplement,
+    positioned as the prerequisite for ePHI-scoped questions
 
   # Gap analysis template
   - >-
-    Gap analysis template includes sections for each SOC 2 category in scope
-    (Security, Availability, Confidentiality)
+    Gap analysis template includes sections for each HIPAA safeguard
+    category (Administrative, Physical, Technical) plus Breach
+    Notification
   - >-
-    Each gap entry includes the SOC 2 criterion ID, mapped CSF subcategory,
-    CSFLite coverage status, current state, and remediation recommendation
+    Each gap entry includes the HIPAA section reference, mapped CSF
+    subcategory, CSFLite coverage status, current state, and
+    remediation recommendation
   - >-
-    Gap analysis template does not use maturity language — findings are
-    expressed as coverage exists, coverage partial, or coverage missing
+    Gap analysis template does not use maturity language — findings
+    are expressed as coverage exists, coverage partial, or coverage
+    missing
+  - >-
+    Advisory findings for periodic evaluation (§164.308(a)(8)) and
+    document retention (§164.316) are included as notes, not as
+    assessed gaps
+  - >-
+    ePHI-specific audit logging, emergency access procedures, and
+    ePHI integrity verification are documented as coverage notes
+    under their respective CSFLite controls, not as separate gaps
 
   # Executive summary
   - Executive summary is one page maximum
   - >-
     Executive summary includes overall CSFLite coverage score, count of
-    SOC 2 criteria fully covered vs partially covered vs gap, and top 3
+    HIPAA standards fully covered vs partially covered vs gap, and top 3
     priority remediation items
   - >-
-    Executive summary states that this is a readiness assessment and does
-    not constitute SOC 2 compliance or certification
+    Executive summary states that this is a readiness assessment and
+    does not constitute HIPAA compliance certification
+  - >-
+    Executive summary identifies the client as a Business Associate and
+    frames findings in the context of BA obligations
 
   # Structural validation
   - All CSFLite control IDs validated against csflite/controls.json
   - All referenced NIST CSF 2.0 subcategory IDs validated against CSWP 29
-  - ADR-0001 is included documenting the full-CSF crosswalk decision
+  - >-
+    ADR-0001 (full-CSF crosswalk decision from SOC 2 project) is
+    referenced as the governing architecture decision for crosswalk
+    methodology
 
 constraints:
   - "No maturity scoring — coverage only"
   - "All documents in markdown"
   - "Client data never committed to repo"
   - >-
-    SOC 2 readiness assessment only — no compliance claims, no certification
-    language, no audit opinions
+    HIPAA readiness assessment only — no compliance claims, no
+    certification language, no legal opinions on BAA sufficiency
   - >-
-    Crosswalk maps to full NIST CSF 2.0 subcategory set per ADR-0001, not
-    limited to CSFLite's 25 controls
+    Crosswalk maps to full NIST CSF 2.0 subcategory set per ADR-0001,
+    not limited to CSFLite's 25 controls
   - >-
     Supplement questionnaire is standalone — does not modify existing
     governance pipeline, scoring engine, or controls.json
   - >-
-    Target audience is Philippine SMBs (20-200 employees) serving US clients
-    facing SOC 2 requirements from customers or partners
+    Target audience is Philippine SMBs (20-200 employees) operating as
+    HIPAA Business Associates for US healthcare clients
   - >-
-    SOC 2 criteria references use 2017 Trust Services Criteria with revised
-    points of focus (2022) as the authoritative source
+    All policies and documentation produced or reviewed during this
+    assessment should be retained for a minimum of 6 years per
+    §164.316(b)(2) — noted as advisory, not assessed
+  - >-
+    This engagement satisfies the periodic evaluation requirement under
+    §164.308(a)(8) — client should establish a recurring evaluation
+    schedule (annually recommended)
+  - >-
+    HIPAA references use 45 CFR Part 164 Subparts C (Security Rule) and
+    D (Breach Notification Rule) as authoritative sources
   - >-
     Deliverables use the term 'readiness assessment' or 'readiness gap
     analysis' in all client-facing language
+  - >-
+    BAA assessment is limited to existence verification — legal
+    sufficiency review of BAA content is explicitly out of scope
 
 deliverables:
   - type: doc
     subtype: mapping
     description: >-
-      CSFLite-to-SOC 2 crosswalk mapping all in-scope Trust Services Criteria
-      (CC1-CC9, A1, C1) to their corresponding NIST CSF 2.0 subcategories.
-      Each entry shows the SOC 2 criterion, mapped CSF subcategory ID and name,
-      whether the subcategory is within CSFLite's 25 controls, and a coverage
-      rating (full, partial, or gap). Gap entries include notes identifying
-      what is missing and which supplement questions address the gap.
+      CSFLite-to-HIPAA crosswalk mapping all Security Rule standards
+      (§164.308, §164.310, §164.312) and Breach Notification Rule
+      requirements (§164.400-414) to their corresponding NIST CSF 2.0
+      subcategories. Each entry shows the HIPAA section reference,
+      standard name, Required/Addressable designation, mapped CSF
+      subcategory ID and name, whether the subcategory is within
+      CSFLite's 25 controls, and a coverage rating (full, partial,
+      or gap). Gap entries include notes identifying what is missing
+      and which supplement questions address the gap.
 
   - type: doc
     subtype: assessment-report
     description: >-
-      Supplement questionnaire covering SOC 2 gap areas not addressed by
-      CSFLite's 25 controls. Covers five domains: change management (CC8),
-      physical access controls (CC6.4), security awareness and communication
-      (CC2), business continuity planning (A1), and data disposal (C1.2).
-      Questions are keyed to real NIST CSF 2.0 subcategory IDs and use the
-      same CSV column schema as the existing governance checklist template.
-      Delivered as a standalone checklist for Tier 1; engineered integration
-      into the scoring engine is deferred to Tier 2.
+      Supplement questionnaire covering 9 HIPAA gap areas not addressed
+      by CSFLite's 25 controls. Questions in order: (1) PHI data flow
+      mapping as prerequisite, (2) physical safeguards for facility and
+      workstation access with remote/hybrid qualifier, (3) device and
+      media disposal, (4) security awareness and training, (5) BAA
+      existence verification, (6) breach notification procedures,
+      (7) contingency planning and BCP/DR, (8) workforce security
+      onboarding/offboarding, (9) minimum necessary standard. Questions
+      are keyed to real NIST CSF 2.0 subcategory IDs and use the same
+      CSV column schema as the existing governance checklist template.
+      Delivered as a standalone checklist for Tier 1; engineered
+      integration into the scoring engine is deferred to Tier 2.
 
   - type: doc
     subtype: gap-analysis
     description: >-
-      Client-facing SOC 2 readiness gap analysis template. Takes CSFLite
+      Client-facing HIPAA readiness gap analysis template. Takes CSFLite
       governance assessment results and supplement questionnaire responses
-      and presents findings organized by SOC 2 category (Security,
-      Availability, Confidentiality). Each finding shows the SOC 2 criterion,
-      current coverage status, evidence assessed, and a prioritized
-      remediation recommendation. Intended for delivery to the client as
-      the primary engagement artifact.
+      and presents findings organized by HIPAA safeguard category
+      (Administrative, Physical, Technical) plus Breach Notification.
+      Each finding shows the HIPAA section reference, current coverage
+      status, evidence assessed, and a prioritized remediation
+      recommendation. Includes advisory notes for periodic evaluation
+      and document retention requirements. Frames all findings in the
+      context of Business Associate obligations. Intended for delivery
+      to the client as the primary engagement artifact.
 
   - type: doc
     subtype: executive-summary
     description: >-
       One-page executive summary for client leadership and their US
-      customers or auditors. Includes overall CSFLite coverage score,
-      SOC 2 criteria coverage breakdown (covered, partial, gap), top
+      healthcare customers. Includes overall CSFLite coverage score,
+      HIPAA standards coverage breakdown (covered, partial, gap), top
       priority remediation items, and a readiness posture statement.
-      Explicitly states this is a readiness assessment, not a SOC 2
-      report or compliance certification.
+      Identifies the client as a Business Associate and frames readiness
+      in terms of BA obligations. Explicitly states this is a readiness
+      assessment, not HIPAA compliance certification or a legal opinion.

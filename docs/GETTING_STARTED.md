@@ -81,7 +81,8 @@ CSFLite/
 ├── docs/
 │   ├── adr/         # Architectural decision records
 │   ├── reference/   # CSFLite framework reference docs
-│   └── soc2/        # SOC 2 readiness deliverables
+│   ├── soc2/        # SOC 2 readiness deliverables
+│   └── hipaa/       # HIPAA readiness deliverables
 ├── templates/       # Input templates for assessments
 ├── scans/           # Nuclei scan outputs (generated)
 ├── output/          # Final assessment reports (generated)
@@ -248,6 +249,58 @@ Open [`docs/soc2/soc2-gap-analysis-template.md`](soc2/soc2-gap-analysis-template
 ### Step 5: Complete the Executive Summary
 
 Open [`docs/soc2/soc2-executive-summary-template.md`](soc2/soc2-executive-summary-template.md) and fill in the overall coverage score, criteria breakdown counts, and the top 3 priority remediation items identified in the gap analysis. This is the primary client-facing deliverable.
+
+---
+
+## HIPAA Readiness Assessment
+
+If your organization handles electronic Protected Health Information (ePHI) for US healthcare Covered Entities as a Business Associate, CSFLite includes a standalone set of deliverables that map your governance assessment results to the HIPAA Security Rule and Breach Notification Rule.
+
+> **Scope:** Administrative Safeguards (§164.308), Physical Safeguards (§164.310), Technical Safeguards (§164.312), and Breach Notification Rule — BA obligations (§164.400–414). These deliverables are a readiness assessment only — they do not constitute HIPAA compliance, a HIPAA audit, or any certification.
+
+### Step 1: Complete the Governance Assessment First
+
+The HIPAA deliverables are designed to be used after you have completed the standard governance assessment (see above). Your governance assessment results determine which HIPAA standards have coverage and which are gaps.
+
+### Step 2: Review the Crosswalk
+
+Open [`docs/hipaa/csflite-hipaa-crosswalk.md`](hipaa/csflite-hipaa-crosswalk.md) to see how your assessed controls map to each HIPAA Security Rule standard and implementation specification. Each entry shows:
+
+- The HIPAA section reference and implementation specification name
+- Whether the specification is Required (R) or Addressable (A)
+- The mapped NIST CSF 2.0 subcategory and whether it is in the CSFLite 25
+- A coverage rating: `full`, `partial`, `gap`, or `advisory`
+- Notes on ePHI scoping requirements and which supplement questions address gaps
+
+### Step 3: Complete the Supplement Questionnaire
+
+For HIPAA standards that map to subcategories outside the CSFLite 25, complete the supplement questionnaire:
+
+```bash
+cp templates/hipaa-supplement-questionnaire.csv templates/my_hipaa_supplement.csv
+```
+
+Open the file and fill in the `response` column (Yes / Partial / No) along with any notes. The questionnaire covers nine gap domains in this order:
+
+| Q# | Topic | HIPAA Section |
+|----|-------|---------------|
+| Q1 | PHI data flow mapping (prerequisite) | §164.308(a)(1)(i) |
+| Q2 | Physical safeguards — facility/workstation (remote/hybrid qualifier) | §164.310(a)(1), (b), (c) |
+| Q3 | Device and media disposal | §164.310(d)(1)(i–ii) |
+| Q4 | Security awareness and training | §164.308(a)(5) |
+| Q5 | BAA existence verification | §164.308(b)(1), §164.314(a)(2)(i) |
+| Q6 | Breach notification procedures | §164.410, §164.412 |
+| Q7 | Contingency planning / BCP/DR | §164.308(a)(7) |
+| Q8 | Workforce security | §164.308(a)(3) |
+| Q9 | Minimum necessary standard | §164.308(a)(4) |
+
+### Step 4: Populate the Gap Analysis Template
+
+Open [`docs/hipaa/hipaa-gap-analysis-template.md`](hipaa/hipaa-gap-analysis-template.md) and fill in the **Current State** and **Evidence Assessed** columns for each HIPAA standard using your governance assessment output and supplement questionnaire responses. Coverage status and remediation recommendations are pre-populated from the crosswalk.
+
+### Step 5: Complete the Executive Summary
+
+Open [`docs/hipaa/hipaa-executive-summary-template.md`](hipaa/hipaa-executive-summary-template.md) and fill in the overall coverage score, HIPAA standards breakdown counts, and the top 3 priority remediation items. This is the primary client-facing deliverable and is limited to one page.
 
 ---
 

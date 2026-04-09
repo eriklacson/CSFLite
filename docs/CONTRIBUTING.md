@@ -124,6 +124,7 @@ CSFLite/
 | `templates/governance_checks_template.csv` | Governance questionnaire | Yes — changes user-facing assessment |
 | `config/path_config.json` | Centralized path configuration | Yes — breaks tools if misconfigured |
 | `csflite-assessment-philosophy.md` | Authoritative methodology document | Requires maintainer approval |
+| `docs/reference/csflite-800-53-crosswalk.md` | SP 800-53 assessment method reference | Yes — do not modify control mappings or assessment methods |
 
 ---
 
@@ -145,7 +146,7 @@ These are the most impactful things you can contribute right now:
 
 ### Welcome Contributions
 
-**Compliance Crosswalks** — Mappings between CSFLite subcategories and other frameworks (SOC 2, HIPAA, ISO 27001). These should be added as reference documents in `docs/reference/`.
+**Compliance Crosswalks** — Mappings between CSFLite subcategories and other frameworks (SOC 2, HIPAA, ISO 27001, SP 800-53, etc.). These should be added as reference documents in `docs/reference/`. Crosswalks for SOC 2, HIPAA, and SP 800-53 already exist as reference examples.
 
 **Output Format Additions** — Markdown reports, HTML dashboards, or other report formats generated from assessment data.
 

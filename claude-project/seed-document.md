@@ -16,7 +16,7 @@ There is no proof-of-concept client for CSFLite itself. Client engagements (SOC 
 
 ### Project Separation
 
-CSFLite is the framework layer. Client delivery projects consume its outputs. Compliance crosswalks (SOC 2, HIPAA, ISO 27001) are reference documents that live in CSFLite but inform client delivery.
+CSFLite is the framework layer. Client delivery projects consume its outputs. Compliance crosswalks (SOC 2, HIPAA, SP 800-53, ISO 27001) are reference documents that live in CSFLite but inform client delivery.
 
 | Project | Asset Type | Owns |
 |---|---|---|
@@ -412,7 +412,7 @@ These become ADRs when decomposed into the template.
 | Nuclei as scan engine | Nuclei (ProjectDiscovery) | Open source, template-based, tag system enables CSF mapping, active community, covers web/network/cloud. |
 | CSV/JSON for persistence | Flat files, no database | Eliminates infrastructure dependency. Keeps tool portable and local. Appropriate for current CLI-based delivery mode. |
 | YAML migration for template mapping | Moving from per-template CSV to tag-based YAML rules | CSV approach does not scale — requires manual entry per template. YAML tag rules can match categories of templates. Blocked on Phase 5 validation to avoid compounding unknowns. |
-| Compliance crosswalks as reference docs | Stored in `docs/reference/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. |
+| Compliance crosswalks as reference docs | Stored in `docs/reference/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. |
 | Assessment philosophy as authoritative | `csflite-assessment-philosophy.md` overrides all other docs on conflicts | Single source of truth for methodology prevents drift across documentation. |
 | Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. |
 

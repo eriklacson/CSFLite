@@ -23,6 +23,7 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 - **Governance questionnaire template** — Ready-to-use CSV covering all 25 subcategories with evidence requirements
 - **SOC 2 readiness assessment** — CSFLite-to-Trust Services Criteria crosswalk (CC1–CC9, A1, C1), supplement questionnaire for gap domains, gap analysis template, and executive summary template
 - **HIPAA readiness assessment** — CSFLite-to-HIPAA Security Rule crosswalk (§164.308, §164.310, §164.312) and Breach Notification Rule, 9-question supplement questionnaire for gap domains, gap analysis template, and executive summary template; scoped for Business Associates serving US healthcare Covered Entities
+- **SP 800-53 framework reference** — CSFLite-to-SP 800-53 Rev 5 crosswalk mapping all 25 CSFLite subcategories to SP 800-53 Rev 5 controls with assessment methods sourced from SP 800-53A Rev 5
 
 ### 🚧 In Preview
 
@@ -172,6 +173,10 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - [HIPAA Gap Analysis Template](docs/hipaa/hipaa-gap-analysis-template.md) — Client-facing findings template organized by Administrative, Physical, Technical Safeguards, and Breach Notification; scoped for Business Associates
 - [HIPAA Executive Summary Template](docs/hipaa/hipaa-executive-summary-template.md) — One-page BA-framed readiness summary
 - [HIPAA Supplement Questionnaire](templates/hipaa-supplement-questionnaire.csv) — 9-question standalone CSV covering gap domains outside the CSFLite 25
+
+### SP 800-53 Readiness
+
+- [CSFLite-to-SP 800-53 Crosswalk](docs/reference/csflite-800-53-crosswalk.md) — Maps all 25 CSFLite subcategories to SP 800-53 Rev 5 controls with assessment methods from SP 800-53A Rev 5
 
 ---
 

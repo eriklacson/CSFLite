@@ -80,7 +80,7 @@ CSFLite/
 │   └── targets.txt
 ├── docs/
 │   ├── adr/         # Architectural decision records
-│   ├── reference/   # CSFLite framework reference docs
+│   ├── reference/   # CSFLite framework reference docs (includes crosswalks: SOC 2, HIPAA, SP 800-53)
 │   ├── soc2/        # SOC 2 readiness deliverables
 │   └── hipaa/       # HIPAA readiness deliverables
 ├── templates/       # Input templates for assessments

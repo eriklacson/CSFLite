@@ -248,6 +248,16 @@ Design for resource-constrained organizations. If it doesn't work for a 10-perso
 
 ### Manual Governance Questionnaire
 
+#### Assessment Method Basis
+
+The procedural basis for governance evaluations is drawn from SP 800-53A Rev 5 (*Assessing Security and Privacy Controls in Information Systems and Organizations*). SP 800-53A Rev 5 defines three assessment methods that CSFLite governance checks are aligned to:
+
+- **Examine** — Review of policies, procedures, plans, and documentation to confirm existence and scope
+- **Interview** — Discussion with personnel to confirm that practices are understood and applied
+- **Test** — Observation or verification that a capability is operational and repeatable
+
+CSFLite governance questions are scoped to the Examine and Interview methods. Test-based evidence (e.g., backup restoration logs, DR exercise records) is accepted as supporting documentation when cited by a respondent. The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
+
 The questionnaire implements the coverage-first philosophy by asking existence-focused questions:
 
 - "Does a documented [X] exist?"

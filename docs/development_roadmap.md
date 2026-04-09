@@ -180,6 +180,7 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 - [ ] Expand Nuclei template mappings using YAML rules (target: 50+ templates covered)
 - [x] Add SOC 2 compliance crosswalk and readiness assessment deliverables (crosswalk, supplement questionnaire, gap analysis template, executive summary — completed 2026-03-26)
 - [x] Add HIPAA compliance crosswalk and readiness assessment deliverables (crosswalk, 9-question supplement questionnaire, gap analysis template, executive summary — completed 2026-03-30; scoped for Business Associates serving US healthcare Covered Entities)
+- [x] Add SP 800-53 Rev 5 compliance crosswalk as a framework reference document mapping all 25 CSFLite subcategories to SP 800-53 Rev 5 controls with assessment methods from SP 800-53A Rev 5 (completed 2026-04-09)
 - [ ] Add compliance crosswalk documents (ISO 27001)
 - [ ] Add support for additional output formats (Markdown report, HTML dashboard)
 - [ ] Explore JSONL streaming support for large scan outputs

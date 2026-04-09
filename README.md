@@ -1,12 +1,12 @@
 # CSFLite
 
-**Lean Security Framework for Startups and SMEs**
+**Governance Assessment Framework for Startups and SMEs**
 
-CSFLite is a lightweight cybersecurity framework implementation based on NIST CSF v2.0, designed specifically for resource-constrained organizations. It combines automated vulnerability scanning with governance assessments to answer a fundamental question: **Do these security controls exist at all?**
+CSFLite is a governance assessment framework built on 25 curated NIST CSF 2.0 subcategories. It answers a single question: **Do these security controls exist at all?**
 
-This is not a compliance tool. CSFLite treats cybersecurity as governance under adversarial conditions. Security emerges from embedded constraints, automation, and measurable outcomes, not documentation.
+This is not a compliance tool. CSFLite measures coverage existence before maturity, giving resource-constrained organizations a structured baseline without enterprise overhead. Crosswalk reference documents for SOC 2, HIPAA, and SP 800-53 are provided for structured starting points for external assessment readiness. Scanning and other control enforcements are handled by external projects.
 
-See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full design rationale.
+See the [Assessment Philosophy](docs/assessment_philosophy.md) for the full design rationale.
 
 **☕ Support CSFLite:** If this project helps you in any way consider [buying me a coffee](https://buymeacoffee.com/eriklacson). 
 
@@ -26,6 +26,8 @@ See the [Assessment Philosophy](docs/assessment-philosophy.md) for the full desi
 - **SP 800-53 framework reference** — CSFLite-to-SP 800-53 Rev 5 crosswalk mapping all 25 CSFLite subcategories to SP 800-53 Rev 5 controls with assessment methods sourced from SP 800-53A Rev 5
 
 ### 🚧 In Preview
+
+> ⚠️ **Scanner integration is being extracted from CSFLite core.** Scan tooling will move to separate adapter projects. CSFLite is becoming a pure governance assessment framework. Scanner code is preserved in the separate branch.
 
 - **Nuclei scan tooling** — CLI wrapper, profile-based scan configuration, and raw output conversion are implemented but not yet validated end-to-end against live targets
 - **Scan-to-CSF mapping** — CSV-based template lookups exist (⚠️ deprecated; YAML tag-based system in development on feature branch)

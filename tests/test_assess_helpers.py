@@ -2,7 +2,6 @@ import json
 import os
 import sys
 from pathlib import Path
-from unittest.mock import mock_open, patch
 
 import pytest
 
@@ -20,109 +19,6 @@ def test_get_paths():
         expected_paths = json.load(config_file)
 
     assert get_paths() == expected_paths
-
-
-def test_read_scan_json_valid():
-    """tests reading valid scan JSON"""
-    from tools.assess_helpers import read_scan_json
-
-    # Mock JSON content
-    mock_json_content = '{"key": "value"}'
-    expected_result = {"key": "value"}
-
-    # Mock the open function and patch it
-    with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        # Call the function and assert the result
-        result = read_scan_json("mock_file.json")
-        assert result == expected_result
-
-
-def test_read_scan_json_invalid():
-    """test handling of invalid scan JSON"""
-    from tools.assess_helpers import read_scan_json
-
-    # Mock invalid JSON content
-    mock_json_content = '{"key": "value"'
-
-    # Mock the open function and patch it
-    with patch("builtins.open", mock_open(read_data=mock_json_content)):
-        # Assert that a JSONDecodeError is raised
-        try:
-            read_scan_json("mock_file.json")
-        except json.JSONDecodeError:
-            pass
-        else:
-            raise AssertionError("JSONDecodeError was not raised")
-
-
-# test_map_scan_to_csf.py
-@pytest.fixture
-def mock_lookup_csv(tmp_path):
-    # Create a temporary CSV file for the lookup data
-    lookup_data = """templateID,csf_function,subcategory_id,subcategory_name,recommended_remediation
-TEMPLATE-1,Identify,ID.AM-02,Asset Management,Remediate template 1
-TEMPLATE-2,Protect,PR.AA-03,Access Control,Remediate template 2
-"""
-    lookup_csv_path = tmp_path / "lookup.csv"
-    lookup_csv_path.write_text(lookup_data)
-    return lookup_csv_path
-
-
-def test_map_scan_to_csf(mock_lookup_csv):
-    # import necessary functions
-    from tools.assess_helpers import map_scan_to_csf
-
-    # Sample findings (must be list of dicts, not strings)
-    test_findings = [
-        {
-            "templateID": "TEMPLATE-1",
-            "host": "https://dev.example.com",
-            "timestamp": "2025-08-08T10:02:00Z",
-            "severity": "medium",
-            "matcher-name": "self-signed-cert",
-            "description": "TLS uses a self-signed certificate",
-        },
-        {
-            "templateID": "TEMPLATE-2",
-            "host": "http://example.com/admin",
-            "timestamp": "2025-08-08T10:01:00Z",
-            "severity": "high",
-            "matcher-name": "unauth-admin-panel",
-            "description": "Accessible admin panel without authentication",
-        },
-    ]
-
-    result = map_scan_to_csf(test_findings, mock_lookup_csv)
-    assert len(result) == 2
-    assert result[0]["csf_function"] == "Identify"
-    assert result[0]["csf_subcategory_id"] == "ID.AM-02"
-    assert "templateID" in result[0]
-    assert "host" in result[1]
-
-
-def test_generate_scan_heatmap_handles_info_and_critical(tmp_path: Path):
-    import numpy as np
-
-    from tools.assess_helpers import generate_scan_heatmap
-
-    mapped = [
-        {"csf_subcategory_id": "ID.AM-02", "severity": "critical"},
-        {"csf_subcategory_id": "ID.AM-02", "severity": "info"},
-    ]
-
-    lookup_csv = tmp_path / "heatmap_lookup.csv"
-    lookup_csv.write_text(
-        "csf_subcategory_id,csf_subcategory_name,weight\nID.AM-02,Devices and systems inventoried,1.0\n"
-    )
-
-    result = generate_scan_heatmap(mapped, lookup_csv)
-
-    assert len(result) == 1
-    assert result[0]["csf_subcategory_id"] == "ID.AM-02"
-    assert result[0]["max_severity"] == "critical"
-    assert result[0]["count"] == 2
-    expected_score = 4 + np.log1p(2)
-    assert float(result[0]["weighted_score"]) == pytest.approx(expected_score, rel=1e-2)
 
 
 def test_get_csf_lookup(tmp_path: Path):

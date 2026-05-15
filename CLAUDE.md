@@ -33,46 +33,28 @@ CI runs Black → Ruff → Bandit → pytest in sequence on Python 3.12. pytest 
 
 ## Architecture
 
-CSFLite is a lean NIST CSF v2.0 security assessment tool for startups and SMEs. It measures control **coverage** (existence), not maturity. It operates on a curated set of **25 CSF subcategories** (`data/csf_lookup.csv`).
+CSFLite is a lean NIST CSF v2.0 security assessment and governance framework for startups and SMEs. It measures control **coverage** (existence), not maturity. It operates on a curated set of **25 CSF subcategories** (`data/csf_lookup.csv`).
 
-There are two independent assessment tracks that can be combined:
-
-**1. Governance Assessment (manual)**
+**Governance Assessment (manual)**
 - User fills in `templates/governance_checks_template.csv` with Yes/Partial/No responses
 - `tools/governance_check.py` orchestrates the pipeline
 - Scoring in `tools/assess_helpers.py`: response (Yes=1, Partial=0.5, No=0) × subcategory weight → gap score
 - Outputs: `governance_assessment.csv`, `governance_heatmap.csv`
 
-**2. Scan Assessment (automated via Nuclei)**
-- Nuclei runs against targets using profiles defined in `data/profiles.yaml`
-- `tools/nuclei_scan_tool.py` wraps Nuclei CLI execution
-- `tools/nuclei_json_converter.py` converts raw JSONL output, mapping templateIDs → CSF subcategories via `data/nuclei_csf_lookup.csv`
-- Scoring: weight × (max_severity + ln(1 + finding_count))
-- Outputs: `scan-findings.csv`, `scan_heatmap.csv`
-- **Status: preview — end-to-end pipeline not yet validated (Phase 5)**
-
-**3. Combined Assessment**
-- `tools/assess.py` orchestrates both tracks into a unified heatmap
-- **Marked for deprecation/refactor**
-
 ### Key modules
 
 | File | Role |
 |------|------|
-| `tools/assess_helpers.py` | Core scoring and heatmap logic for both tracks |
+| `tools/assess_helpers.py` | Core scoring and heatmap logic for governance assessment |
+| `tools/governance_check.py` | CLI entry point for governance assessment |
 | `tools/global_helpers.py` | Path resolution, CSV/JSON I/O utilities |
-| `tools/nuclei_helpers.py` | Nuclei profile loading, command building, subprocess management |
-| `tools/nuclei_convert_tool.py` | CLI entry point for converting Nuclei JSONL output |
-| `tools/mapping_helpers.py` | Supporting functions for Nuclei→CSF tag-based mapping |
-| `tools/map_nuclie_to_csf.py` | Legacy CSV-based mapping (superseded by `mapping_rules.yaml`) |
 | `config/path_config.json` | Centralized paths for all inputs/outputs |
 | `data/csf_lookup.csv` | The 25 CSFLite subcategories with weights and recommendations |
 | `data/heat_map_lookup.csv` | Same 25 subcategories with shortened display names for heatmap rendering (separate from `csf_lookup.csv`) |
-| `data/mapping_rules.yaml` | Tag-based rules for Nuclei→CSF mapping (migration target, replacing `nuclei_csf_lookup.csv`) |
 
 ### Test structure
 
-Tests in `tests/` mirror `tools/`. Fixtures live in `tests/fixtures/`. Integration tests in `tests/integration/` are pending (Phase 5).
+Tests in `tests/` mirror `tools/`. Fixtures live in `tests/fixtures/`.
 
 ### Crosswalk supplements
 
@@ -83,7 +65,4 @@ Tests in `tests/` mirror `tools/`. Fixtures live in `tests/fixtures/`. Integrati
 ## Known Issues
 
 - `path_config.json` uses relative `../` paths — breaks if CWD is not the project root
-- `assess.py` is slated for deprecation pending refactor
-- Nuclei template mapping is in a migration freeze (CSV → YAML tag-based rules in `data/mapping_rules.yaml`) — do not modify `nuclei_csf_lookup.csv` during this freeze
 - CI Bandit target is a placeholder `your_package` (not scanning actual code yet)
-- Missing `scan_input_json` key in `path_config.json` will cause a runtime error in the scan pipeline

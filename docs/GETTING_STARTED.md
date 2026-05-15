@@ -75,16 +75,13 @@ CSFLite/
 │   └── controls.json  # Canonical 25-control reference
 ├── data/            # Reference data & CSF mappings
 │   ├── csf_lookup.csv
-│   ├── nuclei_csf_lookup.json
-│   ├── profiles.yaml
-│   └── targets.txt
+│   └── heat_map_lookup.csv
 ├── docs/
 │   ├── adr/         # Architectural decision records
 │   ├── reference/   # CSFLite framework reference docs (includes crosswalks: SOC 2, HIPAA, SP 800-53)
 │   ├── soc2/        # SOC 2 readiness deliverables
 │   └── hipaa/       # HIPAA readiness deliverables
 ├── templates/       # Input templates for assessments
-├── scans/           # Nuclei scan outputs (generated)
 ├── output/          # Final assessment reports (generated)
 └── tools/           # Python assessment scripts
 ```
@@ -304,79 +301,6 @@ Open [`docs/hipaa/hipaa-executive-summary-template.md`](hipaa/hipaa-executive-su
 
 ---
 
-## 🚧 Preview: Nuclei Scan Integration
-
-> **Status**: The scan tooling infrastructure is built and unit-tested, but has not been validated end-to-end against live targets. The tools below are functional but should be treated as preview features. Pilot testing is tracked in the [development roadmap](development_roadmap.md).
-
-CSFLite is designed to combine governance assessment with automated vulnerability scanning. The following tools exist for the scan workflow:
-
-### Prerequisites (Additional)
-
-| Software | Version | Check Command | Purpose |
-|----------|---------|---------------|---------|
-| **Nuclei** | Latest | `nuclei -version` | Vulnerability scanner |
-
-**Install Nuclei:**
-```bash
-# macOS
-brew install nuclei
-
-# Using Go
-go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
-
-# Update templates
-nuclei -update-templates
-```
-
-### Configure Targets
-
-```bash
-# Edit the targets file with systems you own
-nano data/targets.txt
-```
-
-**Example targets format:**
-```
-# Web applications
-https://example.com
-https://app.example.com
-
-# IP addresses
-192.168.1.100
-
-# Domains
-internal.company.local
-```
-
-⚠️ **Important**: Only scan systems you own or have explicit permission to test.
-
-### Scan Profiles
-
-CSFLite includes pre-configured scan profiles in `data/profiles.yaml`:
-
-- `baseline_web` — Web application security checks
-- `baseline_network` — Network infrastructure scans
-- `baseline_cloud` — Cloud infrastructure checks
-- `comprehensive` — Full coverage scan (slower)
-
-### Preview Workflow
-
-```bash
-# Step 1: Run a Nuclei scan using a profile
-python tools/nuclei_scan_tool.py \
-  --profile baseline_web \
-  --targets data/targets.txt
-
-# Step 2: Convert raw Nuclei output to CSFLite format
-python tools/nuclei_convert_tool.py \
-  --nuclei_raw scans/nuclei_raw_scan.jsonl \
-  --csflite_out output/nuclei_csf_mapped.json
-```
-
-The combined assessment tool (`tools/assess.py`) can merge scan findings with governance results, but this workflow has not yet been pilot-tested. Refer to the roadmap for updates.
-
----
-
 ## Troubleshooting
 
 ### Common Issues
@@ -419,12 +343,9 @@ chmod -R 755 scans/ output/
 - [`docs/reference/top_25_sub_categories.md`](reference/top_25_sub_categories.md) — Subcategory definitions and selection rationale
 - [`docs/reference/automatable_subcategories.md`](reference/automatable_subcategories.md) — Automation classification per subcategory
 - [`docs/reference/manual_remediation.md`](reference/manual_remediation.md) — Remediation guidance for every governance gap
-- [`docs/reference/nuclei_to_csf_mapping.md`](reference/nuclei_to_csf_mapping.md) — How Nuclei templates map to CSF subcategories
-
 ### Customize Your Assessments
 
 - **Adjust weights**: Edit `data/csf_lookup.csv` to change subcategory weights
-- **Modify mappings**: Edit `data/nuclei_csf_lookup.json` for scan-to-CSF mapping
 - **Extend the questionnaire**: Add rows to `templates/governance_checks_template.csv`
 
 ---

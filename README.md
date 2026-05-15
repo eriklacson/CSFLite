@@ -25,33 +25,18 @@ See the [Assessment Philosophy](docs/assessment_philosophy.md) for the full desi
 - **HIPAA readiness assessment** — CSFLite-to-HIPAA Security Rule crosswalk (§164.308, §164.310, §164.312) and Breach Notification Rule, 9-question supplement questionnaire for gap domains, gap analysis template, and executive summary template; scoped for Business Associates serving US healthcare Covered Entities
 - **SP 800-53 framework reference** — CSFLite-to-SP 800-53 Rev 5 crosswalk mapping all 25 CSFLite subcategories to SP 800-53 Rev 5 controls with assessment methods sourced from SP 800-53A Rev 5
 
-### 🚧 In Preview
-
-> ⚠️ **Scanner integration is being extracted from CSFLite core.** Scan tooling will move to separate adapter projects. CSFLite is becoming a pure governance assessment framework. Scanner code is preserved in the separate branch.
-
-- **Nuclei scan tooling** — CLI wrapper, profile-based scan configuration, and raw output conversion are implemented but not yet validated end-to-end against live targets
-- **Scan-to-CSF mapping** — CSV-based template lookups exist (⚠️ deprecated; YAML tag-based system in development on feature branch)
-- **Combined assessment** — Tool to merge scan findings with governance results is built but awaiting integration testing
-
----
-
 ## What's Included
 
 ### Framework Assets
 - Curated CSFLite **Top 25 subcategories** list
-- Mapping of **Nuclei templates → CSF subcategories** (CSV format, YAML migration pending)
-- **Lookup tables** for automation (CSV/JSON)
+- **Lookup tables** for automation (CSV)
 
 ### Tooling
 - **Governance assessment tool** (`governance_check.py`) — Processes questionnaire responses into scored assessments and heatmaps
-- **Nuclei scan tool** (`nuclei_scan_tool.py`) — Profile-based scan configuration and execution *(preview)*
-- **Nuclei converter** (`nuclei_convert_tool.py`) — Maps raw scan output to CSF subcategories *(preview)*
-- **Combined assessment** (`assess.py`) — Merges scan and governance data into unified report *(preview)*
 
 ### Templates & Guidance
 - **Governance checklist template** — Pre-built CSV questionnaire for all 25 subcategories
 - **Remediation guidance** — Step-by-step actions for each governance gap
-- **Scan profiles** — Pre-configured Nuclei scan profiles (baseline_web, baseline_network, baseline_cloud, comprehensive)
 - **SOC 2 crosswalk** — Full mapping of Trust Services Criteria (CC1–CC9, A1, C1) to NIST CSF 2.0 subcategories with coverage ratings
 - **SOC 2 supplement questionnaire** — 28-question CSV covering five gap domains not addressed by the CSFLite 25 (change management, physical access, security awareness, business continuity, data disposal)
 - **SOC 2 gap analysis template** — Client-facing markdown template organized by SOC 2 category, pre-populated from the crosswalk
@@ -97,13 +82,6 @@ The Getting Started guide walks you through:
 
 See [`docs/development_roadmap.md`](docs/development_roadmap.md) for phased deliverables and progress tracking.
 
-**Current phase:** Integration & Pilot Testing (Phase 5)
-
-**Next milestones:**
-- End-to-end validation of scan pipeline against live targets
-- YAML-based tag mapping system (feature branch)
-- Integration test coverage for full assessment workflow
-
 ---
 
 ## 📄 License
@@ -117,12 +95,9 @@ Released under the [MIT License](./LICENSE).
 Contributions are welcome. Please read **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** before submitting a pull request.
 
 **High-value contributions right now:**
-- Bug fixes in the scan pipeline
-- Integration test coverage for governance → scan → combined assessment
-- Scan profiles for specific environments (SaaS, healthcare, fintech)
-
-**Currently frozen:**
-- Nuclei template mappings (YAML migration in progress on feature branch)
+- Bug fixes in the governance pipeline
+- Integration test coverage for governance assessment
+- Documentation improvements and compliance crosswalks
 
 This project uses Claude Code for spec-driven development. See CLAUDE.md for context and conventions, and claude-project/ for spec templates and artifacts.
 
@@ -158,7 +133,6 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - [Top 25 Subcategories](docs/reference/top_25_sub_categories.md) — Selection criteria and definitions
 - [Automatable Subcategories](docs/reference/automatable_subcategories.md) — Automation classification
 - [Manual Remediation Guide](docs/reference/manual_remediation.md) — Step-by-step remediation for governance gaps
-- [Nuclei-to-CSF Mapping](docs/reference/nuclei_to_csf_mapping.md) — Template mapping rationale
 - [claude-project/](claude-project/) — Seed documents, spec templates, and ADRs for Claude Code workflows
 
 ### SOC 2 Readiness
@@ -188,16 +162,13 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 - **Dependency Management:** Poetry
 - **Testing:** pytest
 - **Code Quality:** Black (formatting), Ruff (linting), Bandit (security)
-- **Scanning:** Nuclei (vulnerability detection)
-- **Data:** CSV/JSON (current), YAML (future)
+- **Data:** CSV/JSON
 - **Claude Code:** Latest — AI-assisted spec execution
 
 ---
 
 ## ⚠️ Known Limitations
 
-- Scan pipeline has **not been validated** against live targets (see Phase 5 in roadmap)
-- Nuclei mapping uses **deprecated CSV approach** (YAML migration on feature branch)
 - No maturity scoring or risk quantification (by design)
 - Limited to 25 subcategories (intentional scope constraint)
 - Designed for startups/SMEs, not enterprises

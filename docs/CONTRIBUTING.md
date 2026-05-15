@@ -8,7 +8,7 @@ CSFLite is a lean cybersecurity framework for startups and SMEs. Contributions s
 
 ## Project Status
 
-CSFLite is in **alpha** (v0.1.0-alpha). The governance assessment pipeline is functional. Nuclei scan integration is in preview. Expect breaking changes to data formats, CLI interfaces, and scoring methodology.
+CSFLite is in **alpha** (v0.1.0-alpha). The governance assessment pipeline is functional. Expect breaking changes to data formats, CLI interfaces, and scoring methodology.
 
 We welcome contributions but ask that you open an issue to discuss significant changes before investing time in a pull request.
 
@@ -88,7 +88,7 @@ def test_<function>_<scenario>():
     # assert
 ```
 
-Use `pytest` fixtures and `unittest.mock.patch` for external dependencies (file I/O, subprocess calls). See `tests/test_nuclei_helpers.py` for examples of mocking subprocess and filesystem operations.
+Use `pytest` fixtures and `unittest.mock.patch` for external dependencies (file I/O, subprocess calls). See `tests/test_assess_helpers.py` for patterns using fixtures and mocking.
 
 Run tests before submitting:
 
@@ -119,8 +119,6 @@ CSFLite/
 | File | Role | Change carefully |
 |------|------|-----------------|
 | `data/csf_lookup.csv` | Subcategory weights and recommendations | Yes — affects all scoring |
-| `data/nuclei_csf_lookup.json` | Template-to-CSF mapping | Yes — affects scan mapping accuracy |
-| `data/mapping_rules.yaml` | Tag-based mapping rules | Yes — affects automated classification |
 | `templates/governance_checks_template.csv` | Governance questionnaire | Yes — changes user-facing assessment |
 | `config/path_config.json` | Centralized path configuration | Yes — breaks tools if misconfigured |
 | `csflite-assessment-philosophy.md` | Authoritative methodology document | Requires maintainer approval |
@@ -134,13 +132,9 @@ CSFLite/
 
 These are the most impactful things you can contribute right now:
 
-**Nuclei Template Mappings** — The current `data/nuclei_csf_lookup.json` covers a small set of templates. Adding validated mappings for additional Nuclei templates directly improves scan coverage. See the "Adding Nuclei Mappings" section below.
+**Bug Fixes** — Especially in the governance pipeline (`tools/governance_check.py`, `tools/assess_helpers.py`).
 
-**Scan Profile Contributions** — Industry-specific or environment-specific Nuclei scan profiles in `data/profiles.yaml`. For example: profiles optimized for SaaS applications, healthcare environments, or financial services infrastructure.
-
-**Bug Fixes** — Especially in the scan pipeline (`tools/assess.py`, `tools/nuclei_json_converter.py`), which hasn't been pilot-tested end-to-end yet.
-
-**Test Coverage** — Integration tests covering the full pipeline (scan JSON → mapped CSV → heatmap) are missing entirely.
+**Test Coverage** — Integration tests covering the full governance pipeline (questionnaire → scored assessment → heatmap) are missing.
 
 **Documentation Fixes** — Broken links, inaccurate CLI examples, outdated file references.
 
@@ -161,39 +155,6 @@ Open an issue before working on these — they affect framework integrity:
 **Scoring Methodology Changes** — Modifications to the weighted scoring, gap calculation, or heatmap severity thresholds in `tools/assess_helpers.py`.
 
 **Assessment Philosophy Changes** — Any change that contradicts `csflite-assessment-philosophy.md` will be rejected. If you believe the philosophy should evolve, open a discussion issue.
-
----
-
-## Adding Nuclei Mappings
-
-This is the most common and most needed contribution type.
-
-### Structure
-
-Mappings live in `data/nuclei_csf_lookup.json`. Each entry maps a Nuclei template ID to one or more CSF subcategories:
-
-```json
-{
-  "templateID": "ssl-issuer",
-  "csf_function": "Protect",
-  "csf_subcategory_id": "PR.DS-02",
-  "csf_subcategory_name": "Data-in-transit is protected",
-  "rationale": "SSL/TLS certificate validation signals transport security posture"
-}
-```
-
-### Requirements for New Mappings
-
-1. **Template ID must be exact** — Match the Nuclei template ID precisely. Run `nuclei -tl` to list available templates.
-2. **Subcategory ID must be canonical** — Use IDs from `data/csf_lookup.csv`. All IDs are validated against NIST CSWP 29.
-3. **Rationale must be specific** — Explain *why* this template finding maps to this subcategory. "Related to security" is not a rationale.
-4. **One mapping per finding-to-subcategory relationship** — If a template maps to multiple subcategories, create separate entries.
-
-### Validation
-
-Before submitting, verify your mapping makes sense by asking: "If this Nuclei template fires, does it provide evidence about the existence (or absence) of the capability described by this CSF subcategory?"
-
-If the answer is "sort of, loosely" — the mapping is probably wrong. CSFLite values defensible mappings over broad coverage.
 
 ---
 
@@ -226,7 +187,7 @@ Open an issue with:
 
 ### Before Submitting
 
-1. **Branch from `master`** — Use a descriptive branch name: `fix/nuclei-mapping-ssl`, `feat/soc2-crosswalk`, `docs/fix-getting-started-links`
+1. **Branch from `master`** — Use a descriptive branch name: `fix/governance-scoring`, `feat/soc2-crosswalk`, `docs/fix-getting-started-links`
 2. **Run all checks locally:**
    ```bash
    poetry run black --check .

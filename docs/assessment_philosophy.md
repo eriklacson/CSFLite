@@ -18,50 +18,6 @@ This is not a simplification. It is a deliberate resequencing of how cybersecuri
 
 ---
 
-## The Separation of Automated and Manual Assessment
-
-CSFLite deliberately separates automated technical scanning from manual governance checks. This is a design decision, not a limitation.
-
-### What Automated Scanning Can Do
-
-Automated tools (such as Nuclei vulnerability scanners) are effective at identifying technical signals:
-
-- Exposed services and open ports
-- Outdated software and missing patches
-- Misconfigurations and insecure defaults
-- Known vulnerabilities (CVEs)
-- Weak cryptographic implementations
-
-These are observable, repeatable, and machine-verifiable.
-
-### What Automated Scanning Cannot Do
-
-Automated tools cannot determine whether an organization has the foundational governance capabilities required to sustain cybersecurity over time:
-
-- Whether a policy exists
-- Whether ownership and accountability are defined
-- Whether a process is documented and followed
-- Whether personnel are trained
-- Whether incident response has been planned
-- Whether recovery capabilities have been tested
-
-These require human judgment and organizational context.
-
-### Why Both Are Required
-
-A vulnerability scan can tell you that port 22 is exposed. It cannot tell you whether anyone is responsible for reviewing SSH access, whether there is a policy governing remote access, or whether the organization would know what to do if that access were compromised.
-
-CSFLite combines both tracks to produce a complete picture:
-
-| Track | What It Assesses | Method |
-|-------|------------------|--------|
-| Automated | Technical exposure signals | Nuclei scans mapped to CSF subcategories |
-| Manual | Governance capability existence | Structured questionnaire responses |
-
-Neither track alone is sufficient. Together, they produce an actionable baseline.
-
----
-
 ## The Manual Governance Check
 
 ### The Question It Answers
@@ -265,15 +221,6 @@ The questionnaire implements the coverage-first philosophy by asking existence-f
 - "Is [X] applied across the organization or only in specific areas?"
 
 Questions avoid maturity language ("How mature is your...") and risk quantification ("What is the likelihood of...").
-
-### Automated Scan Processing
-
-Nuclei scan results are mapped to CSF subcategories to identify technical coverage gaps. The mapping focuses on:
-
-- Which technical controls are demonstrably in place (or absent)
-- Which outcomes have observable evidence
-
-Scan results do not produce risk scores or threat assessments.
 
 ### Assessment Reports
 

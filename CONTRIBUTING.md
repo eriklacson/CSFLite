@@ -8,62 +8,9 @@ CSFLite is a lean cybersecurity framework for startups and SMEs. Contributions s
 
 ## Project Status
 
-CSFLite is in **alpha** (v0.1.0-alpha). The governance assessment pipeline is functional. Nuclei scan integration is in preview. Expect breaking changes to data formats, CLI interfaces, and scoring methodology.
+CSFLite is in **alpha** (v0.1.0-alpha). The governance assessment pipeline is functional. Expect breaking changes to data formats, CLI interfaces, and scoring methodology.
 
 We welcome contributions but ask that you open an issue to discuss significant changes before investing time in a pull request.
-
----
-
-## ⚠️ Mapping System Transition
-
-CSFLite is migrating from direct template ID lookups to a more flexible YAML-based tag mapping system.
-
-### Current State (v0.1.0-alpha)
-
-The scan-to-CSF mapping uses **direct template ID matching** from `data/nuclei_csf_lookup.csv`:
-
-```python
-# Current: tools/assess_helpers.py
-def map_scan_to_csf(scan_results, lookup_csv_path):
-    lookup_df = pd.read_csv(lookup_csv_path)
-    # Match exact templateID
-    match = lookup_df[lookup_df["templateID"] == template_id]
-```
-
-### Future State (v0.2.0+)
-
-The new system will use **tag-based heuristics** from `data/mapping_rules.yaml`, allowing fuzzy matching when exact template IDs aren't in the lookup table.
-
-**Example YAML rule:**
-```yaml
-rules:
-  - tags: [ssl, tls, certificate]
-    subcategory_id: PR.DS-02
-    confidence: high
-```
-
-This enables automatic mapping of new Nuclei templates without manual CSV updates.
-
-### For Contributors
-
-**⚠️ HOLD: Do NOT contribute new mappings to CSV/JSON files.**
-
-The current CSV-based direct matching will be replaced by YAML tag-based rules in v0.2.0. 
-
-**If you need to add mappings now:**
-1. Open an issue describing the template(s) and proposed CSF mapping
-2. Wait for maintainer guidance on whether to add to CSV (short-term) or YAML (future-proof)
-
-**Why the freeze?**
-- Prevents duplicate work when YAML system launches
-- Ensures new mappings follow the tag-based philosophy
-- Reduces merge conflicts during the transition
-
-**Migration timeline:**
-- v0.1.0-alpha: CSV/JSON (current — **no new contributions accepted**)
-- v0.2.0-alpha: YAML parallel implementation (feature branch)
-- v0.3.0-alpha: YAML becomes primary, CSV deprecated but still supported
-- v1.0.0: CSV/JSON fully removed
 
 ---
 
@@ -103,7 +50,7 @@ poetry run ruff check .
    ```bash
    git checkout -b fix/issue-123
    # or
-   git checkout -b feat/nuclei-yaml-rules
+   git checkout -b feat/iso27001-crosswalk
    ```
 3. **Make your changes** following the development standards below
 4. **Run all checks locally:**
@@ -169,7 +116,7 @@ def test_<function>_<scenario>():
     assert result == expected_value
 ```
 
-Use `pytest` fixtures and `unittest.mock.patch` for external dependencies (file I/O, subprocess calls). See `tests/test_nuclei_helpers.py` for examples of mocking subprocess and filesystem operations.
+Use `pytest` fixtures and `unittest.mock.patch` for external dependencies (file I/O). See `tests/test_assess_helpers.py` for examples of fixtures and mocking.
 
 **Running tests:**
 
@@ -201,7 +148,7 @@ def test_governance_to_heatmap_pipeline():
 
 Use `tests/fixtures/` for sample data files.
 
-**Note:** Integration tests for the scan pipeline are pending (Phase 5). See roadmap for status.
+**Note:** Integration tests for the governance pipeline are pending. See roadmap for status.
 
 ---
 
@@ -228,11 +175,7 @@ CSFLite/
 | File | Role | Change carefully | Status |
 |------|------|-----------------|--------|
 | `data/csf_lookup.csv` | Subcategory weights and recommendations | Yes — affects all scoring | Stable |
-| `data/nuclei_csf_lookup.csv` | Template-to-CSF mapping (current) | Yes — affects scan mapping | **⚠️ Deprecated — YAML migration in progress** |
-| `data/nuclei_csf_lookup.json` | JSON version of template mappings | Yes — reference only | **⚠️ Deprecated — YAML migration in progress** |
-| `data/mapping_rules.yaml` | Tag-based mapping rules (future) | N/A — not yet merged | **🚧 Preview — see feature branch** |
 | `data/heat_map_lookup.csv` | Heatmap severity thresholds | Yes — affects visual output | Stable |
-| `data/profiles.yaml` | Nuclei scan profiles | Yes — affects scan execution | Stable |
 | `templates/governance_checks_template.csv` | Governance questionnaire | Yes — changes user-facing assessment | Stable |
 | `config/path_config.json` | Centralized path configuration | Yes — breaks tools if misconfigured | Stable |
 | `docs/csflite-assessment-philosophy.md` | Authoritative methodology document | Requires maintainer approval | Stable |
@@ -243,12 +186,9 @@ CSFLite/
 
 Before you open a PR, check if it's already tracked as technical debt:
 
-- **`assess.py` is marked for deprecation** — Awaiting refactor (see roadmap Phase 5)
 - **`path_config.json` uses `../` relative paths** — Breaks on non-standard CWD
 - **CI Bandit target is placeholder `your_package`** — Not scanning actual CSFLite code
 - **CI Python version (3.10) doesn't match project requirement (3.12+)** — Tests may pass in CI but fail locally
-- **`scan_input_json` key referenced in `assess.py` but missing from `path_config.json`** — Will cause runtime error
-- **Nuclei mapping uses CSV instead of YAML** — Feature branch exists; merge blocked until Phase 5 testing complete
 
 See `docs/development_roadmap.md` for full technical debt list and resolution timeline.
 
@@ -260,11 +200,9 @@ See `docs/development_roadmap.md` for full technical debt list and resolution ti
 
 These are the most impactful things you can contribute right now:
 
-**Bug Fixes** — Especially in the scan pipeline (`tools/assess.py`, `tools/nuclei_json_converter.py`), which hasn't been pilot-tested end-to-end yet.
+**Bug Fixes** — Especially in the governance pipeline (`tools/governance_check.py`, `tools/assess_helpers.py`).
 
-**Test Coverage** — Integration tests covering the full pipeline (scan JSON → mapped CSV → heatmap) are missing entirely. This is the highest-priority gap.
-
-**Scan Profile Contributions** — Industry-specific or environment-specific Nuclei scan profiles in `data/profiles.yaml`. For example: profiles optimized for SaaS applications, healthcare environments, or financial services infrastructure.
+**Test Coverage** — Integration tests covering the full governance pipeline (questionnaire → scored assessment → heatmap) are missing. This is the highest-priority gap.
 
 **Documentation Fixes** — Broken links, inaccurate CLI examples, outdated file references, typos in docstrings.
 
@@ -285,8 +223,6 @@ Open an issue before working on these — they affect framework integrity:
 **Scoring Methodology Changes** — Modifications to the weighted scoring, gap calculation, or heatmap severity thresholds in `tools/assess_helpers.py`.
 
 **Assessment Philosophy Changes** — Any change that contradicts `docs/csflite-assessment-philosophy.md` will be rejected. If you believe the philosophy should evolve, open a discussion issue first.
-
-**Nuclei Template Mappings** — Currently frozen due to YAML migration. See "Mapping System Transition" section above.
 
 ---
 
@@ -319,7 +255,7 @@ Open an issue with:
 
 ### Before Submitting
 
-1. **Branch from `main`** — Use a descriptive branch name: `fix/nuclei-mapping-ssl`, `feat/soc2-crosswalk`, `docs/fix-getting-started-links`
+1. **Branch from `main`** — Use a descriptive branch name: `fix/governance-scoring`, `feat/soc2-crosswalk`, `docs/fix-getting-started-links`
 2. **Run all checks locally:**
    ```bash
    poetry run black .
@@ -353,7 +289,7 @@ PRs are evaluated on:
 
 - Changes that add maturity scoring, risk quantification, or compliance certification language (contradicts assessment philosophy)
 - Subcategory additions without removing one (we stay at 25)
-- New CSV/JSON mappings without prior discussion (migration freeze)
+- Subcategory additions without removing one (we stay at 25)
 - Code without tests
 - Style violations (let the pre-commit hooks catch these before you push)
 
@@ -435,7 +371,7 @@ Include:
 
 Be professional. Be constructive. Assume good intent. Disagree on ideas, not people.
 
-This is a security framework project — accuracy and rigor matter more than speed. Take the time to validate your work against canonical sources (NIST CSWP 29, Nuclei template documentation, etc.).
+This is a security framework project — accuracy and rigor matter more than speed. Take the time to validate your work against canonical sources (NIST CSWP 29).
 
 We value diverse perspectives and welcome contributors of all backgrounds and experience levels. If you're new to open source or security frameworks, ask questions. The maintainers are here to help.
 

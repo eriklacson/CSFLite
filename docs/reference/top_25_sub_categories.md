@@ -51,7 +51,7 @@ You cannot protect what you don't know exists. Asset visibility is foundational.
 
 ### ID.RA-01 — Vulnerabilities in assets are identified, validated, and recorded
 
-> **Why included:** Core to automated scanning workflows. Nuclei templates map directly here.
+> **Why included:** Foundational for identifying known risks. Fully automatable via external vulnerability scanners.
 
 ### ID.RA-05 — Threats, vulnerabilities, likelihoods, and impacts are used to understand inherent risk and inform risk response prioritization
 

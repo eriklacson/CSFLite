@@ -19,7 +19,7 @@ __all__ = [*assess.__all__, "main"]
 
 
 def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
-    """Parse command line arguments for the Nuclei scanning CLI."""
+    """Parse command line arguments for the governance assessment CLI."""
 
     parser = argparse.ArgumentParser(description="CSFLite governance baseline assessment tool")
     parser.add_argument("--governance_checklist", type=str, help="Governance checklist CSV File")

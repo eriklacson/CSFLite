@@ -1,6 +1,6 @@
 # CSFLite: Automatable CSF Subcategories
 
-This document identifies which CSFLite Top 25 subcategories can be fully or partially automated using vulnerability scanning tools (e.g., Nuclei) versus those requiring manual governance validation.
+This document identifies which CSFLite Top 25 subcategories can be fully or partially automated using external vulnerability scanning tools versus those requiring manual governance validation. Scanning is handled by tools outside CSFLite — this document serves as a reference for assessors who use external scanners alongside the governance assessment.
 
 ---
 
@@ -28,7 +28,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - Physical asset verification
 - Ownership and location tracking
 
-**Tools:** Nmap, Nuclei network templates, asset discovery scanners
+**Tools:** Nmap, network scanners, asset discovery tools
 
 ---
 
@@ -44,7 +44,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - Business purpose documentation
 - Decommissioning status
 
-**Tools:** Nuclei technology detection templates, software composition analysis
+**Tools:** Technology detection scanners, software composition analysis
 
 ---
 
@@ -60,13 +60,13 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 
 **Fully automatable:** This is the core use case for vulnerability scanning.
 
-**Nuclei template categories:**
-- `cves/` — Known CVE detection
-- `technologies/` — Version detection for outdated software
-- `exposures/` — Credential and data exposures
-- `misconfigurations/` — Security misconfigurations
+**Scanner coverage areas:**
+- Known CVE detection
+- Version detection for outdated software
+- Credential and data exposures
+- Security misconfigurations
 
-**Tools:** Nuclei, Nessus, OpenVAS, Qualys
+**Tools:** Nessus, OpenVAS, Qualys, vulnerability scanners
 
 ---
 
@@ -92,7 +92,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - Privileged access review
 - Credential rotation compliance
 
-**Tools:** Nuclei default-logins templates, credential scanners
+**Tools:** Default credential scanners
 
 ---
 
@@ -108,7 +108,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - Service account management
 - Session management review
 
-**Tools:** Nuclei auth templates, API security scanners
+**Tools:** API security scanners
 
 ---
 
@@ -124,7 +124,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - Database encryption configuration
 - Key management practices
 
-**Tools:** Nuclei exposure templates, directory brute-forcing
+**Tools:** Exposure scanners, directory brute-forcing tools
 
 ---
 
@@ -139,7 +139,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - HSTS header presence
 - Certificate transparency
 
-**Tools:** Nuclei SSL templates, testssl.sh, SSLyze
+**Tools:** testssl.sh, SSLyze, SSL scanning tools
 
 ---
 
@@ -163,7 +163,7 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 - Firewall rule documentation review
 - Architecture compliance
 
-**Tools:** Nuclei networking templates, Nmap, firewall scanners
+**Tools:** Nmap, firewall scanners
 
 ---
 
@@ -255,19 +255,5 @@ This document identifies which CSFLite Top 25 subcategories can be fully or part
 
 **Scan Coverage:** 9/25 subcategories (36%) have automatable components  
 **Governance Coverage:** 25/25 subcategories (100%) assessable via questionnaire
-
----
-
-## Nuclei Template Mapping
-
-| CSF Subcategory | Primary Nuclei Template Categories |
-|-----------------|-----------------------------------|
-| ID.AM-02 | `technologies/`, `networking/` |
-| ID.RA-01 | `cves/`, `vulnerabilities/`, `exposures/` |
-| PR.AA-01 | `default-logins/` |
-| PR.AA-03 | `auth/`, `misconfiguration/` |
-| PR.DS-01 | `exposures/`, `misconfiguration/` |
-| PR.DS-02 | `ssl/`, `headers/` |
-| PR.IR-01 | `networking/`, `misconfiguration/` |
 
 ---

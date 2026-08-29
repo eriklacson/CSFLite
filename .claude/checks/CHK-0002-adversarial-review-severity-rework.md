@@ -22,7 +22,7 @@ below were independently reproduced before being acted on.
 | 3 | Fixed | Blank spreadsheet row raised `TypeError`, not `ValueError` |
 | 4 | Fixed | Threshold constants pinned by no test — three mutants survived |
 | 5 | Fixed | Downstream docs and committed example output left stale |
-| 6 | Open | CLI exits 0 after reporting a data error |
+| 6 | Fixed | CLI exits 0 after reporting a data error |
 
 ---
 
@@ -142,7 +142,7 @@ The severity change did not propagate:
 
 ## 6. CLI exits 0 after reporting a data error
 
-**Status:** Open
+**Status:** Fixed
 
 ```
 $ poetry run python tools/governance_check.py --governance_checklist <blank responses> ...
@@ -160,9 +160,23 @@ the documented workflow now lands here.
 
 The `Argument Error:` label is also wrong for a data error.
 
-**Recommendation.** `sys.exit(1)` in the handler, and relabel. Deferred because it changes the CLI's
-exit contract, which is a decision separate from the scoring work. Phase 4 retires this entry point,
-so it may be resolved by deletion.
+**Resolution.** `sys.exit(1)` added to the handler and the label changed from `Argument Error:` to
+`Error:`, since it covers data errors as well as argument errors.
+
+Exit codes verified across every path:
+
+| Invocation | Exit |
+|---|---|
+| Blank-response template (the routine failure) | 1 |
+| No arguments | 1 |
+| Missing checklist file | 1 |
+| Valid checklist | 0, outputs written |
+
+`tests/test_governance_check.py` covers the argument path and the unscoreable-data path, asserting
+both the exit code and that no output files are left behind.
+
+This changes the CLI's exit contract. Any wrapper that relied on a zero exit after a rejected
+checklist will now fail, which is the point.
 
 ---
 

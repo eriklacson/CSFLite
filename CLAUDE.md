@@ -54,15 +54,15 @@ CSFLite is a lean NIST CSF v2.0 security assessment and governance framework for
 
 ### Test structure
 
-Tests in `tests/` mirror `tools/`. Fixtures live in `tests/fixtures/`.
+Tests in `tests/` mirror `tools/`. Test data is built inline and written to pytest's `tmp_path` — there are no fixture files.
 
 ### Crosswalk supplements
 
 `templates/soc2-supplement-questionnaire.csv` is a delivered SOC 2 crosswalk supplement (28 questions covering 5 gap domains outside the core 25).
 
-`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `claude-project/project.yaml`.
+`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `.claude/docs/csflite-spec-brief.md`.
 
 ## Known Issues
 
-- `path_config.json` uses relative `../` paths — breaks if CWD is not the project root
-- CI Bandit target is a placeholder `your_package` (not scanning actual code yet)
+- `path_config.json` points `governance_checklist` at `scans/governance_checks.csv`, but no `scans/` directory exists — the default input path resolves to nothing
+- `pytest` is declared in both the main and dev dependency groups in `pyproject.toml` — should be dev-only

@@ -13,8 +13,9 @@ CSFLite follows a governance-first development sequence: define the framework, v
 | 1 | Framework Foundation | ✅ Complete |
 | 2 | Reference Data & Mappings | ✅ Complete |
 | 3 | Governance Assessment Pipeline | ✅ Complete |
-| 4 | Release Hardening | ⬚ Not Started |
-| 5 | Community & Iteration | ⬚ Not Started |
+| 4 | Web Interface | ⬚ Not Started |
+| 5 | Release Hardening | ⬚ Not Started |
+| 6 | Community & Iteration | ⬚ Not Started |
 
 ---
 
@@ -78,7 +79,32 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 
 ---
 
-## ⬚ Phase 4: Release Hardening
+## ⬚ Phase 4: Web Interface
+
+**Goal:** Replace the CLI with a web application. After this phase CSFLite is not operable from a terminal.
+
+Specification: `.claude/docs/csflite-spec-brief.md` §12.
+
+**Deliverables:**
+- [ ] Move `pytest` to the dev dependency group only (`pyproject.toml`)
+- [ ] Web questionnaire form with evidence upload (replaces the checklist CSV)
+- [ ] Web-rendered report and heatmap, with CSV/JSON download
+- [ ] Database persistence — assessment sessions, configurations, historical results, single-tenant
+- [ ] Hosted deployment profile
+- [ ] Retire `governance_check.py` and file-based path configuration
+- [ ] Migration path for assessments already completed as CSV
+
+**Open before build:**
+- Local-first data handling. The current rationale is that client data should not leave the operator's machine without explicit agreement. A hosted application breaks that.
+
+**Acceptance criteria:**
+- An assessment can be completed end to end in the browser
+- Scoring output matches the CLI output for the same responses
+- `assess_helpers.py` is unchanged
+
+---
+
+## ⬚ Phase 5: Release Hardening
 
 **Goal:** Polish the project for public consumption as `v0.1.0`.
 
@@ -88,9 +114,7 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 - [ ] Add GitHub PR template with checklist
 - [ ] Create GitHub Discussions categories (Q&A, Feature Proposals, Show & Tell)
 - [ ] Audit all documentation for broken links and outdated references
-- [ ] Verify all CLI examples in docs work on clean install
-- [ ] Update CI to test against Python 3.12 (currently using 3.10)
-- [ ] Fix CI Bandit scan to target `tools/` instead of placeholder `your_package`
+- [ ] Verify all documented workflows work on a clean install
 - [ ] Resolve known technical debt (see table below)
 - [ ] Tag v0.1.0 release
 
@@ -103,7 +127,7 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 
 ---
 
-## ⬚ Phase 5: Community & Iteration
+## ⬚ Phase 6: Community & Iteration
 
 **Goal:** Open the project for external contributions and expand coverage.
 
@@ -121,7 +145,7 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 **Success metrics:**
 - 5+ external contributors
 - 10+ GitHub stars
-- 3+ community-submitted scan profiles or compliance crosswalks
+- 3+ community-submitted compliance crosswalks
 - Active usage by at least 3 organizations (based on feedback/issues)
 
 ---
@@ -132,10 +156,7 @@ These items are not blocking release but should be addressed before v1.0.0:
 
 | Item | Location | Impact | Resolution Plan |
 |------|----------|--------|-----------------|
-| `path_config.json` uses relative paths with `../` prefix | `config/path_config.json` | Breaks if tools are run from unexpected working directory | Switch to PROJECT_ROOT-relative paths in Phase 4 |
 | `pytest` in both main and dev dependency groups | `pyproject.toml` | Should only be in dev | Move to dev-only in Phase 4 |
-| CI Bandit target is `your_package` (placeholder) | `.github/workflows/python-lint.yaml` | Bandit scan isn't actually running against CSFLite code | Fix to scan `tools/` in Phase 4 |
-| CI Python version (3.10) doesn't match project requirement (3.12+) | `.github/workflows/python-lint.yaml` | Tests may pass on CI but fail on target runtime | Update to 3.12 in Phase 4 |
 
 ---
 

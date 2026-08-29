@@ -1,6 +1,6 @@
 # LeanSecurity — CSFLite
 ## Project Specification Brief v2.0
-**Status:** Phase 5 build in progress  
+**Status:** Phase 3 complete; Phase 4 (Web Interface) next  
 **Last updated:** March 2026
 
 ---
@@ -17,58 +17,53 @@ CSFLite is a framework with three layers:
 
 - **The 25 curated NIST CSF 2.0 subcategories** — foundational to security posture, applicable across sectors, assessable with a simple yes/no, and clearly actionable when missing. Excluded controls reflect lower relative impact, not a neglected area. The cap at 25 is a deliberate, opinionated scope constraint that keeps the framework lean and avoids the scope creep that makes larger frameworks overwhelming for target organizations.
 - **An assessment methodology** — a simple questionnaire and scoring rubric.
-- **A web-based application toolkit** — automates the assessment process.
+- **An application toolkit** — automates the assessment process. Currently a CLI; becomes a web application in Phase 4 (§12).
 
 ---
 
 ## 2. Architecture Pattern
 
-**Web-based Intake** 
+**Batch CLI, file-based**
 
 ### Layers
 
-**Intake Layer**  
-Responsible for indgesting raw inputs: Web-base questionaire and evidence upload. Produces cleaned, typed records ready for scoring. Never performs scoring, weighting, or output generation.
+**Intake Layer**
+Responsible for ingesting raw inputs: the governance checklist CSV filled by the assessor. Validates required fields and produces cleaned, typed records ready for scoring. Never performs scoring, weighting, or output generation.
 
-**Scoring Layer**  
-Responsible for joining intake records against the CSF lookup reference data (`csf_lookup.csv`), applying weights, computing coverage scores, and classifying heatmap severity. Produces scored assessment records and heatmap records. Never reads raw input directly only consumes validated records from the intake layer.
+**Scoring Layer**
+Responsible for joining intake records against the CSF lookup reference data (`csf_lookup.csv`), applying weights, computing coverage scores, and classifying heatmap severity. Produces scored assessment records and heatmap records. Never reads raw input directly — only consumes validated records from the intake layer.
 
-**Output Layer**  
-Responsible for serializing scored records heatmaps and reports downloadbable as machine readable CSV/JSON files. Never performs scoring logic. Handles path resolution via `path_config.json`.
+**Output Layer**
+Responsible for serializing scored records and heatmaps as machine-readable CSV files. Never performs scoring logic. Handles path resolution via `path_config.json`.
+
+These layer responsibilities survive the Phase 4 web rewrite unchanged. Only the intake and output mechanisms change — see §12.
 
 ### Flow
 
 ```
-Governance CSV                
-      │                       
-      ▼                       
- Intake: validate             
- required fields              
-      │                            
-      ▼                            
- Scoring: join CSF            
- lookup, apply weights,       
- compute coverage             
-      │                       
-      ▼                        
-   Heatmap       
-      │                            
+Governance CSV
+      │
       ▼
-   Report        
-   ]]              
+ Intake: validate
+ required fields
+      │
+      ▼
+ Scoring: join CSF
+ lookup, apply weights,
+ compute coverage
+      │
+      ▼
+   Heatmap
+      │
+      ▼
+   Report
 ```
 
 ### Delivery Mode
 
-Current State:
-
 Synchronous, batch-oriented CLI execution. Each tool runs independently against file inputs and produces file outputs. There is no event bus, queue, or streaming component.
 
-Built now: governance assessment pipeline (end-to-end working)
-
-Future State:
-
-As described above in 2. Architecture Patterns. Web-based questionarie form intake. Design avaiable via Claude Design. Output is web-based report and heatmap, downloadable files. Single Tenant. Future state is not yet built.
+The governance assessment pipeline works end to end.
 
 ---
 
@@ -78,7 +73,7 @@ All contracts are prescriptive they define what the schemas should be, not merel
 
 ### Governance Checklist Input (CSV)
 
-The questionnaire filled by the assessor. Produced by the human operator, consumed by `governance_check.py`. Should be the reference for web-based form
+The questionnaire filled by the assessor. Produced by the human operator, consumed by `governance_check.py`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -102,8 +97,7 @@ The authoritative reference for subcategory weights and remediation recommendati
 
 ### Governance Assessment Output (CSV)
 
-Scored governance results. Produced by `generate_governance_assessement()`, consumed by heatmap generator and report tools. 
-Reference for web-based report and dowloadable output.
+Scored governance results. Produced by `generate_governance_assessement()`, consumed by heatmap generator and report tools.
 
 | Field | Type | Description |
 |---|---|---|
@@ -119,7 +113,6 @@ Reference for web-based report and dowloadable output.
 ### Governance Heatmap Output (CSV)
 
 Severity-classified gap prioritization. Produced by `generate_governance_heatmap()`, consumed by report tools and dashboards.
-Reference for web-based report and dowloadable output.
 
 | Field | Type | Description |
 |---|---|---|
@@ -137,16 +130,10 @@ Centralized file path registry. Produced by framework maintainer, consumed by al
 | Field | Type | Description |
 |---|---|---|
 | `governance_checklist` | `string` | Path to governance checklist input CSV |
-| `lookup_csv` | `string` | Path to Nuclei-to-CSF mapping CSV |
 | `heatmap_lookup` | `string` | Path to heatmap severity threshold CSV |
 | `csf_lookup` | `string` | Path to CSF subcategory reference CSV |
-| `output_csv` | `string` | Path for scan findings output CSV |
-| `output_json` | `string` | Path for scan findings output JSON |
-| `heatmap_csv` | `string` | Path for scan heatmap output CSV |
 | `governance_assessment_csv` | `string` | Path for governance assessment output CSV |
 | `governance_heatmap_csv` | `string` | Path for governance heatmap output CSV |
-| `nuclei_profile` | `string` | Path to Nuclei scan profiles YAML |
-| `nuclei_scan_findings` | `string` | Path for converted Nuclei scan findings JSON |
 
 ### Design Rules
 
@@ -155,7 +142,6 @@ Centralized file path registry. Produced by framework maintainer, consumed by al
 - Response values in governance checklists must be exactly `Yes`, `Partial`, or `No` — case-sensitive, no synonyms
 - All scored output fields that represent decimal values are formatted as strings with 2 decimal places (e.g., `"1.50"`)
 - Path configuration uses paths relative to project root — tools resolve paths via `path_config.json`, not hardcoded paths
-- Nuclei converter accepts both legacy (`template-id`, `host`) and current (`templateID`, `url`) field names — no breaking changes when Nuclei updates its output format
 
 ---
 
@@ -166,12 +152,6 @@ Centralized file path registry. Produced by framework maintainer, consumed by al
 | `governance_check.py` | Governance assessment CLI | Complete |
 | `assess_helpers.py` | Shared scoring and heatmap functions | Complete |
 | `global_helpers.py` | Shared I/O utilities (CSV/JSON, path config) | Complete |
-| `nuclei_scan_tool.py` | Nuclei CLI wrapper with profile support | Complete (not validated) |
-| `nuclei_helpers.py` | Nuclei profile loading, command building, execution | Complete (not validated) |
-| `nuclei_json_converter.py` | Raw Nuclei JSON → CSFLite summary format | Complete (not validated) |
-| `nuclei_convert_tool.py` | Nuclei converter CLI | Complete (not validated) |
-| `assess.py` | Combined scan + governance assessment | Complete (not validated, marked for deprecation) |
-| `mapping_rules.yaml` | YAML tag-based Nuclei mapping rules | Feature branch (not merged) |
 
 ---
 
@@ -183,27 +163,14 @@ Centralized file path registry. Produced by framework maintainer, consumed by al
 CSFLite/
 ├── tools/                          ← Python CLI tools and helper modules
 │   ├── governance_check.py         ← Governance assessment CLI (working)
-│   ├── assess.py                   ← Combined assessment CLI (preview, deprecated)
 │   ├── assess_helpers.py           ← Scoring engine and heatmap functions
-│   ├── global_helpers.py           ← Shared I/O utilities
-│   ├── nuclei_scan_tool.py         ← Nuclei scan CLI wrapper (preview)
-│   ├── nuclei_helpers.py           ← Nuclei profile/command helpers
-│   ├── nuclei_json_converter.py    ← Raw scan → CSFLite format
-│   └── nuclei_convert_tool.py      ← Nuclei converter CLI (preview)
+│   └── global_helpers.py           ← Shared I/O utilities
 ├── tests/                          ← pytest unit tests (mirrors tools/)
-│   ├── fixtures/                   ← Sample data for tests
-│   ├── integration/                ← End-to-end pipeline tests (planned)
 │   ├── test_assess_helpers.py      ← Scoring and heatmap tests
-│   ├── test_global_helpers.py      ← I/O utility tests
-│   ├── test_nuclei_helpers.py      ← Nuclei helper tests
-│   └── test_nuclei_json_converter.py
-├── data/                           ← Reference data (CSF lookups, mappings, profiles)
+│   └── test_global_helpers.py      ← I/O utility tests
+├── data/                           ← Reference data (CSF lookups)
 │   ├── csf_lookup.csv              ← Authoritative subcategory weights + recommendations
-│   ├── nuclei_csf_lookup.csv       ← Template→CSF mapping (deprecated)
-│   ├── nuclei_csf_lookup.json      ← JSON version (deprecated)
-│   ├── heat_map_lookup.csv         ← Heatmap severity thresholds
-│   ├── profiles.yaml               ← Nuclei scan profile definitions
-│   └── targets.txt                 ← Default scan targets
+│   └── heat_map_lookup.csv         ← Heatmap severity thresholds
 ├── templates/                      ← User-facing input templates
 │   └── governance_checks_template.csv  ← 25-item governance questionnaire
 ├── config/                         ← Runtime configuration
@@ -217,11 +184,9 @@ CSFLite/
 │       ├── top_25_sub_categories.md
 │       ├── automatable_subcategories.md
 │       ├── manual_remediation.md
-│       ├── nuclei_to_csf_mapping.md
 │       └── manual_questionnaire.md
 ├── input/examples/                 ← Sample input data
 ├── output/examples/                ← Sample output data
-├── scans/                          ← Generated scan outputs (gitignored)
 ├── output/                         ← Generated assessment outputs (gitignored)
 ├── .github/workflows/              ← CI pipeline (Black, Ruff, Bandit, pytest)
 ├── pyproject.toml                  ← Poetry project definition
@@ -231,7 +196,7 @@ CSFLite/
 
 ### Boundary Rules
 
-- `tools/` modules may import from `tools/global_helpers.py` and `tools/assess_helpers.py` — never from CLI entry points (`governance_check.py`, `assess.py`, `nuclei_scan_tool.py`)
+- `tools/` modules may import from `tools/global_helpers.py` and `tools/assess_helpers.py` — never from CLI entry points (`governance_check.py`)
 - `tests/` mirrors `tools/` structure — each `tools/x.py` has a corresponding `tests/test_x.py`
 - `data/` files are reference data, not generated output — they are version-controlled and change only through deliberate maintainer action
 - `config/path_config.json` is the single source of truth for file paths — no tool constructs paths independently
@@ -242,17 +207,14 @@ CSFLite/
 
 ## 6. Database Schema
 
-Current State:
 Not applicable. CSFLite uses file-based persistence (CSV/JSON). All state is contained in input files, reference data files, and output files. There is no database, no ORM, no migrations.
 
-Future State:
-Should define tables for assessment sessions, configurations, and historical results with a single-tenancy isolation strategy.
+Phase 4 introduces a database — see §12.
 
 ---
 
 ## 7. Hosting Stack
 
-Current:
 CSFLite runs as a local CLI tool on the operator's machine. There is no hosting infrastructure, no deployment pipeline, and no remote services.
 
 ### Infrastructure Needs
@@ -268,23 +230,19 @@ CSFLite runs as a local CLI tool on the operator's machine. There is no hosting 
 | Need | Service | Notes |
 |------|---------|-------|
 | Runtime | Local Python 3.12+ via Poetry | `poetry install && poetry shell` |
-| Scanner | Nuclei installed via Go or binary | Optional — governance pipeline works without it |
-| Test targets | Docker containers (DVWA, WebGoat) | For Phase 5 validation only |
 
 Local-first because the tool is operated by the consultant on their own machine, processing client data that should not leave the local environment without explicit agreement.
 
-### Future Profiles
-
-This web-based or API-based profile would requires addendum for this spec
-
 ---
 
+
+## 8. Reference Data
 
 ### What the Scoring Engine Uses
 
 | Field | Used for |
 |---|---|
-| `csf_subcategory_id` | Join key — links governance responses and scan findings to the framework |
+| `csf_subcategory_id` | Join key — links governance responses to the framework |
 | `weight` | Multiplier for coverage scoring (assessment_score = response_score × weight) |
 | `recommendation` | Populated into assessment output for each subcategory with a gap |
 
@@ -301,33 +259,27 @@ CSFLite is its own proof-of-concept. There is no external client for the framewo
 | Phase | Milestone | Status |
 |---|---|---|
 | 1 | Framework Foundation — 25 subcategories, assessment philosophy, reference docs | Complete |
-| 2 | Reference Data & Mappings — CSF lookup, Nuclei mappings, scan profiles | Complete |
+| 2 | Reference Data & Mappings — CSF lookup, heatmap lookup | Complete |
 | 3 | Governance Assessment Pipeline — questionnaire → scored output → heatmap | Complete |
-| 4 | Scan Tooling Infrastructure — Nuclei wrapper, converter, scan-to-CSF mapping | Complete (not validated) |
-| 5 | Integration & Pilot Testing — end-to-end validation against live targets | In progress |
-| 6 | Release Hardening — CI fixes, documentation audit, v0.1.0 tag | Not started |
-| 7 | Community & Iteration — external contributions, expanded mappings | Not started |
+| 4 | Web Interface — web questionnaire and report, replaces the CLI | Not started |
+| 5 | Release Hardening — CI fixes, documentation audit, v0.1.0 tag | Not started |
+| 6 | Community & Iteration — external contributions, expanded mappings | Not started |
 
-### Current Status (Phase 5)
+### Current Status
 
-**Decided, not yet built:**
-Web-based version that will suprsede the current CLI version
+Phase 3 complete. The governance assessment pipeline runs end to end as a CLI.
+
+**Decided, not yet built:** the Phase 4 web interface, which replaces the CLI. Specified in §12.
 
 ### Configuration (current structure)
 
 ```json
 {
     "governance_checklist": "scans/governance_checks.csv",
-    "lookup_csv": "data/nuclei_csf_lookup.csv",
     "heatmap_lookup": "data/heat_map_lookup.csv",
     "csf_lookup": "data/csf_lookup.csv",
-    "output_csv": "output/scan-findings.csv",
-    "output_json": "output/scan-findings.json",
-    "heatmap_csv": "output/scan_heatmap.csv",
     "governance_assessment_csv": "output/governance_assessment.csv",
-    "governance_heatmap_csv": "output/governance_heatmap.csv",
-    "nuclei_profile": "data/profiles.yaml",
-    "nuclei_scan_findings": "output/nuclei_scan_findings.json"
+    "governance_heatmap_csv": "output/governance_heatmap.csv"
 }
 ```
 
@@ -342,18 +294,49 @@ These become ADRs when decomposed into the template.
 | Scope limited to 25 subcategories | Fixed at 25, additions require a removal | Keeps framework lean and assessable by resource-constrained teams. Broader coverage available through later-stage maturity assessments. |
 | Coverage-only scoring | Yes/Partial/No (1.0/0.5/0.0) — no maturity levels | Small teams cannot defend nuanced maturity scores. Binary or near-binary answers are defensible and actionable. |
 | Evidence required for "Yes" | Assertions without proof score Partial or No | Prevents attestation theater. Most critical quality control mechanism. |
-| Governance pipeline before scan pipeline | Governance validated first, scans layered on top | Mirrors assessment philosophy — coverage before depth. Manual governance establishes baseline that scanning extends. |
-| YAML migration for template mapping | Moving from per-template CSV to tag-based YAML rules | CSV approach does not scale — requires manual entry per template. YAML tag rules can match categories of templates. Blocked on Phase 5 validation to avoid compounding unknowns. |
 | Compliance crosswalks as reference docs | Stored in `docs/reference/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. |
 | Assessment philosophy as authoritative | `csflite-assessment-philosophy.md` overrides all other docs on conflicts | Single source of truth for methodology prevents drift across documentation. |
+| Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. |
 | Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. |
 
 ---
 
 ## 11. What This Project Does Not Own
 
-- **Client-specific assessment data** — CSFLite provides the framework; client projects provide the questionnaire responses, scan targets, and deliverables.
+- **Client-specific assessment data** — CSFLite provides the framework; client projects provide the questionnaire responses and deliverables.
 - **SOC 2 / HIPAA / ISO 27001 readiness assessments** — these are client delivery engagements that consume CSFLite. Compliance crosswalk reference documents live in CSFLite; readiness assessment workflows, gap analyses, and remediation roadmaps live in client projects.
 - **Tool integrations (OWASP ZAP, Graylog, TheHive, DefectDojo)** — planned integrations per the development roadmap are future scope. When built, they may live in CSFLite if they are framework-generic, or in separate projects if they are deployment-specific.
 - **Unified governance dashboard** — longer-horizon milestone that would require a service model. Would need its own seed document.
 - **Maturity assessment, risk quantification, continuous monitoring** — explicitly out of scope by design. CSFLite is Stage 1 (coverage). Later stages are separate projects.
+
+---
+
+## 12. Planned — Phase 4 Web Interface
+
+Not built. Nothing in this section is contract-binding. It records decisions made, not implementation.
+
+The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable from a terminal. `governance_check.py` is retired, and §4, §5, and the §5 Boundary Rules are rewritten at that point.
+
+### Carries over unchanged
+
+- The 25 curated subcategories and `csf_lookup.csv` as their single source of truth
+- The scoring rules and output contracts in §3 — a web form producing the same records satisfies the same contracts
+- `assess_helpers.py` — pure functions over dicts, no I/O, callable directly from a web layer
+
+### Changes
+
+**Intake** — web questionnaire form with evidence upload, replacing the checklist CSV. The Governance Checklist Input contract in §3 is the reference for form fields.
+
+**Output** — web-rendered report and heatmap, plus downloadable CSV/JSON. The Governance Assessment Output and Governance Heatmap Output contracts in §3 are the reference for both.
+
+**Persistence** — a database replaces file-based state. Tables for assessment sessions, configurations, and historical results. Single-tenant isolation.
+
+**Hosting** — a hosted profile replaces the local-only profile.
+
+**Design** — available via Claude Design.
+
+### Open questions
+
+- **Local-first rationale.** §7 states the tool is local-first because client data should not leave the operator's machine without explicit agreement. A hosted web application breaks that. Resolve before building.
+- **`path_config.json`.** Whether it survives, and what replaces it for a hosted deployment.
+- **Migration.** What happens to assessments already completed as CSV.

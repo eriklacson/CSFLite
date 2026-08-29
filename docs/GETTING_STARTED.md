@@ -161,7 +161,7 @@ Governance assessment heatmap written to: output/governance_heatmap.csv
 | Column | Description |
 |--------|-------------|
 | `csf_subcategory_id` | NIST CSF subcategory identifier |
-| `severity` | Risk severity: `high`, `medium`, or `low` |
+| `severity` | Coverage severity: `high` (absent), `medium` (partial), or `none` (covered) |
 | `gap_score` | Size of the gap |
 
 The heatmap prioritizes your remediation efforts. Focus on `high` severity items first — these represent the largest weighted gaps in your security posture.
@@ -195,7 +195,7 @@ CSFLite scores represent **coverage**, not maturity or risk.
 
 ### Priority Framework
 
-1. **High severity gaps** (gap_score > 0) in GOVERN subcategories — fix first, these are foundational
+1. **High severity gaps** (absent controls) in GOVERN subcategories — fix first, these are foundational
 2. **High severity gaps** in PROTECT subcategories — these prevent or limit incident impact
 3. **Any "No" response** — a missing capability is always higher priority than a partial one
 4. **Partial responses** — improve these after addressing missing capabilities

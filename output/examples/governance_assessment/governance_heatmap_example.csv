@@ -21,6 +21,6 @@ DE.CM-09,Computing systems are monitored for adverse events,Partial,medium,0.60
 ID.AM-01,Hardware inventories are maintained,Partial,medium,0.60
 ID.AM-02,Software and systems inventories are maintained,Partial,medium,0.60
 PR.IR-01,Networks are protected from unauthorized access,Partial,medium,0.60
-PR.AA-03,Users and services are authenticated,Yes,low,0.00
-PR.DS-02,Data-in-transit is protected,Yes,low,0.00
-PR.DS-11,Backups are created and tested,Yes,low,0.00
+PR.AA-03,Users and services are authenticated,Yes,none,0.00
+PR.DS-02,Data-in-transit is protected,Yes,none,0.00
+PR.DS-11,Backups are created and tested,Yes,none,0.00

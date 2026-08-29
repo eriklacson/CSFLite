@@ -112,15 +112,28 @@ Scored governance results. Produced by `generate_governance_assessement()`, cons
 
 ### Governance Heatmap Output (CSV)
 
-Severity-classified gap prioritization. Produced by `generate_governance_heatmap()`, consumed by report tools and dashboards.
+Severity-classified gap prioritization. Produced by `generate_governance_heatmap()`, consumed by report tools and dashboards. Consumes the Governance Assessment Output above, requiring its `score` and `weight` fields.
 
 | Field | Type | Description |
 |---|---|---|
 | `csf_subcategory_id` | `string` | Canonical subcategory ID |
 | `name` | `string` | Human-readable subcategory name |
 | `response` | `string` | Original assessor response |
-| `severity` | `string` | One of: `high` (score ≤ 0), `medium` (score < weight), `low` (score ≥ weight) |
+| `severity` | `string` | One of: `none`, `medium`, `high`. Derived from coverage — see below |
 | `gap_score` | `string` | Weighted gap, formatted to 2 decimal places |
+
+Severity reflects coverage only. Weight is deliberately not a factor:
+
+| Severity | Condition | Meaning |
+|---|---|---|
+| `none` | `score = 1` (Yes) | Control is covered. There is no gap, so there is no severity |
+| `medium` | `score = 0.5` (Partial) | Control exists but is not fully in place |
+| `high` | `score = 0` (No) | Control is absent |
+
+Weight drives priority through `gap_score`, which is the sort key: among two absent subcategories,
+the one weighted 1.5 sorts above the one weighted 1.0. Weight is not encoded in the severity label.
+Banding severity on the weighted gap was tried and reverted — with weights spanning only 1.0 to 1.5
+there is no room to separate the three coverage classes, and the attempt demoted real findings.
 
 
 ### Path Configuration (JSON)
@@ -141,6 +154,9 @@ Centralized file path registry. Produced by framework maintainer, consumed by al
 - `csf_lookup.csv` is the single source of truth for subcategory weights — no tool hardcodes weights
 - Response values in governance checklists must be exactly `Yes`, `Partial`, or `No` — case-sensitive, no synonyms
 - All scored output fields that represent decimal values are formatted as strings with 2 decimal places (e.g., `"1.50"`)
+- Severity is a function of coverage alone — an absent subcategory is `high` at every weight, and a covered one is `none`
+- Weight affects priority only through `gap_score` ordering, never through the severity label
+- Gap is computed from unformatted `score` and `weight`, never from the 2-decimal presentation strings
 - Path configuration uses paths relative to project root — tools resolve paths via `path_config.json`, not hardcoded paths
 
 ---

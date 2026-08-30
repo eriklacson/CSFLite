@@ -83,24 +83,28 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 
 **Goal:** Replace the CLI with a web application. After this phase CSFLite is not operable from a terminal.
 
-Specification: `.claude/docs/csflite-spec-brief.md` §12.
+Solution design: `docs/design/phase-4-web-interface.md`. Locked decisions: `.claude/docs/csflite-spec-brief.md` §10 and §12.
+
+CSFLite ships as a container image the operator runs themselves. Local profile first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
 
 **Deliverables:**
 - [ ] Move `pytest` to the dev dependency group only (`pyproject.toml`)
-- [ ] Web questionnaire form with evidence upload (replaces the checklist CSV)
+- [ ] Django application skeleton, server-rendered, no build step
+- [ ] Web questionnaire form with evidence upload and notes (replaces the checklist CSV)
 - [ ] Web-rendered report and heatmap, with CSV/JSON download
-- [ ] Database persistence — assessment sessions, configurations, historical results, single-tenant
-- [ ] Hosted deployment profile
-- [ ] Retire `governance_check.py` and file-based path configuration
-- [ ] Migration path for assessments already completed as CSV
-
-**Open before build:**
-- Local-first data handling. The current rationale is that client data should not leave the operator's machine without explicit agreement. A hosted application breaks that.
+- [ ] Database persistence — assessments, responses, evidence, immutable result snapshots
+- [ ] Container image and local `docker compose` profile
+- [ ] Railway deployment profile — Postgres addon, mounted volume, always-on
+- [ ] Operator password guard — refuse to bind a non-loopback address without `CSFLITE_PASSWORD`
+- [ ] CSV import for assessments already completed with the CLI
+- [ ] Retire `governance_check.py` and `config/path_config.json`
 
 **Acceptance criteria:**
 - An assessment can be completed end to end in the browser
-- Scoring output matches the CLI output for the same responses
-- `assess_helpers.py` is unchanged
+- Web output is byte-identical to `tests/fixtures/golden/` for the same responses
+- `assess_helpers.py` is unchanged, verified by diff
+- The container starts from `docker compose up` with no host Python
+- A past assessment's result does not change when `csf_lookup.csv` is reweighted
 
 ---
 
@@ -169,4 +173,4 @@ These items are not blocking release but should be addressed before v1.0.0:
 
 ---
 
-*Last updated: 2026-03-30*
+*Last updated: 2026-08-30*

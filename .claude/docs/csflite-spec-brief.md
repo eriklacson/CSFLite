@@ -1,7 +1,7 @@
 # LeanSecurity — CSFLite
 ## Project Specification Brief v2.0
 **Status:** Phase 3 complete; Phase 4 (Web Interface) next  
-**Last updated:** March 2026
+**Last updated:** August 2026
 
 ---
 
@@ -249,6 +249,8 @@ CSFLite runs as a local CLI tool on the operator's machine. There is no hosting 
 
 Local-first because the tool is operated by the consultant on their own machine, processing client data that should not leave the local environment without explicit agreement.
 
+Phase 4 replaces this profile with a container image the operator runs themselves, locally or in their own cloud account. Because the operator owns the infrastructure, client data still never leaves an environment they control. See `docs/design/phase-4-web-interface.md`.
+
 ---
 
 
@@ -313,6 +315,9 @@ These become ADRs when decomposed into the template.
 | Compliance crosswalks as reference docs | Stored in `docs/reference/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. |
 | Assessment philosophy as authoritative | `csflite-assessment-philosophy.md` overrides all other docs on conflicts | Single source of truth for methodology prevents drift across documentation. |
 | Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. |
+| Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds client data, which resolves the §7 local-first conflict rather than deferring it. |
+| Cloud-native scope | Portable and operable, not elastic | pandas import cost rules out scale-to-zero, and a single operator generates no load. Recorded so the application is not later "fixed" into a serverless deployment. |
+| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same path as the hosted deployment. |
 | Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. |
 
 ---
@@ -329,30 +334,12 @@ These become ADRs when decomposed into the template.
 
 ## 12. Planned — Phase 4 Web Interface
 
-Not built. Nothing in this section is contract-binding. It records decisions made, not implementation.
+Not built. Nothing in this section is contract-binding.
 
-The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable from a terminal. `governance_check.py` is retired, and §4, §5, and the §5 Boundary Rules are rewritten at that point.
+The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable from a terminal. `governance_check.py` and `config/path_config.json` are retired, and §2, §4, §5, §6, §7, and the §5 Boundary Rules are rewritten at that point.
 
-### Carries over unchanged
+Carries over unchanged: the 25 curated subcategories, `csf_lookup.csv` as their single source of truth, the output contracts in §3, and `assess_helpers.py`.
 
-- The 25 curated subcategories and `csf_lookup.csv` as their single source of truth
-- The scoring rules and output contracts in §3 — a web form producing the same records satisfies the same contracts
-- `assess_helpers.py` — pure functions over dicts, no I/O, callable directly from a web layer
+CSFLite ships as a container image that the operator runs on their own machine or in their own cloud account. Local first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
 
-### Changes
-
-**Intake** — web questionnaire form with evidence upload, replacing the checklist CSV. The Governance Checklist Input contract in §3 is the reference for form fields.
-
-**Output** — web-rendered report and heatmap, plus downloadable CSV/JSON. The Governance Assessment Output and Governance Heatmap Output contracts in §3 are the reference for both.
-
-**Persistence** — a database replaces file-based state. Tables for assessment sessions, configurations, and historical results. Single-tenant isolation.
-
-**Hosting** — a hosted profile replaces the local-only profile.
-
-**Design** — available via Claude Design.
-
-### Open questions
-
-- **Local-first rationale.** §7 states the tool is local-first because client data should not leave the operator's machine without explicit agreement. A hosted web application breaks that. Resolve before building.
-- **`path_config.json`.** Whether it survives, and what replaces it for a hosted deployment.
-- **Migration.** What happens to assessments already completed as CSV.
+**Full design:** `docs/design/phase-4-web-interface.md`. That document owns the stack, data model, configuration, deployment profiles, container, routes, and the CLI retirement sequence. It is superseded by this brief when Phase 4 ships.

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f0eee9;font-family:'Kalam',cursive}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08)}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 22px}
+.dv-tid{font:700 11px/1 'Kalam',cursive;padding:4px 8px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:700 16px/1.2 'Architects Daughter',cursive;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px}
+.dv-oid{font:700 12px/1 'Kalam',cursive;padding:4px 9px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:700 13px/1.3 'Architects Daughter',cursive;color:rgba(0,0,0,.7)}
+.dv-card{background:#fff;border:2px solid #1a1a1a;padding:18px;box-shadow:3px 3px 0 rgba(0,0,0,.15)}
+.dv-next{margin:24px 0 0;font:16px/1.5 'Kalam',cursive;color:rgba(0,0,0,.55)}
+.scr{width:250px;border:2px solid #1a1a1a;background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px;position:relative}
+.scr-label{position:absolute;top:-11px;left:8px;background:#f0eee9;padding:0 6px;font:700 11px 'Architects Daughter',cursive}
+.ph{border:1.5px dashed rgba(0,0,0,.4);background:rgba(0,0,0,.03)}
+.ln{height:8px;border-radius:2px;background:rgba(0,0,0,.15)}
+.dot{width:9px;height:9px;border-radius:50%;border:1.5px solid #1a1a1a}
+.btnw{border:2px solid #1a1a1a;text-align:center;font:700 11px 'Architects Daughter',cursive;padding:5px 0}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Three structural approaches — admin workspace, new assessment, client questionnaire, results</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Wizard rail — persistent left stepper, guided one-thing-at-a-time</div>
+<div class="dv-card" style="display:flex;gap:14px;flex-wrap:wrap">
+
+<div class="scr" style="height:190px"><span class="scr-label">Admin · Workspace</span>
+  <div class="ln" style="width:60%;margin-top:6px"></div>
+  <div class="ph" style="height:26px;display:flex;align-items:center;padding:0 6px;gap:6px"><div class="dot" style="border-radius:2px;width:12px;height:12px"></div><div class="ln" style="width:50%"></div><div class="ln" style="width:20%;margin-left:auto;background:#5980a6"></div></div>
+  <div class="ph" style="height:26px;display:flex;align-items:center;padding:0 6px;gap:6px"><div class="dot" style="border-radius:2px;width:12px;height:12px"></div><div class="ln" style="width:35%"></div><div class="ln" style="width:20%;margin-left:auto"></div></div>
+  <div class="ph" style="height:26px;display:flex;align-items:center;padding:0 6px;gap:6px"><div class="dot" style="border-radius:2px;width:12px;height:12px"></div><div class="ln" style="width:45%"></div><div class="ln" style="width:20%;margin-left:auto"></div></div>
+  <div class="btnw" style="margin-top:auto">+ new client</div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">New Assessment</span>
+  <div class="ln" style="width:50%;margin-top:6px"></div>
+  <div class="ph" style="height:22px"></div>
+  <div class="ln" style="width:70%;margin-top:4px"></div>
+  <div style="display:flex;gap:5px"><div class="ph" style="flex:1;height:34px"></div><div class="ph" style="flex:1;height:34px"></div><div class="ph" style="flex:1;height:34px"></div></div>
+  <div class="btnw" style="margin-top:auto;background:#5980a6;color:#fff;border-color:#5980a6">create + send link</div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">Client · Question (rail)</span>
+  <div style="display:flex;gap:8px;height:100%">
+    <div style="width:34px;border-right:1.5px dashed rgba(0,0,0,.3);display:flex;flex-direction:column;gap:5px;padding-top:6px">
+      <div class="dot" style="background:#5980a6;border-color:#5980a6"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;padding-top:6px">
+      <div class="ln" style="width:80%"></div>
+      <div class="ph" style="height:30px"></div>
+      <div style="display:flex;gap:4px"><div class="btnw" style="flex:1">Yes</div><div class="btnw" style="flex:1">Partial</div><div class="btnw" style="flex:1">No</div></div>
+      <div class="ln" style="width:60%;margin-top:auto"></div>
+    </div>
+  </div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">Results</span>
+  <div class="ln" style="width:40%;margin-top:6px"></div>
+  <div class="ph" style="height:44px;display:flex;align-items:center;justify-content:center;font:700 16px 'Architects Daughter',cursive">72%</div>
+  <div style="display:flex;gap:3px;height:36px">
+    <div class="ph" style="flex:1;background:#c76b5a44"></div><div class="ph" style="flex:1;background:#d6a94944"></div><div class="ph" style="flex:1;background:#5980a644"></div><div class="ph" style="flex:1;background:#5980a622"></div><div class="ph" style="flex:1;background:#c76b5a44"></div><div class="ph" style="flex:1;background:#5980a644"></div>
+  </div>
+  <div class="ln" style="width:90%"></div><div class="ln" style="width:75%"></div>
+</div>
+
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Table + card stack — admin runs a data table, client gets full-screen question cards with top bar</div>
+<div class="dv-card" style="display:flex;gap:14px;flex-wrap:wrap">
+
+<div class="scr" style="height:190px"><span class="scr-label">Admin · Workspace (table)</span>
+  <div style="display:flex;gap:4px;margin-top:6px"><div class="ln" style="width:30%"></div><div class="ln" style="width:20%;margin-left:auto"></div><div class="ln" style="width:20%"></div><div class="ln" style="width:15%"></div></div>
+  <div class="ph" style="height:1.5px;background:#1a1a1a;border:none"></div>
+  <div style="display:flex;gap:4px"><div class="ln" style="width:30%"></div><div class="ln" style="width:20%;margin-left:auto"></div><div class="ln" style="width:20%;background:#d6a949"></div><div class="ln" style="width:15%"></div></div>
+  <div style="display:flex;gap:4px"><div class="ln" style="width:30%"></div><div class="ln" style="width:20%;margin-left:auto"></div><div class="ln" style="width:20%;background:#5980a6"></div><div class="ln" style="width:15%"></div></div>
+  <div style="display:flex;gap:4px"><div class="ln" style="width:30%"></div><div class="ln" style="width:20%;margin-left:auto"></div><div class="ln" style="width:20%;background:#c76b5a"></div><div class="ln" style="width:15%"></div></div>
+  <div class="btnw" style="margin-top:auto">+ new client</div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">New Assessment (modal)</span>
+  <div class="ph" style="position:absolute;inset:14px;background:#fff;border:2px solid #1a1a1a;padding:10px;display:flex;flex-direction:column;gap:6px">
+    <div class="ln" style="width:50%"></div>
+    <div class="ph" style="height:20px"></div>
+    <div class="ln" style="width:40%;margin-top:4px"></div>
+    <div style="display:flex;gap:4px"><div class="ph" style="flex:1;height:20px"></div><div class="ph" style="flex:1;height:20px"></div><div class="ph" style="flex:1;height:20px"></div></div>
+    <div class="btnw" style="margin-top:auto;background:#5980a6;color:#fff;border-color:#5980a6">create</div>
+  </div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">Client · Question (top bar)</span>
+  <div style="height:5px;background:rgba(0,0,0,.1);margin-top:6px"><div style="width:35%;height:100%;background:#5980a6"></div></div>
+  <div class="ln" style="width:30%;margin-top:2px"></div>
+  <div class="ln" style="width:85%;margin-top:6px"></div>
+  <div class="ph" style="flex:1"></div>
+  <div class="ln" style="width:55%"></div>
+  <div style="display:flex;gap:4px"><div class="btnw" style="flex:1">Yes</div><div class="btnw" style="flex:1">Partial</div><div class="btnw" style="flex:1">No</div></div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">Results (tabbed)</span>
+  <div style="display:flex;gap:4px;margin-top:6px"><div class="btnw" style="flex:1;background:#1a1a1a;color:#fff">Core</div><div class="btnw" style="flex:1">SOC2</div></div>
+  <div style="display:flex;gap:8px;align-items:center"><div class="ph" style="width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 13px 'Architects Daughter',cursive">72%</div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:4px"><div class="ln"></div><div class="ln" style="width:70%"></div></div></div>
+  <div style="display:flex;gap:3px;height:30px;margin-top:auto"><div class="ph" style="flex:1;background:#c76b5a44"></div><div class="ph" style="flex:1;background:#d6a94944"></div><div class="ph" style="flex:1;background:#5980a644"></div><div class="ph" style="flex:1;background:#5980a622"></div></div>
+</div>
+
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Split context panel — org + live progress always visible beside the active question; kanban workspace</div>
+<div class="dv-card" style="display:flex;gap:14px;flex-wrap:wrap">
+
+<div class="scr" style="height:190px"><span class="scr-label">Admin · Workspace (kanban)</span>
+  <div style="display:flex;gap:5px;margin-top:6px;height:150px">
+    <div style="flex:1;border:1.5px dashed rgba(0,0,0,.3);padding:4px;display:flex;flex-direction:column;gap:4px"><div class="ln" style="width:80%"></div><div class="ph" style="height:24px"></div><div class="ph" style="height:24px"></div></div>
+    <div style="flex:1;border:1.5px dashed rgba(0,0,0,.3);padding:4px;display:flex;flex-direction:column;gap:4px"><div class="ln" style="width:80%"></div><div class="ph" style="height:24px;background:#d6a94933"></div></div>
+    <div style="flex:1;border:1.5px dashed rgba(0,0,0,.3);padding:4px;display:flex;flex-direction:column;gap:4px"><div class="ln" style="width:80%"></div><div class="ph" style="height:24px;background:#5980a633"></div><div class="ph" style="height:24px;background:#5980a633"></div></div>
+  </div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">New Assessment (side drawer)</span>
+  <div style="margin-left:auto;width:65%;height:100%;border-left:2px solid #1a1a1a;padding-left:8px;display:flex;flex-direction:column;gap:6px;padding-top:6px">
+    <div class="ln" style="width:60%"></div>
+    <div class="ph" style="height:18px"></div>
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <div class="btnw" style="margin-top:auto;background:#5980a6;color:#fff;border-color:#5980a6">send</div>
+  </div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">Client · Question (split)</span>
+  <div style="display:flex;gap:6px;height:100%;margin-top:4px">
+    <div style="width:70px;border-right:1.5px dashed rgba(0,0,0,.3);display:flex;flex-direction:column;gap:4px;padding-top:2px">
+      <div class="ln" style="width:90%"></div>
+      <div class="ph" style="height:14px"></div>
+      <div class="ln" style="width:70%"></div>
+      <div class="ph" style="height:40px;margin-top:auto"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;padding-top:2px">
+      <div class="ln" style="width:80%"></div>
+      <div class="ph" style="height:26px"></div>
+      <div style="display:flex;gap:4px"><div class="btnw" style="flex:1">Yes</div><div class="btnw" style="flex:1">Partial</div><div class="btnw" style="flex:1">No</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="scr" style="height:190px"><span class="scr-label">Results (same split shell)</span>
+  <div style="display:flex;gap:6px;height:100%;margin-top:4px">
+    <div style="width:70px;border-right:1.5px dashed rgba(0,0,0,.3);display:flex;flex-direction:column;gap:4px;padding-top:2px">
+      <div class="ln" style="width:90%"></div>
+      <div class="ph" style="height:30px;display:flex;align-items:center;justify-content:center;font:700 12px 'Architects Daughter',cursive">72%</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:4px;padding-top:2px">
+      <div class="ln" style="width:70%"></div>
+      <div style="display:flex;gap:3px;height:60px"><div class="ph" style="flex:1;background:#c76b5a44"></div><div class="ph" style="flex:1;background:#d6a94944"></div><div class="ph" style="flex:1;background:#5980a644"></div><div class="ph" style="flex:1;background:#5980a622"></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "combine <a class="dv-oid" href="#1a">1a</a>'s rail nav with <a class="dv-oid" href="#1c">1c</a>'s split results" · "show the SOC2/HIPAA branch point" · "pick 1b, move to hi-fi"</p>
+</section>
+
+</x-dc>
+</body>
+</html>

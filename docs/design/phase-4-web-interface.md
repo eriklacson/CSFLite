@@ -4,6 +4,8 @@
 **Supersedes on completion:** spec brief §2, §4, §5, §6, §7
 **Binding:** No. The spec brief (`.claude/docs/csflite-spec-brief.md`) is the contract-binding document. This design records intent for work not yet done.
 
+**UX source:** `docs/design/ux/` — a Claude Design prototype and wireframes. The prototype defines the flow and screens in §6. Where it disagrees with the interface contracts, §16 records which one wins.
+
 This document owns only what does not exist yet: stack, data model, configuration, deployment, container, routes, and the retirement sequence. It does not restate the interface contracts, the 25 subcategories, or the scoring rules. Those live in the spec brief and are cited from here.
 
 ---
@@ -75,7 +77,43 @@ There is no HTTP boundary between the web layer and the scoring core, and no ser
 
 ---
 
-## 6. Stack
+## 6. User flow and screens
+
+Source: `docs/design/ux/`. `CSFLite Assessment.dc.html` is the interactive prototype; `Wireframes.dc.html` holds the three structural options that preceded it.
+
+Three steps: **Scope → Questionnaire → Results.**
+
+### Scope
+
+Organisation name, track selection, and a preview of the path. Baseline is locked on. Each optional track appends its crosswalk supplement and restates the question count. The preview lists every section with its question count, and the footer gives totals as "N questions · M screens".
+
+### Questionnaire
+
+Sectioned by CSF Function group, not one question per screen. The header names the track and the section position. Two progress indicators: a bar for answered-of-total, and a clickable segment strip that jumps between sections.
+
+Each question shows the subcategory ID, the subcategory name, the question text, an evidence prompt, the weight, and Yes / Partial / No. The footer carries Back, a per-screen answered count, and Next.
+
+### Results
+
+Track tabs, weighted coverage as a percentage, the weighted-point detail behind it, severity counts, coverage-by-group bars, and a gap heatmap sorted by gap descending then subcategory ID. Exports for `assessment.csv` and `heatmap.csv`. Start over.
+
+### Prototype configuration left open
+
+| Prop | Prototype default | Note |
+|---|---|---|
+| `oneQuestionPerScreen` | `false` | Grouped screens were chosen over one-at-a-time |
+| `showEvidence` | `true` | Evidence prompt visible under each question |
+| `supplementWeight` | `1.0` | Flat weight for supplement questions — see §16 |
+
+### Explored and not taken
+
+`Wireframes.dc.html` explored an admin workspace listing multiple client engagements, with a "create + send link" flow to a separate client-facing questionnaire. The built prototype did not take it and is labelled single tenant.
+
+Phase 4 follows the prototype. The admin/client split stays a non-goal under §3, because it needs accounts, invitation links, and a second trust boundary — none of which a single operator assessing their own clients requires.
+
+---
+
+## 7. Stack
 
 | Concern | Choice | Rationale |
 |---|---|---|
@@ -92,7 +130,7 @@ Django is chosen because the portability seam this design needs is its default. 
 
 ---
 
-## 7. Data model
+## 8. Data model
 
 Reference data stays in version-controlled files and is loaded at boot. It does not move into the database. Spec brief §8 holds: reweighting a subcategory means editing `csf_lookup.csv`, nothing more.
 
@@ -107,11 +145,13 @@ Only assessment data is persisted.
 
 `Result` exists because scoring is deterministic from responses **and** `csf_lookup.csv`, and that file changes over time. Without a snapshot, reweighting a subcategory would silently rewrite the history of every past assessment. `lookup_digest` records which version of the reference data produced the result.
 
+The model covers the core 25 only. Whether `Assessment` gains a selected-tracks field depends on the supplement decision in §16.
+
 `Response.notes` resolves CHK-0001 #4. The spec says notes are preserved in output; the CLI's four-column projection dropped them. The web form persists them.
 
 ---
 
-## 8. Configuration
+## 9. Configuration
 
 All configuration comes from the environment. There is no per-environment settings file.
 
@@ -129,7 +169,7 @@ All configuration comes from the environment. There is no per-environment settin
 
 ---
 
-## 9. Authentication
+## 10. Authentication
 
 Local: none. The application binds to `127.0.0.1`. A login screen on a loopback interface protects nothing.
 
@@ -139,7 +179,7 @@ Hosted: one operator password from `CSFLITE_PASSWORD`, Django session cookie, no
 
 ---
 
-## 10. Deployment profiles
+## 11. Deployment profiles
 
 ### Local — Phase 4
 
@@ -157,7 +197,7 @@ Not designed here. The commitment Phase 4 makes to keep them cheap: no cloud SDK
 
 ---
 
-## 11. Container
+## 12. Container
 
 - Multi-stage build on `python:3.12-slim`
 - Poetry exports to requirements in the build stage; Poetry is absent from the runtime layer
@@ -170,22 +210,24 @@ Known cost: pandas and numpy put roughly 100MB in the image. Accepted, because k
 
 ---
 
-## 12. Routes
+## 13. Routes
+
+Follows the three-step flow in §6. The assessment list has no prototype screen — it exists because persistence does, and the prototype holds all state in the browser.
 
 | Route | Purpose |
 |---|---|
 | `/` | Assessment list |
-| `/assessments/new` | Create |
-| `/assessments/<id>/questionnaire` | The 25 questions, evidence upload, notes |
-| `/assessments/<id>/report` | Rendered report and heatmap |
-| `/assessments/<id>/export/<format>` | CSV and JSON download |
+| `/assessments/new` | Scope — organisation name and track selection |
+| `/assessments/<id>/section/<n>` | One CSF Function group per screen |
+| `/assessments/<id>/results` | Coverage, severity counts, group bars, gap heatmap |
+| `/assessments/<id>/export/<track>/<artifact>.csv` | `assessment.csv` and `heatmap.csv`, generated server-side |
 | `/assessments/import` | Upload an existing checklist CSV |
 | `/login` | Hosted profile only |
 | `/healthz` | Liveness |
 
 ---
 
-## 13. Migration from CSV
+## 14. Migration from CSV
 
 `/assessments/import` accepts the existing governance checklist CSV, runs it through the same validation the web form uses, and persists it as a completed assessment. Existing client work is not stranded.
 
@@ -193,7 +235,7 @@ Rejected input fails the same way it does today: the assessment is not created, 
 
 ---
 
-## 14. CLI retirement
+## 15. CLI retirement
 
 Ordered so that parity is provable before the CLI is deleted:
 
@@ -207,18 +249,57 @@ Step 2 gates step 3. The CLI is not deleted before the web application reproduce
 
 ---
 
-## 15. Acceptance criteria
+## 16. Prototype divergences from the contracts
+
+The prototype is a design artifact. It reimplemented scoring in JavaScript to render without a backend, and that reimplementation drifted from the contracts in several places. These are recorded so the implementation follows the contracts, not the prototype.
+
+### Settled — the contract wins
+
+| Prototype behaviour | Contract | Resolution |
+|---|---|---|
+| An unanswered question scores as `No` | Blank or invalid input is a hard error (CHK-0001 #1) | The form blocks progress past an unanswered question. Nothing is ever defaulted |
+| Severity `low` for a covered control | Spec §3 defines `none` | Use `none` |
+| Severity derived from the weighted `assessment_score` | Derived from `score` alone | Equivalent for positive weights, but it diverges at weight 0 and reintroduces the weight coupling CHK-0002 removed |
+| Scoring and CSV generation in JavaScript | `assess_helpers.py` is the only scoring implementation | The server generates both exports. No scoring in the browser |
+| `assessment.csv` omits `recommendation` | Spec §3 includes it | Add the column |
+| No notes field | CHK-0001 #4 — notes are preserved in output | The form persists notes per response |
+
+### Open — needs a decision
+
+**Evidence.** The prototype renders evidence as a text prompt under each question, telling the assessor what would substantiate a Yes. It does not accept a file. The roadmap deliverable is evidence upload, and §8 models `Evidence` as an uploaded file.
+
+These are not the same feature, and both are defensible. The prompt is what makes the "evidence required for Yes" rule in spec §10 legible at the moment of answering. The upload is what makes it auditable afterwards. Recommendation: ship both — keep the prompt, and add an optional upload beside it.
+
+**Supplement tracks.** The prototype scores SOC 2 (28 questions) and HIPAA (9 questions) as selectable tracks alongside the core 25, weighting every supplement question at a flat 1.0.
+
+This conflicts with two locked decisions. Spec §10 stores crosswalks as reference documents "not consumed by the scoring engine". Spec §11 assigns readiness assessments to client delivery engagements rather than to CSFLite. Scoring the supplements moves both.
+
+It also has no reference data behind it. `csf_lookup.csv` holds weights for the core 25 only, so the flat 1.0 is invented at render time rather than derived, which contradicts spec §8.
+
+Three ways out, in the order I would consider them:
+
+1. **Cut the supplements from Phase 4.** Smallest scope, no locked decision moves, and the core 25 flow is what retires the CLI. The supplements stay CSV templates.
+2. **Collect but do not score them.** The tracks appear, answers persist and export, and no weighted coverage is computed for them. Honest about CSFLite not claiming compliance, and it keeps the prototype's flow.
+3. **Score them.** Requires weights per supplement question in reference data, and amending spec §10 and §11 first.
+
+Recommendation: option 1 for Phase 4, with option 2 as a follow-on phase. The supplements are not what makes the CLI retirable.
+
+---
+
+## 17. Acceptance criteria
 
 - An assessment completes end to end in the browser
 - Web output is byte-identical to the golden fixtures for the same responses
 - `tools/assess_helpers.py` is unchanged, verified by diff
+- No scoring runs in the browser — exports are generated server-side
+- The questionnaire cannot be completed with an unanswered question, and no response is ever defaulted
 - The container starts from `docker compose up` with no host Python
 - The application refuses to start bound to a non-loopback address without `CSFLITE_PASSWORD`
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 
 ---
 
-## 16. Open risks
+## 18. Open risks
 
 | Risk | Handling |
 |---|---|

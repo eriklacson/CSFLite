@@ -23,7 +23,7 @@ poetry run black --check .  # check without modifying
 poetry run ruff check .
 
 # Security scan (HIGH severity only)
-poetry run bandit -r tools --severity-level high
+poetry run bandit -r . -x .venv,venv,build,dist,docs,migrations --severity-level high
 
 # Install pre-commit hooks (required before first commit)
 poetry run pre-commit install
@@ -54,13 +54,21 @@ CSFLite is a lean NIST CSF v2.0 security assessment and governance framework for
 
 ### Test structure
 
-Tests in `tests/` mirror `tools/`. Test data is built inline and written to pytest's `tmp_path` — there are no fixture files.
+Tests in `tests/` mirror `tools/`. Test data is built inline and written to pytest's `tmp_path`, except
+`tests/test_golden_pipeline.py`, which replays `tests/fixtures/golden/` — recorded CLI output that gates
+the Phase 4 web rewrite. A failure there means scoring behaviour changed.
 
 ### Crosswalk supplements
 
 `templates/soc2-supplement-questionnaire.csv` is a delivered SOC 2 crosswalk supplement (28 questions covering 5 gap domains outside the core 25).
 
 `templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `.claude/docs/csflite-spec-brief.md`.
+
+Both move into the web app in Phase 5 as collected, unscored tracks (`docs/design/phase-4-web-interface.md` §16) — answers persist and export, but no coverage score is computed for them.
+
+### Phase 4 — web interface (in progress)
+
+The CLI in this section is being replaced. Scope: `.claude/docs/phase-4/web-interface-scope.md`. Full design: `docs/design/phase-4-web-interface.md`. `assess_helpers.py` carries over unchanged; everything else in this Architecture section is rewritten once Phase 4 ships.
 
 ## Known Issues
 
@@ -69,7 +77,7 @@ Tests in `tests/` mirror `tools/`. Test data is built inline and written to pyte
 
 ## Execution Loop
 All tasks follow this loop — no exceptions:
-1. READ — understand the request, read spec brief document, check relevant files inside .claude/doc, check for existing ADRs
+1. READ — understand the request, read spec brief document, check relevant files inside .claude/docs, check for existing ADRs
 2. PLAN — propose what to build, present to architect for review
 3. APPROVE — architect reviews, adjusts, records significant decisions as ADRs
 4. IMPLEMENT — build it

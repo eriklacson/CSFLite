@@ -280,7 +280,7 @@ CSFLite is its own proof-of-concept. There is no external client for the framewo
 | 2 | Reference Data & Mappings — CSF lookup, heatmap lookup | Complete |
 | 3 | Governance Assessment Pipeline — questionnaire → scored output → heatmap | Complete |
 | 4 | Web Interface — web questionnaire and report, replaces the CLI | Not started |
-| 5 | Release Hardening — CI fixes, documentation audit, v0.1.0 tag | Not started |
+| 5 | Release Hardening — supplement tracks, CI fixes, documentation audit, v0.1.0 tag | Not started |
 | 6 | Community & Iteration — external contributions, expanded mappings | Not started |
 
 ### Current Status
@@ -341,5 +341,7 @@ The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable f
 Carries over unchanged: the 25 curated subcategories, `csf_lookup.csv` as their single source of truth, the output contracts in §3, and `assess_helpers.py`.
 
 CSFLite ships as a container image that the operator runs on their own machine or in their own cloud account. Local first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
+
+Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements arrive in Phase 5 as collected, unscored tracks, so the crosswalk decision in §10 and the boundary in §11 do not move.
 
 **Full design:** `docs/design/phase-4-web-interface.md`. That document owns the stack, data model, configuration, deployment profiles, container, routes, and the CLI retirement sequence. It is superseded by this brief when Phase 4 ships.

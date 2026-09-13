@@ -87,10 +87,12 @@ Solution design: `docs/design/phase-4-web-interface.md`. Locked decisions: `.cla
 
 CSFLite ships as a container image the operator runs themselves. Local profile first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
 
+Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5.
+
 **Deliverables:**
 - [ ] Move `pytest` to the dev dependency group only (`pyproject.toml`)
 - [ ] Django application skeleton, server-rendered, no build step
-- [ ] Web questionnaire form with evidence upload and notes (replaces the checklist CSV)
+- [ ] Web questionnaire form with notes and an optional evidence upload per question (replaces the checklist CSV)
 - [ ] Web-rendered report and heatmap, with CSV/JSON download
 - [ ] Database persistence — assessments, responses, evidence, immutable result snapshots
 - [ ] Container image and local `docker compose` profile
@@ -105,12 +107,14 @@ CSFLite ships as a container image the operator runs themselves. Local profile f
 - `assess_helpers.py` is unchanged, verified by diff
 - The container starts from `docker compose up` with no host Python
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
+- Evidence files are reachable only through the application, never by a public URL
+- Attaching evidence changes no score
 
 ---
 
 ## ⬚ Phase 5: Release Hardening
 
-**Goal:** Polish the project for public consumption as `v0.1.0`.
+**Goal:** Add the supplement tracks and polish the project for public consumption as `v0.1.0`.
 
 **Deliverables:**
 - [x] Write `CONTRIBUTING.md` (completed 2026-02-10)
@@ -120,6 +124,7 @@ CSFLite ships as a container image the operator runs themselves. Local profile f
 - [ ] Audit all documentation for broken links and outdated references
 - [ ] Verify all documented workflows work on a clean install
 - [ ] Resolve known technical debt (see table below)
+- [ ] SOC 2 and HIPAA supplement tracks in the web questionnaire. Answers are collected and exported, not scored (design §16, option 2)
 - [ ] Tag v0.1.0 release
 
 **Acceptance criteria:**
@@ -128,6 +133,7 @@ CSFLite ships as a container image the operator runs themselves. Local profile f
 - All documentation links resolve
 - No placeholder values in configuration files
 - All known critical bugs are fixed or documented as limitations
+- Supplement answers persist and export, and no coverage score is computed for them
 
 ---
 

@@ -85,17 +85,19 @@ Three steps: **Scope → Questionnaire → Results.**
 
 ### Scope
 
-Organisation name, track selection, and a preview of the path. Baseline is locked on. Each optional track appends its crosswalk supplement and restates the question count. The preview lists every section with its question count, and the footer gives totals as "N questions · M screens".
+Organisation name and a preview of the path. The preview lists every section with its question count, and the footer gives totals as "N questions · M screens".
+
+Phase 4 ships the baseline track only. The prototype's optional SOC 2 and HIPAA tracks arrive in Phase 5. See §16.
 
 ### Questionnaire
 
 Sectioned by CSF Function group, not one question per screen. The header names the track and the section position. Two progress indicators: a bar for answered-of-total, and a clickable segment strip that jumps between sections.
 
-Each question shows the subcategory ID, the subcategory name, the question text, an evidence prompt, the weight, and Yes / Partial / No. The footer carries Back, a per-screen answered count, and Next.
+Each question shows the subcategory ID, the subcategory name, the question text, an evidence prompt, the weight, and Yes / Partial / No. An optional file upload sits beside the evidence prompt, and files already attached are listed with download and remove actions. See §8. The footer carries Back, a per-screen answered count, and Next.
 
 ### Results
 
-Track tabs, weighted coverage as a percentage, the weighted-point detail behind it, severity counts, coverage-by-group bars, and a gap heatmap sorted by gap descending then subcategory ID. Exports for `assessment.csv` and `heatmap.csv`. Start over.
+Weighted coverage as a percentage, the weighted-point detail behind it, severity counts, coverage-by-group bars, and a gap heatmap sorted by gap descending then subcategory ID. Exports for `assessment.csv` and `heatmap.csv`. Start over.
 
 ### Prototype configuration left open
 
@@ -103,7 +105,7 @@ Track tabs, weighted coverage as a percentage, the weighted-point detail behind 
 |---|---|---|
 | `oneQuestionPerScreen` | `false` | Grouped screens were chosen over one-at-a-time |
 | `showEvidence` | `true` | Evidence prompt visible under each question |
-| `supplementWeight` | `1.0` | Flat weight for supplement questions — see §16 |
+| `supplementWeight` | `1.0` | Not adopted. Supplements are collected, not scored. See §16 |
 
 ### Explored and not taken
 
@@ -145,9 +147,27 @@ Only assessment data is persisted.
 
 `Result` exists because scoring is deterministic from responses **and** `csf_lookup.csv`, and that file changes over time. Without a snapshot, reweighting a subcategory would silently rewrite the history of every past assessment. `lookup_digest` records which version of the reference data produced the result.
 
-The model covers the core 25 only. Whether `Assessment` gains a selected-tracks field depends on the supplement decision in §16.
+The model covers the core 25 only. Phase 4 adds no track field. Supplement persistence is designed with Phase 5.
 
 `Response.notes` resolves CHK-0001 #4. The spec says notes are preserved in output; the CLI's four-column projection dropped them. The web form persists them.
+
+### Evidence files
+
+Evidence upload is optional. A response can have zero or more files. The evidence prompt stays on every question, so the assessor still sees what would substantiate a Yes.
+
+**Scoring ignores evidence.** A Yes with no file still scores 1.0. Attaching a file never changes a response. Spec brief §3 says evidence is not consumed by scoring, and the parity gate in §15 depends on that. Applying the "evidence required for Yes" rule stays the assessor's judgement. The upload records what they sighted.
+
+**Accepted files.** An extension allowlist: `pdf`, `png`, `jpg`, `jpeg`, `docx`, `xlsx`, `pptx`, `csv`, `txt`. Everything else is rejected, including HTML, SVG, and archives. HTML and SVG can run script when opened from the application's own origin.
+
+**Size.** 25 MB per file. A rejected file shows a form error, and the section keeps its answers.
+
+**Storage.** Files are written through Django `STORAGES` as `<assessment id>/<random name>.<ext>`. The original filename is kept only in the `Evidence` row. It is never used to build a path.
+
+**Serving.** Files download only through an application view, behind the same access control as every other page. The view streams the file with `Content-Disposition: attachment`. There is no public media URL, and WhiteNoise never serves the evidence directory. The view streams from storage rather than redirecting to a storage URL, so this holds when object storage replaces the volume.
+
+**Removal.** Removing a file deletes the stored file as well as the row.
+
+**Exports.** The CSV exports do not include evidence. The spec brief §3 contracts have no evidence column, and adding one would break byte-identical parity.
 
 ---
 
@@ -217,10 +237,12 @@ Follows the three-step flow in §6. The assessment list has no prototype screen 
 | Route | Purpose |
 |---|---|
 | `/` | Assessment list |
-| `/assessments/new` | Scope — organisation name and track selection |
-| `/assessments/<id>/section/<n>` | One CSF Function group per screen |
+| `/assessments/new` | Scope — organisation name |
+| `/assessments/<id>/section/<n>` | One CSF Function group per screen. Responses, notes, and evidence uploads post here |
 | `/assessments/<id>/results` | Coverage, severity counts, group bars, gap heatmap |
-| `/assessments/<id>/export/<track>/<artifact>.csv` | `assessment.csv` and `heatmap.csv`, generated server-side |
+| `/assessments/<id>/export/<artifact>.csv` | `assessment.csv` and `heatmap.csv`, generated server-side |
+| `/assessments/<id>/evidence/<evidence_id>` | Download one evidence file, as an attachment |
+| `/assessments/<id>/evidence/<evidence_id>/delete` | Remove one evidence file (POST) |
 | `/assessments/import` | Upload an existing checklist CSV |
 | `/login` | Hosted profile only |
 | `/healthz` | Liveness |
@@ -264,11 +286,11 @@ The prototype is a design artifact. It reimplemented scoring in JavaScript to re
 | `assessment.csv` omits `recommendation` | Spec §3 includes it | Add the column |
 | No notes field | CHK-0001 #4 — notes are preserved in output | The form persists notes per response |
 
-### Open — needs a decision
+### Decided — 2026-09-13
 
 **Evidence.** The prototype renders evidence as a text prompt under each question, telling the assessor what would substantiate a Yes. It does not accept a file. The roadmap deliverable is evidence upload, and §8 models `Evidence` as an uploaded file.
 
-These are not the same feature, and both are defensible. The prompt is what makes the "evidence required for Yes" rule in spec §10 legible at the moment of answering. The upload is what makes it auditable afterwards. Recommendation: ship both — keep the prompt, and add an optional upload beside it.
+These are not the same feature, and both are defensible. The prompt is what makes the "evidence required for Yes" rule in spec §10 legible at the moment of answering. The upload is what makes it auditable afterwards. Decision: ship both. The prompt stays, and an optional upload sits beside it. The upload is specified in §8.
 
 **Supplement tracks.** The prototype scores SOC 2 (28 questions) and HIPAA (9 questions) as selectable tracks alongside the core 25, weighting every supplement question at a flat 1.0.
 
@@ -282,7 +304,7 @@ Three ways out, in the order I would consider them:
 2. **Collect but do not score them.** The tracks appear, answers persist and export, and no weighted coverage is computed for them. Honest about CSFLite not claiming compliance, and it keeps the prototype's flow.
 3. **Score them.** Requires weights per supplement question in reference data, and amending spec §10 and §11 first.
 
-Recommendation: option 1 for Phase 4, with option 2 as a follow-on phase. The supplements are not what makes the CLI retirable.
+Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not what makes the CLI retirable. Option 2 collects answers without scoring them, so spec §10 and §11 do not move.
 
 ---
 
@@ -296,6 +318,9 @@ Recommendation: option 1 for Phase 4, with option 2 as a follow-on phase. The su
 - The container starts from `docker compose up` with no host Python
 - The application refuses to start bound to a non-loopback address without `CSFLITE_PASSWORD`
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
+- Evidence files are reachable only through the application download view. None has a public URL
+- A file with a disallowed extension or over 25 MB is rejected, and the section keeps its answers
+- Attaching or removing evidence changes no score. Golden parity holds with evidence attached
 
 ---
 
@@ -307,7 +332,8 @@ Recommendation: option 1 for Phase 4, with option 2 as a follow-on phase. The su
 | pandas image size and boot cost | Accepted. Always-on deployment pays it once |
 | Railway volume is not stateless | Accepted and labelled. Removed on the move to object storage |
 | Evidence files are unencrypted at rest | Depends on the host. An operator responsibility, not solved in the application |
+| Evidence files are not scanned for malware | Operator responsibility. The application never opens or renders them, and serves them only as downloads |
 
 ---
 
-*Last updated: 2026-08-30*
+*Last updated: 2026-09-13*

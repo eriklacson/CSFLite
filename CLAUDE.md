@@ -66,3 +66,12 @@ Tests in `tests/` mirror `tools/`. Test data is built inline and written to pyte
 
 - `path_config.json` points `governance_checklist` at `scans/governance_checks.csv`, but no `scans/` directory exists — the default input path resolves to nothing
 - `pytest` is declared in both the main and dev dependency groups in `pyproject.toml` — should be dev-only
+
+## Execution Loop
+All tasks follow this loop — no exceptions:
+1. READ — understand the request, read spec brief document, check relevant files inside .claude/doc, check for existing ADRs
+2. PLAN — propose what to build, present to architect for review
+3. APPROVE — architect reviews, adjusts, records significant decisions as ADRs
+4. IMPLEMENT — build it
+5. VERIFY — validate control IDs against data/csf_lookup.csv, check acceptance criteria, run tests, validate alignment with seed document
+6. REPORT — present output + verification results, flag unresolved items honestly

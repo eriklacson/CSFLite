@@ -71,8 +71,6 @@ poetry run python -c "import tools.global_helpers; print('CSFLite ready.')"
 ```
 CSFLite/
 ├── config/          # Configuration files (paths, settings)
-├── csflite/         # Framework validation artifacts
-│   └── controls.json  # Canonical 25-control reference
 ├── data/            # Reference data & CSF mappings
 │   ├── csf_lookup.csv
 │   └── heat_map_lookup.csv

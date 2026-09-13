@@ -39,7 +39,7 @@ subcategories outside the CSFLite 25 receive a coverage rating of `gap` and are 
 standalone supplement questionnaire (`templates/soc2-supplement-questionnaire.csv`).
 
 This decision was made for the SOC 2 readiness deliverables only. It does not change the scope of
-CSFLite's governance assessment pipeline, scoring engine, or `csflite/controls.json`.
+CSFLite's governance assessment pipeline, scoring engine, or `data/csf_lookup.csv`.
 
 ## Consequences
 

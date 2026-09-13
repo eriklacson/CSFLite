@@ -1,7 +1,7 @@
 # CSFLite to SOC 2 Trust Services Criteria Crosswalk
 
 **Framework:** NIST CSF 2.0 (CSWP 29) → AICPA 2017 Trust Services Criteria (2022 revised points of focus)
-**CSFLite version:** 1.0.0 (25 controls — see `csflite/controls.json`)
+**CSFLite version:** 1.0.0 (25 controls — see `data/csf_lookup.csv`)
 **Architectural basis:** [ADR-0001](../adr/ADR-0001-full-csf-crosswalk.md)
 **Scope:** Security (CC1–CC9), Availability (A1), Confidentiality (C1)
 **Excluded:** Processing Integrity, Privacy

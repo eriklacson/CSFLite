@@ -73,5 +73,5 @@ All tasks follow this loop — no exceptions:
 2. PLAN — propose what to build, present to architect for review
 3. APPROVE — architect reviews, adjusts, records significant decisions as ADRs
 4. IMPLEMENT — build it
-5. VERIFY — validate control IDs against data/csf_lookup.csv, check acceptance criteria, run tests, validate alignment with seed document
+5. VERIFY — validate control IDs against data/csf_lookup.csv, check acceptance criteria, run tests, validate alignment with seed document, validate implementation with subagent
 6. REPORT — present output + verification results, flag unresolved items honestly

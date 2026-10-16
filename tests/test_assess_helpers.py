@@ -216,6 +216,33 @@ def test_generate_governance_heatmap_gap_score_matches_assessment():
     assert heatmap[0]["gap_score"] == assessment[0]["gap_score"]
 
 
+def test_generate_governance_assessement_preserves_input_order():
+    """generate_governance_assessement() does not sort — row order is the caller's responsibility.
+
+    The CLI gets its order from get_governance_checklist_results(), which sorts descending by
+    csf_subcategory_id before scoring (see test_get_governance_checklist_results). Any future
+    caller that builds the checklist list a different way — a database query, for instance —
+    must apply the same ordering itself, or its output will not match the golden fixtures.
+    """
+    from tools.assess_helpers import generate_governance_assessement
+
+    # deliberately not in csf_subcategory_id order, ascending or descending
+    checklist = [
+        {"csf_subcategory_id": "PR.AA-03", "csf_subcategory_name": "Access control", "response": "Yes"},
+        {"csf_subcategory_id": "AA.AA-01", "csf_subcategory_name": "First alpha", "response": "No"},
+        {"csf_subcategory_id": "ZZ.ZZ-99", "csf_subcategory_name": "Last alpha", "response": "Partial"},
+    ]
+    lookup = [
+        {"csf_subcategory_id": "PR.AA-03", "weight": 1.0, "recommendation": "-"},
+        {"csf_subcategory_id": "AA.AA-01", "weight": 1.0, "recommendation": "-"},
+        {"csf_subcategory_id": "ZZ.ZZ-99", "weight": 1.0, "recommendation": "-"},
+    ]
+
+    result = generate_governance_assessement(checklist, lookup)
+
+    assert [r["csf_subcategory_id"] for r in result] == ["PR.AA-03", "AA.AA-01", "ZZ.ZZ-99"]
+
+
 def test_generate_governance_assessement_rejects_blank_response():
     from tools.assess_helpers import generate_governance_assessement
 

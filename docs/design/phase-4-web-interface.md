@@ -75,6 +75,12 @@ assess_helpers  ── scoring: unchanged, in-process call
 
 There is no HTTP boundary between the web layer and the scoring core, and no service abstraction. The view imports the module.
 
+### Row order is the view's responsibility
+
+`generate_governance_assessement()` does not sort. It returns rows in whatever order the input list arrives in (`assess_helpers.py` — the merge preserves left-frame order). The CLI's order comes entirely from `get_governance_checklist_results()`, which sorts the intake rows descending by `csf_subcategory_id` before scoring. That sort is what the golden fixtures in `tests/fixtures/golden/` encode.
+
+The web view does not call `get_governance_checklist_results()` — it builds the checklist list from `Response` rows in the database. Before calling `generate_governance_assessement()`, the view must order those rows the same way: descending by `csf_subcategory_id`. Skipping this reproduces every score correctly but breaks the byte-identical parity check in §15, because `assessment.csv` and `heatmap.csv` row order would no longer match the recordings. Pinned by `test_generate_governance_assessement_preserves_input_order` in `tests/test_assess_helpers.py`.
+
 ---
 
 ## 6. User flow and screens
@@ -325,6 +331,7 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - An assessment completes end to end in the browser
 - Web output is byte-identical to the golden fixtures for the same responses
 - `tools/assess_helpers.py` is unchanged, verified by diff
+- The view orders `Response` rows descending by `csf_subcategory_id` before calling `generate_governance_assessement()` — see §5
 - No scoring runs in the browser — exports are generated server-side
 - The questionnaire cannot be completed with an unanswered question, and no response is ever defaulted
 - The container starts from `docker compose up` with no host Python

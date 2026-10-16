@@ -72,8 +72,7 @@ poetry run python -c "import tools.global_helpers; print('CSFLite ready.')"
 CSFLite/
 ├── config/          # Configuration files (paths, settings)
 ├── data/            # Reference data & CSF mappings
-│   ├── csf_lookup.csv
-│   └── heat_map_lookup.csv
+│   └── csf_lookup.csv
 ├── docs/
 │   ├── adr/         # Architectural decision records
 │   ├── reference/   # CSFLite framework reference docs (includes crosswalks: SOC 2, HIPAA, SP 800-53)

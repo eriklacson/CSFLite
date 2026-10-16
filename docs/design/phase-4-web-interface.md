@@ -22,7 +22,7 @@ The application ships as a container image. The operator runs it on their own ma
 
 | Carried over | Why it survives |
 |---|---|
-| The 25 subcategories, `data/csf_lookup.csv` as their source of truth | Reference data, not application state |
+| The 25 subcategories, `data/csf_lookup.csv` as their single source of truth — weights, recommendations, **and** the questionnaire content (`csf_function`, `csf_subcategory_name`, `question`, `evidence`) | Reference data, not application state. Previously split across `csf_lookup.csv`, the retired `heat_map_lookup.csv`, and `templates/governance_checks_template.csv`, which disagreed with each other on most display names (§8 notes the merge) |
 | `tools/assess_helpers.py` | Pure functions over dicts, no I/O, callable from a view |
 | The output contracts in spec brief §3 | A form producing the same records satisfies the same contracts |
 | Golden fixtures in `tests/fixtures/golden/` | Become the parity gate between CLI and web output |
@@ -135,6 +135,14 @@ Django is chosen because the portability seam this design needs is its default. 
 ## 8. Data model
 
 Reference data stays in version-controlled files and is loaded at boot. It does not move into the database. Spec brief §8 holds: reweighting a subcategory means editing `csf_lookup.csv`, nothing more.
+
+### Reference data source for the questionnaire
+
+The questionnaire view renders `csf_function`, `csf_subcategory_name`, `question`, and `evidence` per subcategory. These now live in `csf_lookup.csv` alongside `weight` and `recommendation` — the same file the scoring functions read.
+
+Before this merge the 25 subcategories were defined redundantly across three files (`csf_lookup.csv`, `heat_map_lookup.csv`, and `templates/governance_checks_template.csv`), and the files disagreed: `csf_lookup.csv`'s display name matched the template on only 3 of 25 rows. Nothing read `heat_map_lookup.csv` or the long-form name in `csf_lookup.csv` — the template's name was the one that actually reached scored output, undocumented. Decided 2026-10-16: collapse to one file. `heat_map_lookup.csv` is retired; its columns added nothing `csf_lookup.csv` didn't already have once merged. The long-form NIST text survives as `csf_outcome`, kept for CSWP 29 traceability but not read by scoring or the questionnaire. `templates/governance_checks_template.csv` is regenerated from the merged file once and then frozen — it is still the CLI's input and the §14 import format, and the CLI has weeks left to live.
+
+`assess_helpers.py` is unaffected: `generate_governance_assessement()` already selects `csf_subcategory_id`, `weight`, and `recommendation` from the lookup explicitly (`assess_helpers.py:88`), so the extra columns are inert to scoring. Golden parity holds unchanged.
 
 Only assessment data is persisted.
 
@@ -286,6 +294,10 @@ The prototype is a design artifact. It reimplemented scoring in JavaScript to re
 | `assessment.csv` omits `recommendation` | Spec §3 includes it | Add the column |
 | No notes field | CHK-0001 #4 — notes are preserved in output | The form persists notes per response |
 
+### Decided — 2026-10-16
+
+**Reference data consolidation.** §8 now sources the questionnaire's content from `csf_lookup.csv` rather than leaving it unspecified. The three files that previously defined the 25 subcategories (`csf_lookup.csv`, `heat_map_lookup.csv`, `templates/governance_checks_template.csv`) are collapsed to one, since they disagreed on display names and the design never named which file the questionnaire view should read. Full rationale in §8.
+
 ### Decided — 2026-09-13
 
 **Evidence.** The prototype renders evidence as a text prompt under each question, telling the assessor what would substantiate a Yes. It does not accept a file. The roadmap deliverable is evidence upload, and §8 models `Evidence` as an uploaded file.
@@ -336,4 +348,4 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 
 ---
 
-*Last updated: 2026-09-13*
+*Last updated: 2026-10-16*

@@ -44,11 +44,10 @@ CSFLite follows a governance-first development sequence: define the framework, v
 
 **Deliverables:**
 - [x] Build `data/csf_lookup.csv` — Subcategory reference with weights and recommendations
-- [x] Build `data/heat_map_lookup.csv` — Heatmap severity thresholds
+- [x] Build `data/heat_map_lookup.csv` — Heatmap severity thresholds (later merged into `csf_lookup.csv`, see Phase 4)
 
 **Key artifacts:**
-- `data/csf_lookup.csv` — Weights, recommendations, subcategory metadata
-- `data/heat_map_lookup.csv` — Display names for heatmap rendering
+- `data/csf_lookup.csv` — Single source of truth: weights, recommendations, and questionnaire content for all 25 subcategories (absorbed `heat_map_lookup.csv`, which was never read by any tool and disagreed with the questionnaire on most display names)
 
 ---
 

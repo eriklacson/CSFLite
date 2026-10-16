@@ -3,7 +3,7 @@ Govern,GV.PO-01,Policy for managing cybersecurity risks is established,Has a for
 Govern,GV.RR-01,Organizational leadership is responsible for cybersecurity risk,Is there a named individual or role accountable for cybersecurity with documented authority?,"Organizational chart, role descriptions, RACI matrix, board minutes",,
 Govern,GV.RM-01,Risk management objectives are established,Are risk appetite and tolerance statements documented and agreed upon by leadership?,"Risk appetite statement, board approval records, risk register",,
 Govern,GV.SC-01,Supply chain risk management program is established,Do you maintain security requirements for vendors and third parties?,"Vendor inventory, contracts with security clauses, third-party assessments",,
-Identify,ID.AM-01,Hardware inventories are maintained,Do you maintain a current inventory of all hardware assets?,"Hardware asset inventory, CMDB exports, network discovery scans",,
+Identify,ID.AM-01,Hardware inventories are maintained,Do you maintain a current inventory of all hardware/cloud assets?,"Hardware asset inventory, CMDB exports, network discovery scans",,
 Identify,ID.AM-02,Software and systems inventories are maintained,Do you maintain a current inventory of all software and systems?,"Software inventory, license management system, installed software reports",,
 Identify,ID.AM-05,Assets are prioritized by criticality,Do you classify and prioritize assets based on business impact?,"Asset classification scheme, criticality ratings, BIA documentation",,
 Identify,ID.RA-01,Vulnerabilities are identified and recorded,Do you perform regular vulnerability scans and track findings?,"Scan reports, vulnerability register, remediation tracking",,

@@ -87,13 +87,18 @@ The questionnaire filled by the assessor. Produced by the human operator, consum
 
 ### CSF Lookup Reference (CSV)
 
-The authoritative reference for subcategory weights and remediation recommendations. Produced by framework maintainer, consumed by all scoring functions.
+The single source of truth for the 25 subcategories — weights, remediation recommendations, and the questionnaire content (function, display name, question, evidence prompt). Produced by framework maintainer, consumed by all scoring functions and, in Phase 4, by the questionnaire view. Scoring functions use only `csf_subcategory_id`, `weight`, and `recommendation`; the remaining columns are questionnaire presentation data carried in the same file to keep the 25 subcategories in one place.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `csf_subcategory_id` | `string` | Yes | Canonical subcategory ID. Primary key. |
+| `csf_function` | `string` | Yes | CSF Function name: Govern, Identify, Protect, Detect, Respond, Recover |
+| `csf_subcategory_name` | `string` | Yes | Human-readable display name, shown in the questionnaire and carried into scored output |
+| `question` | `string` | Yes | Assessment question text (informational, not consumed by scoring) |
+| `evidence` | `string` | Yes | Expected evidence types (informational, not consumed by scoring) |
 | `weight` | `float` | Yes | Relative importance weight. Values: 1.0 (foundational), 1.2 (important), 1.5 (critical) |
 | `recommendation` | `string` | Yes | Remediation guidance text for gaps in this subcategory |
+| `csf_outcome` | `string` | Yes | Full NIST CSWP 29 outcome text, kept for traceability (not consumed by scoring or the questionnaire) |
 
 ### Governance Assessment Output (CSV)
 
@@ -143,7 +148,6 @@ Centralized file path registry. Produced by framework maintainer, consumed by al
 | Field | Type | Description |
 |---|---|---|
 | `governance_checklist` | `string` | Path to governance checklist input CSV |
-| `heatmap_lookup` | `string` | Path to heatmap severity threshold CSV |
 | `csf_lookup` | `string` | Path to CSF subcategory reference CSV |
 | `governance_assessment_csv` | `string` | Path for governance assessment output CSV |
 | `governance_heatmap_csv` | `string` | Path for governance heatmap output CSV |
@@ -185,8 +189,7 @@ CSFLite/
 │   ├── test_assess_helpers.py      ← Scoring and heatmap tests
 │   └── test_global_helpers.py      ← I/O utility tests
 ├── data/                           ← Reference data (CSF lookups)
-│   ├── csf_lookup.csv              ← Authoritative subcategory weights + recommendations
-│   └── heat_map_lookup.csv         ← Heatmap severity thresholds
+│   └── csf_lookup.csv              ← Single source of truth: weights, recommendations, questionnaire content
 ├── templates/                      ← User-facing input templates
 │   └── governance_checks_template.csv  ← 25-item governance questionnaire
 ├── config/                         ← Runtime configuration
@@ -264,7 +267,7 @@ Phase 4 replaces this profile with a container image the operator runs themselve
 | `weight` | Multiplier for coverage scoring (assessment_score = response_score × weight) |
 | `recommendation` | Populated into assessment output for each subcategory with a gap |
 
-The scoring engine does not hardcode control IDs, weights, or scoring rules. All scoring parameters are derived from `csf_lookup.csv` at runtime. Adding, removing, or reweighting a subcategory requires only changing this file (and the corresponding governance template row).
+The scoring engine does not hardcode control IDs, weights, or scoring rules. All scoring parameters are derived from `csf_lookup.csv` at runtime. `csf_lookup.csv` also carries the questionnaire content (`csf_function`, `csf_subcategory_name`, `question`, `evidence`) and the full CSWP 29 outcome text (`csf_outcome`) — none of it read by the scoring functions, kept in the same file so the 25 subcategories have one source of truth instead of three. Adding, removing, or reweighting a subcategory requires only changing this file (and the corresponding governance template row).
 
 ---
 
@@ -294,7 +297,6 @@ Phase 3 complete. The governance assessment pipeline runs end to end as a CLI.
 ```json
 {
     "governance_checklist": "scans/governance_checks.csv",
-    "heatmap_lookup": "data/heat_map_lookup.csv",
     "csf_lookup": "data/csf_lookup.csv",
     "governance_assessment_csv": "output/governance_assessment.csv",
     "governance_heatmap_csv": "output/governance_heatmap.csv"

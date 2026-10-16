@@ -49,8 +49,7 @@ CSFLite is a lean NIST CSF v2.0 security assessment and governance framework for
 | `tools/governance_check.py` | CLI entry point for governance assessment |
 | `tools/global_helpers.py` | Path resolution, CSV/JSON I/O utilities |
 | `config/path_config.json` | Centralized paths for all inputs/outputs |
-| `data/csf_lookup.csv` | The 25 CSFLite subcategories with weights and recommendations |
-| `data/heat_map_lookup.csv` | Same 25 subcategories with shortened display names for heatmap rendering (separate from `csf_lookup.csv`) |
+| `data/csf_lookup.csv` | The single source of truth for the 25 CSFLite subcategories — function, display name, question, evidence prompt, weight, recommendation, and the full CSWP 29 outcome text (`csf_outcome`) |
 
 ### Test structure
 

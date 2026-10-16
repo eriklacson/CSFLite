@@ -174,8 +174,7 @@ CSFLite/
 
 | File | Role | Change carefully | Status |
 |------|------|-----------------|--------|
-| `data/csf_lookup.csv` | Subcategory weights and recommendations | Yes — affects all scoring | Stable |
-| `data/heat_map_lookup.csv` | Heatmap severity thresholds | Yes — affects visual output | Stable |
+| `data/csf_lookup.csv` | Subcategory weights, recommendations, and questionnaire content | Yes — affects all scoring and the questionnaire | Stable |
 | `templates/governance_checks_template.csv` | Governance questionnaire | Yes — changes user-facing assessment | Stable |
 | `config/path_config.json` | Centralized path configuration | Yes — breaks tools if misconfigured | Stable |
 | `docs/csflite-assessment-philosophy.md` | Authoritative methodology document | Requires maintainer approval | Stable |

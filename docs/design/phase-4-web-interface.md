@@ -1,7 +1,7 @@
 # Phase 4 Solution Design — Web Interface
 
 **Status:** Draft — not built
-**Supersedes on completion:** spec brief §2, §4, §5, §6, §7
+**Supersedes on completion:** spec brief §2, the §3 Path Configuration contract, §4, §5, §6, §7
 **Binding:** No. The spec brief (`.claude/docs/csflite-spec-brief.md`) is the contract-binding document. This design records intent for work not yet done.
 
 **UX source:** `docs/design/ux/` — a Claude Design prototype and wireframes. The prototype defines the flow and screens in §6. Where it disagrees with the interface contracts, §16 records which one wins.
@@ -197,7 +197,7 @@ All configuration comes from the environment. There is no per-environment settin
 | `PORT` | `8000` | Not `CSFLITE_`-prefixed — the platform convention Railway and similar hosts use. Gunicorn always binds `0.0.0.0:$PORT` inside the container; see §10 for why |
 | `DATABASE_URL` | `sqlite:///data/csflite.db` | |
 | `CSFLITE_MEDIA_ROOT` | `/data/evidence` | Filesystem storage path |
-| `CSFLITE_ALLOWED_HOSTS` | `localhost` | |
+| `CSFLITE_ALLOWED_HOSTS` | `localhost` | Widening this beyond the default requires `CSFLITE_PUBLIC=true`. See §10 |
 | `CSFLITE_DEBUG` | off | |
 
 `CSFLITE_BIND` does not exist. An earlier draft of this design used it to toggle loopback vs. public binding, and used that address to decide whether `CSFLITE_PASSWORD` was required. It doesn't work in a container: Docker's published ports reach the container through its internal network namespace, not `127.0.0.1`, so gunicorn must always bind `0.0.0.0:$PORT` inside the container just for `docker compose up` to work at all — including for the local profile. An address the app can only ever see as `0.0.0.0` carries no usable signal about whether traffic is reaching it from the operator's own machine or from the internet. §10 replaces it.
@@ -214,12 +214,19 @@ The application cannot tell, from inside the container, whether it is reachable 
 
 **Hosted:** `CSFLITE_PUBLIC=true`, one operator password from `CSFLITE_PASSWORD`, Django session cookie, no user table, no roles, no password reset.
 
-**Startup guard:** if `CSFLITE_PUBLIC` is `true` and `CSFLITE_PASSWORD` is unset, the application exits with an error. This is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password — it is not a substitute for the network-level control, which the declaration is supposed to match. It is a hard failure, not a warning.
+**Startup guards:** the application exits with an error, not a warning, when:
+
+1. `CSFLITE_PUBLIC` is `true` and `CSFLITE_PASSWORD` is unset.
+2. `CSFLITE_ALLOWED_HOSTS` is set to anything other than its default (`localhost`) and `CSFLITE_PUBLIC` is not `true`.
+
+Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password. Guard 2 closes the gap guard 1 leaves open: ties widening `ALLOWED_HOSTS` — the one change that lets Django accept requests from anything other than `localhost` — to the same declaration, so a host can't be added to the allowlist without also turning on the password requirement. Neither guard is a substitute for the network-level control below, which the declaration is supposed to match.
 
 **The network-level control, concretely:**
 
-- Local profile: the shipped `docker-compose.yml` publishes the port as `127.0.0.1:${PORT:-8000}:8000` — bound to the host's loopback only. This, not the application, is what keeps a default local deployment unreachable from the network. An operator who edits that mapping to `0.0.0.0:8000:8000` has made the deployment reachable from their network without setting `CSFLITE_PUBLIC`, and the application has no way to detect it. See §18.
-- Railway profile: Railway assigns a public domain to any service with networking enabled — there is no loopback-only option. The Railway environment template therefore ships with `CSFLITE_PUBLIC=true` already set, so a fresh deploy with no password fails at boot instead of going live silently.
+- Local profile: the shipped `docker-compose.yml` publishes the port as `127.0.0.1:${PORT:-8000}:8000` — bound to the host's loopback only. This, not the application, is what keeps a default local deployment unreachable from the network.
+- Railway profile: Railway assigns a public domain to any service with networking enabled — there is no loopback-only option. The Railway environment template ships with `CSFLITE_ALLOWED_HOSTS` set to that domain and `CSFLITE_PUBLIC=true`, so both the password requirement and the host allowlist are correct from the first deploy.
+
+**Why editing only the port mapping isn't enough.** An operator who edits the local compose file's port mapping to `0.0.0.0:8000:8000`, without touching any environment variable, has made the port reachable from their network — but `CSFLITE_ALLOWED_HOSTS` is still `localhost`. Django rejects any request whose `Host` header doesn't match the allowlist with a 400, before the request reaches a view. A request from a LAN or public address arrives with that address as its `Host` header, not `localhost`, and gets rejected. The application still can't detect the edited port mapping — but the mapping alone no longer produces a working, unauthenticated deployment. Making it one requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD`. See §18.
 
 ---
 
@@ -351,8 +358,10 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - The questionnaire cannot be completed with an unanswered question, and no response is ever defaulted
 - The container starts from `docker compose up` with no host Python
 - The application refuses to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`
+- The application refuses to start with `CSFLITE_ALLOWED_HOSTS` widened beyond `localhost` and `CSFLITE_PUBLIC` not `true`
+- A request whose `Host` header is not in `CSFLITE_ALLOWED_HOSTS` gets Django's 400, regardless of which address the port is published on
 - The shipped local `docker-compose.yml` publishes the port as `127.0.0.1:...`, not `0.0.0.0:...`
-- The shipped Railway environment template sets `CSFLITE_PUBLIC=true`
+- The shipped Railway environment template sets `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the assigned domain
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application download view. None has a public URL
 - A file with a disallowed extension or over 25 MB is rejected, and the section keeps its answers
@@ -369,7 +378,7 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 | Railway volume is not stateless | Accepted and labelled. Removed on the move to object storage |
 | Evidence files are unencrypted at rest | Depends on the host. An operator responsibility, not solved in the application |
 | Evidence files are not scanned for malware | Operator responsibility. The application never opens or renders them, and serves them only as downloads |
-| An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container (§10). Mitigated by shipping the safe default and never documenting the wider mapping as a supported local variant |
+| An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container, but not sufficient on its own either (§10): `CSFLITE_ALLOWED_HOSTS` stays `localhost`, so Django rejects any request whose Host header isn't `localhost` with a 400. Serving the app to anything else also requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 in §10 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD` |
 
 ---
 

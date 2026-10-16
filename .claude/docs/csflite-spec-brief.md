@@ -145,6 +145,8 @@ there is no room to separate the three coverage classes, and the attempt demoted
 
 Centralized file path registry. Produced by framework maintainer, consumed by all CLI tools via `global_helpers.get_paths()`.
 
+Retired in Phase 4: `config/path_config.json` is deleted and this contract is removed, replaced by the environment variables in `docs/design/phase-4-web-interface.md` §9. See §12.
+
 | Field | Type | Description |
 |---|---|---|
 | `governance_checklist` | `string` | Path to governance checklist input CSV |
@@ -338,7 +340,7 @@ These become ADRs when decomposed into the template.
 
 Not built. Nothing in this section is contract-binding.
 
-The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable from a terminal. `governance_check.py` and `config/path_config.json` are retired, and §2, §4, §5, §6, §7, and the §5 Boundary Rules are rewritten at that point.
+The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable from a terminal. `governance_check.py` and `config/path_config.json` are retired, and §2, the §3 Path Configuration contract, §4, §5, §6, §7, and the §5 Boundary Rules are rewritten at that point.
 
 Carries over unchanged: the 25 curated subcategories, `csf_lookup.csv` as their single source of truth, the output contracts in §3, and `assess_helpers.py`.
 

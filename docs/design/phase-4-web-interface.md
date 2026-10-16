@@ -192,12 +192,15 @@ All configuration comes from the environment. There is no per-environment settin
 | Variable | Default | Notes |
 |---|---|---|
 | `CSFLITE_SECRET_KEY` | none | Required. Application refuses to start without it |
-| `CSFLITE_PASSWORD` | none | Required to bind anything other than loopback |
-| `CSFLITE_BIND` | `127.0.0.1:8000` | |
+| `CSFLITE_PUBLIC` | `false` | Declares this deployment is reachable beyond the operator's own machine. See §10 |
+| `CSFLITE_PASSWORD` | none | Required when `CSFLITE_PUBLIC` is `true`. Application refuses to start otherwise |
+| `PORT` | `8000` | Not `CSFLITE_`-prefixed — the platform convention Railway and similar hosts use. Gunicorn always binds `0.0.0.0:$PORT` inside the container; see §10 for why |
 | `DATABASE_URL` | `sqlite:///data/csflite.db` | |
 | `CSFLITE_MEDIA_ROOT` | `/data/evidence` | Filesystem storage path |
 | `CSFLITE_ALLOWED_HOSTS` | `localhost` | |
 | `CSFLITE_DEBUG` | off | |
+
+`CSFLITE_BIND` does not exist. An earlier draft of this design used it to toggle loopback vs. public binding, and used that address to decide whether `CSFLITE_PASSWORD` was required. It doesn't work in a container: Docker's published ports reach the container through its internal network namespace, not `127.0.0.1`, so gunicorn must always bind `0.0.0.0:$PORT` inside the container just for `docker compose up` to work at all — including for the local profile. An address the app can only ever see as `0.0.0.0` carries no usable signal about whether traffic is reaching it from the operator's own machine or from the internet. §10 replaces it.
 
 `config/path_config.json` is deleted. It solved path resolution for a CLI reading fixed project paths, which no longer exists.
 
@@ -205,11 +208,18 @@ All configuration comes from the environment. There is no per-environment settin
 
 ## 10. Authentication
 
-Local: none. The application binds to `127.0.0.1`. A login screen on a loopback interface protects nothing.
+The application cannot tell, from inside the container, whether it is reachable only from the operator's own machine or from the internet. Binding address carries no such signal in a container (§9), and there is no other runtime-observable fact that does — the real control is outside the process, in whatever decides which network traffic reaches the published port. So authentication is not derived from anything the application observes. It is declared by the operator through `CSFLITE_PUBLIC`, and enforced by the deployment profile that ships alongside the declaration.
 
-Hosted: one operator password from `CSFLITE_PASSWORD`, Django session cookie, no user table, no roles, no password reset.
+**Local:** `CSFLITE_PUBLIC` unset (`false`). No login. A login screen adds nothing when the real boundary is Docker's own port publishing, not the application.
 
-**Startup guard:** if `CSFLITE_BIND` is not loopback and `CSFLITE_PASSWORD` is unset, the application exits with an error. This is the control that prevents accidentally publishing client assessment data. It is a hard failure, not a warning.
+**Hosted:** `CSFLITE_PUBLIC=true`, one operator password from `CSFLITE_PASSWORD`, Django session cookie, no user table, no roles, no password reset.
+
+**Startup guard:** if `CSFLITE_PUBLIC` is `true` and `CSFLITE_PASSWORD` is unset, the application exits with an error. This is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password — it is not a substitute for the network-level control, which the declaration is supposed to match. It is a hard failure, not a warning.
+
+**The network-level control, concretely:**
+
+- Local profile: the shipped `docker-compose.yml` publishes the port as `127.0.0.1:${PORT:-8000}:8000` — bound to the host's loopback only. This, not the application, is what keeps a default local deployment unreachable from the network. An operator who edits that mapping to `0.0.0.0:8000:8000` has made the deployment reachable from their network without setting `CSFLITE_PUBLIC`, and the application has no way to detect it. See §18.
+- Railway profile: Railway assigns a public domain to any service with networking enabled — there is no loopback-only option. The Railway environment template therefore ships with `CSFLITE_PUBLIC=true` already set, so a fresh deploy with no password fails at boot instead of going live silently.
 
 ---
 
@@ -219,11 +229,15 @@ Hosted: one operator password from `CSFLITE_PASSWORD`, Django session cookie, no
 
 Container. `docker compose up`, one service, a bind-mounted `./data` directory holding the SQLite file and evidence uploads. Compose rather than a long `docker run` because the volume mount and environment are the part users get wrong.
 
+`ports: ["127.0.0.1:${PORT:-8000}:8000"]` in the shipped compose file, not `"8000:8000"`. This is the actual enforcement of "local means local" — see §10. `CSFLITE_PUBLIC` is left unset.
+
 ### Railway — Phase 4
 
 Same image. A Postgres addon supplies `DATABASE_URL`. A Railway volume mounted at `/data` holds evidence files. Always-on, one instance.
 
 The volume is the single deliberate deviation from statelessness. It is accepted because Railway offers no object storage, and the alternative is adding an external provider before it is needed. The trigger for removing it is the move off Railway.
+
+Railway sets `PORT` itself; gunicorn binds `0.0.0.0:$PORT`, as it does in every profile (§9). The committed Railway environment template sets `CSFLITE_PUBLIC=true`, so the §10 startup guard is live by default and a deploy with no `CSFLITE_PASSWORD` set fails immediately rather than going live unauthenticated.
 
 ### AWS, Azure, GCP — later phases
 
@@ -236,6 +250,7 @@ Not designed here. The commitment Phase 4 makes to keep them cheap: no cloud SDK
 - Multi-stage build on `python:3.12-slim`
 - Poetry exports to requirements in the build stage; Poetry is absent from the runtime layer
 - Runs as a non-root user
+- Gunicorn binds `0.0.0.0:$PORT` unconditionally. Network exposure is controlled entirely by the deployment profile (§10, §11), never by the bind address
 - Logs unbuffered to stdout. No log files, no rotation
 - `HEALTHCHECK` against `/healthz`
 - Migrations run as an explicit release command, never on application boot
@@ -335,7 +350,9 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - No scoring runs in the browser — exports are generated server-side
 - The questionnaire cannot be completed with an unanswered question, and no response is ever defaulted
 - The container starts from `docker compose up` with no host Python
-- The application refuses to start bound to a non-loopback address without `CSFLITE_PASSWORD`
+- The application refuses to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`
+- The shipped local `docker-compose.yml` publishes the port as `127.0.0.1:...`, not `0.0.0.0:...`
+- The shipped Railway environment template sets `CSFLITE_PUBLIC=true`
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application download view. None has a public URL
 - A file with a disallowed extension or over 25 MB is rejected, and the section keeps its answers
@@ -352,6 +369,7 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 | Railway volume is not stateless | Accepted and labelled. Removed on the move to object storage |
 | Evidence files are unencrypted at rest | Depends on the host. An operator responsibility, not solved in the application |
 | Evidence files are not scanned for malware | Operator responsibility. The application never opens or renders them, and serves them only as downloads |
+| An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container (§10). Mitigated by shipping the safe default and never documenting the wider mapping as a supported local variant |
 
 ---
 

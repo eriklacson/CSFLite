@@ -90,8 +90,23 @@ def generate_governance_assessement(governance_checklist_results, csf_lookup):
         how="left",
     )
 
+    # Guard: an unscoreable response or an unknown subcategory yields NaN, which propagates
+    # into assessment_score and makes score_to_sev fall through to "low" — an unanswered
+    # control would be reported as having no gap. Fail early instead.
+    scores = governance_score_df["response"].map(response_score)
+
+    unscored = [str(i) for i in governance_score_df.loc[scores.isna(), "csf_subcategory_id"]]
+    if unscored:
+        raise ValueError(
+            f"Response must be exactly Yes, Partial, or No — missing or invalid for: {', '.join(unscored)}"
+        )
+
+    unknown = [str(i) for i in governance_score_df.loc[governance_score_df["weight"].isna(), "csf_subcategory_id"]]
+    if unknown:
+        raise ValueError(f"Subcategory not found in CSF lookup: {', '.join(unknown)}")
+
     # Add a 'score' column based on the 'response' column
-    governance_score_df["score"] = governance_checklist_df["response"].map(response_score).astype(float)
+    governance_score_df["score"] = scores.astype(float)
 
     # Calculate assessment and gap score
     governance_score_df["assessment_score"] = governance_score_df["score"] * governance_score_df["weight"]
@@ -135,28 +150,33 @@ def generate_governance_heatmap(governance_assessment):
         "csf_subcategory_name",
         "response",
         "weight",
-        "assessment_score",
+        "score",
     }
     if not required.issubset(df.columns):
         return []
 
     # normalize numeric fields
     df["weight"] = df["weight"].astype(float)
-    df["assessment_score"] = df["assessment_score"].astype(float)
+    df["score"] = df["score"].astype(float)
 
-    # determine heat level from asessment score
-    def score_to_sev(row):
-        if row["assessment_score"] <= 0:
-            return "high"
-        elif row["assessment_score"] < row["weight"]:
+    # compute gap score (higher means bigger governance gap).
+    # Derived from score x weight rather than the incoming assessment_score, which is a
+    # presentation string already rounded to 2dp. Recomputing from the rounded value made this
+    # disagree with the gap_score in the assessment output.
+    df["gap_score"] = df["weight"] - (df["score"] * df["weight"])
+
+    # determine heat level from coverage. Weight is deliberately not a factor: with weights
+    # spanning only 1.0-1.5 there is no room to band on the weighted gap without demoting real
+    # findings, so weight drives ordering through gap_score instead, which is the sort key below.
+    def score_to_sev(score):
+        if score >= 1:
+            return "none"
+        elif score > 0:
             return "medium"
         else:
-            return "low"
+            return "high"
 
-    df["severity"] = df.apply(score_to_sev, axis=1)
-
-    # compute gap score (higher means bigger governance gap)
-    df["gap_score"] = df["weight"] - df["assessment_score"]
+    df["severity"] = df["score"].map(score_to_sev)
 
     # prepare final shape
     df["name"] = df["csf_subcategory_name"]

@@ -23,7 +23,7 @@ poetry run black --check .  # check without modifying
 poetry run ruff check .
 
 # Security scan (HIGH severity only)
-poetry run bandit -r tools --severity-level high
+poetry run bandit -r . -x .venv,venv,build,dist,docs,migrations --severity-level high
 
 # Install pre-commit hooks (required before first commit)
 poetry run pre-commit install
@@ -49,20 +49,36 @@ CSFLite is a lean NIST CSF v2.0 security assessment and governance framework for
 | `tools/governance_check.py` | CLI entry point for governance assessment |
 | `tools/global_helpers.py` | Path resolution, CSV/JSON I/O utilities |
 | `config/path_config.json` | Centralized paths for all inputs/outputs |
-| `data/csf_lookup.csv` | The 25 CSFLite subcategories with weights and recommendations |
-| `data/heat_map_lookup.csv` | Same 25 subcategories with shortened display names for heatmap rendering (separate from `csf_lookup.csv`) |
+| `data/csf_lookup.csv` | The single source of truth for the 25 CSFLite subcategories — function, display name, question, evidence prompt, weight, recommendation, and the full CSWP 29 outcome text (`csf_outcome`) |
 
 ### Test structure
 
-Tests in `tests/` mirror `tools/`. Fixtures live in `tests/fixtures/`.
+Tests in `tests/` mirror `tools/`. Test data is built inline and written to pytest's `tmp_path`, except
+`tests/test_golden_pipeline.py`, which replays `tests/fixtures/golden/` — recorded CLI output that gates
+the Phase 4 web rewrite. A failure there means scoring behaviour changed.
 
 ### Crosswalk supplements
 
 `templates/soc2-supplement-questionnaire.csv` is a delivered SOC 2 crosswalk supplement (28 questions covering 5 gap domains outside the core 25).
 
-`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `claude-project/project.yaml`.
+`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `.claude/docs/csflite-spec-brief.md`.
+
+Both move into the web app in Phase 5 as collected, unscored tracks (`docs/design/phase-4-web-interface.md` §16) — answers persist and export, but no coverage score is computed for them.
+
+### Phase 4 — web interface (in progress)
+
+The CLI in this section is being replaced. Scope: `.claude/docs/phase-4/web-interface-scope.md`. Full design: `docs/design/phase-4-web-interface.md`. `assess_helpers.py` carries over unchanged; everything else in this Architecture section is rewritten once Phase 4 ships.
 
 ## Known Issues
 
-- `path_config.json` uses relative `../` paths — breaks if CWD is not the project root
-- CI Bandit target is a placeholder `your_package` (not scanning actual code yet)
+- `path_config.json` points `governance_checklist` at `scans/governance_checks.csv`, but no `scans/` directory exists — the default input path resolves to nothing
+- `pytest` is declared in both the main and dev dependency groups in `pyproject.toml` — should be dev-only
+
+## Execution Loop
+All tasks follow this loop — no exceptions:
+1. READ — understand the request, read spec brief document, check relevant files inside .claude/docs, check for existing ADRs
+2. PLAN — propose what to build, present to architect for review
+3. APPROVE — architect reviews, adjusts, records significant decisions as ADRs
+4. IMPLEMENT — build it
+5. VERIFY — validate control IDs against data/csf_lookup.csv, check acceptance criteria, run tests, validate alignment with seed document, validate implementation with subagent
+6. REPORT — present output + verification results, flag unresolved items honestly

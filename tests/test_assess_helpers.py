@@ -128,6 +128,7 @@ def test_generate_governance_heatmap():
             "csf_subcategory_name": "Governance roles",
             "response": "No",
             "weight": 1.0,
+            "score": 0.0,
             "assessment_score": "0.00",
         },
         {
@@ -135,6 +136,7 @@ def test_generate_governance_heatmap():
             "csf_subcategory_name": "Access control",
             "response": "Yes",
             "weight": 2.0,
+            "score": 1.0,
             "assessment_score": "2.00",
         },
     ]
@@ -145,5 +147,129 @@ def test_generate_governance_heatmap():
     assert result[0]["csf_subcategory_id"] == "GV.P0-01"
     assert result[0]["severity"] == "high"
     assert result[0]["gap_score"] == "1.00"
-    assert result[1]["severity"] == "low"
+    assert result[1]["severity"] == "none"
     assert result[1]["gap_score"] == "0.00"
+
+
+def test_generate_governance_heatmap_severity_is_weight_invariant():
+    """Severity depends only on coverage. Weight must never demote a finding."""
+    from tools.assess_helpers import generate_governance_heatmap
+
+    def row(sid, weight, score):
+        return {
+            "csf_subcategory_id": sid,
+            "csf_subcategory_name": sid,
+            "response": "-",
+            "weight": weight,
+            "score": score,
+        }
+
+    # every weight a maintainer could plausibly set, including degenerate ones
+    assessment = []
+    for i, w in enumerate([1.0, 1.2, 1.5, 0.5, 0.0, 100.0]):
+        for label, sc in [("cov", 1.0), ("par", 0.5), ("abs", 0.0)]:
+            assessment.append(row(f"{label}-{i}", w, sc))
+
+    sev = {r["csf_subcategory_id"]: r["severity"] for r in generate_governance_heatmap(assessment)}
+
+    for i in range(6):
+        assert sev[f"cov-{i}"] == "none", f"covered control at weight index {i}"
+        assert sev[f"par-{i}"] == "medium", f"partial control at weight index {i}"
+        assert sev[f"abs-{i}"] == "high", f"absent control at weight index {i}"
+
+
+def test_generate_governance_heatmap_orders_by_weighted_gap():
+    """Weight drives priority through the sort, not through severity."""
+    from tools.assess_helpers import generate_governance_heatmap
+
+    def row(sid, weight, score):
+        return {
+            "csf_subcategory_id": sid,
+            "csf_subcategory_name": sid,
+            "response": "-",
+            "weight": weight,
+            "score": score,
+        }
+
+    assessment = [
+        row("FOUNDATIONAL", 1.0, 0.0),  # absent, gap 1.00
+        row("CRITICAL", 1.5, 0.0),  # absent, gap 1.50
+    ]
+
+    result = generate_governance_heatmap(assessment)
+
+    # same severity, but the critical one sorts first
+    assert [r["csf_subcategory_id"] for r in result] == ["CRITICAL", "FOUNDATIONAL"]
+    assert result[0]["severity"] == result[1]["severity"] == "high"
+
+
+def test_generate_governance_heatmap_gap_score_matches_assessment():
+    """Regression: the heatmap must not recompute the gap from the rounded assessment_score."""
+    from tools.assess_helpers import generate_governance_assessement, generate_governance_heatmap
+
+    checklist = [{"csf_subcategory_id": "XX.AA-01", "csf_subcategory_name": "Quarter", "response": "Partial"}]
+    lookup = [{"csf_subcategory_id": "XX.AA-01", "weight": 1.25, "recommendation": "-"}]
+
+    assessment = generate_governance_assessement(checklist, lookup)
+    heatmap = generate_governance_heatmap(assessment)
+
+    assert heatmap[0]["gap_score"] == assessment[0]["gap_score"]
+
+
+def test_generate_governance_assessement_preserves_input_order():
+    """generate_governance_assessement() does not sort — row order is the caller's responsibility.
+
+    The CLI gets its order from get_governance_checklist_results(), which sorts descending by
+    csf_subcategory_id before scoring (see test_get_governance_checklist_results). Any future
+    caller that builds the checklist list a different way — a database query, for instance —
+    must apply the same ordering itself, or its output will not match the golden fixtures.
+    """
+    from tools.assess_helpers import generate_governance_assessement
+
+    # deliberately not in csf_subcategory_id order, ascending or descending
+    checklist = [
+        {"csf_subcategory_id": "PR.AA-03", "csf_subcategory_name": "Access control", "response": "Yes"},
+        {"csf_subcategory_id": "AA.AA-01", "csf_subcategory_name": "First alpha", "response": "No"},
+        {"csf_subcategory_id": "ZZ.ZZ-99", "csf_subcategory_name": "Last alpha", "response": "Partial"},
+    ]
+    lookup = [
+        {"csf_subcategory_id": "PR.AA-03", "weight": 1.0, "recommendation": "-"},
+        {"csf_subcategory_id": "AA.AA-01", "weight": 1.0, "recommendation": "-"},
+        {"csf_subcategory_id": "ZZ.ZZ-99", "weight": 1.0, "recommendation": "-"},
+    ]
+
+    result = generate_governance_assessement(checklist, lookup)
+
+    assert [r["csf_subcategory_id"] for r in result] == ["PR.AA-03", "AA.AA-01", "ZZ.ZZ-99"]
+
+
+def test_generate_governance_assessement_rejects_blank_response():
+    from tools.assess_helpers import generate_governance_assessement
+
+    checklist = [
+        {
+            "csf_subcategory_id": "GV.PO-01",
+            "csf_subcategory_name": "Policy established",
+            "response": "",
+        }
+    ]
+    lookup = [{"csf_subcategory_id": "GV.PO-01", "weight": 1.5, "recommendation": "Write a policy"}]
+
+    with pytest.raises(ValueError, match="GV.PO-01"):
+        generate_governance_assessement(checklist, lookup)
+
+
+def test_generate_governance_assessement_rejects_unknown_subcategory():
+    from tools.assess_helpers import generate_governance_assessement
+
+    checklist = [
+        {
+            "csf_subcategory_id": "XX.XX-99",
+            "csf_subcategory_name": "Not in the framework",
+            "response": "Yes",
+        }
+    ]
+    lookup = [{"csf_subcategory_id": "GV.PO-01", "weight": 1.5, "recommendation": "Write a policy"}]
+
+    with pytest.raises(ValueError, match="not found in CSF lookup"):
+        generate_governance_assessement(checklist, lookup)

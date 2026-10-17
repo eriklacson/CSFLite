@@ -72,7 +72,8 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
         print(f"Governance assessment heatmap written to: {governance_heatmap_csv}")
 
     except ValueError as ve:
-        print(f"Argument Error: {ve}", file=sys.stderr)
+        print(f"Error: {ve}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -2,9 +2,9 @@
 
 **Status:** Draft — not built
 **Supersedes on completion:** spec brief §2, the §3 Path Configuration contract, §4, §5, §6, §7
-**Binding:** No. The spec brief (`.claude/docs/csflite-spec-brief.md`) is the contract-binding document. This design records intent for work not yet done.
+**Binding:** No. The spec brief (`docs/specs/csflite-spec-brief.md`) is the contract-binding document. This design records intent for work not yet done.
 
-**UX source:** `docs/design/ux/` — a Claude Design prototype and wireframes. The prototype defines the flow and screens in §6. Where it disagrees with the interface contracts, §16 records which one wins.
+**UX source:** `docs/specs/design/ux/` — a Claude Design prototype and wireframes. The prototype defines the flow and screens in §6. Where it disagrees with the interface contracts, §16 records which one wins.
 
 This document owns only what does not exist yet: stack, data model, configuration, deployment, container, routes, and the retirement sequence. It does not restate the interface contracts, the 25 subcategories, or the scoring rules. Those live in the spec brief and are cited from here.
 
@@ -85,7 +85,7 @@ The web view does not call `get_governance_checklist_results()` — it builds th
 
 ## 6. User flow and screens
 
-Source: `docs/design/ux/`. `CSFLite Assessment.dc.html` is the interactive prototype; `Wireframes.dc.html` holds the three structural options that preceded it.
+Source: `docs/specs/design/ux/`. `CSFLite Assessment.dc.html` is the interactive prototype; `Wireframes.dc.html` holds the three structural options that preceded it.
 
 Three steps: **Scope → Questionnaire → Results.**
 

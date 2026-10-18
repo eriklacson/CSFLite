@@ -11,7 +11,7 @@ CHK-NNNN-subject-slug.md
 - `NNNN` — zero-padded, assigned per run in chronological order, never reused
 - slug — names what was reviewed (`scoring-rubric-review`), not what was found
 
-This mirrors `docs/adr/ADR-NNNN-*.md`. The two are different things: an ADR records a decision and
+This mirrors `docs/specs/adr/ADR-NNNN-*.md`. The two are different things: an ADR records a decision and
 its rationale, a check records what a review run found. A finding settled by a real design decision
 should link to the ADR that settles it.
 

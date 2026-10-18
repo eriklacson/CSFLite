@@ -6,7 +6,7 @@
 
 ## Scope
 
-`docs/design/phase-4-web-interface.md` §9–§12, specifically the startup guard that was meant to
+`docs/specs/design/phase-4-web-interface.md` §9–§12, specifically the startup guard that was meant to
 prevent an unauthenticated assessment tool from being reachable on a network.
 
 Prompted by the design review ahead of Phase 4 build-out, continuing from CHK-0003.

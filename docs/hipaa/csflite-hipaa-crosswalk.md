@@ -2,7 +2,7 @@
 
 **Framework:** NIST CSF 2.0 (CSWP 29) → HIPAA Security Rule (45 CFR Part 164 Subpart C) and Breach Notification Rule (45 CFR Part 164 Subpart D)
 **CSFLite version:** 1.0.0 (25 controls — see `data/csf_lookup.csv`)
-**Architectural basis:** [ADR-0001](../adr/ADR-0001-full-csf-crosswalk.md)
+**Architectural basis:** [ADR-0001](../specs/adr/ADR-0001-full-csf-crosswalk.md)
 **Scope:** Administrative Safeguards (§164.308), Physical Safeguards (§164.310), Technical Safeguards (§164.312), Organizational Requirements — BA subcontractor provisions (§164.314(a)(2)(i)), Breach Notification Rule — BA obligations (§164.400–414)
 **Excluded:** Privacy Rule (§164.500 series); Documentation Requirements (§164.316) and Periodic Evaluation (§164.308(a)(8)) are advisory notes, not assessed gaps; Clearinghouse isolation (§164.308(a)(4)(i)) is noted as inapplicable to most BAs
 **Client context:** Business Associate obligations for Philippine SMBs (20–200 employees) serving US healthcare Covered Entities

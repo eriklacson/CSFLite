@@ -61,13 +61,17 @@ the Phase 4 web rewrite. A failure there means scoring behaviour changed.
 
 `templates/soc2-supplement-questionnaire.csv` is a delivered SOC 2 crosswalk supplement (28 questions covering 5 gap domains outside the core 25).
 
-`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `.claude/docs/csflite-spec-brief.md`.
+`templates/hipaa-supplement-questionnaire.csv` is a delivered HIPAA crosswalk supplement (exactly 9 questions covering gap domains outside the CSFLite 25; scoped for Business Associates). The full HIPAA deliverable set lives in `docs/hipaa/`: crosswalk, gap analysis template, and executive summary template. Spec source: `docs/specs/csflite-spec-brief.md`.
 
-Both move into the web app in Phase 5 as collected, unscored tracks (`docs/design/phase-4-web-interface.md` §16) — answers persist and export, but no coverage score is computed for them.
+Both move into the web app in Phase 5 as collected, unscored tracks (`docs/specs/design/phase-4-web-interface.md` §16) — answers persist and export, but no coverage score is computed for them.
 
 ### Phase 4 — web interface (in progress)
 
-The CLI in this section is being replaced. Scope: `.claude/docs/phase-4/web-interface-scope.md`. Full design: `docs/design/phase-4-web-interface.md`. `assess_helpers.py` carries over unchanged; everything else in this Architecture section is rewritten once Phase 4 ships.
+The CLI in this section is being replaced. Scope: `docs/specs/phase-4/web-interface-scope.md`. Full design: `docs/specs/design/phase-4-web-interface.md`. `assess_helpers.py` carries over unchanged; everything else in this Architecture section is rewritten once Phase 4 ships.
+
+### Doc templates
+
+`docs/specs/templates/` holds blank templates (`architecture`, `schema`, `routes`, `integrations`, `standards`). Use them as the structure when writing repo-specific architecture docs for CSFLite. Fill them for this repo's context. CSFLite is single-operator with no tenants, so mark tenant rows `n/a` rather than inventing them.
 
 ## Known Issues
 
@@ -76,7 +80,7 @@ The CLI in this section is being replaced. Scope: `.claude/docs/phase-4/web-inte
 
 ## Execution Loop
 All tasks follow this loop — no exceptions:
-1. READ — understand the request, read spec brief document, check relevant files inside .claude/docs, check for existing ADRs
+1. READ — understand the request, read the spec brief (`docs/specs/csflite-spec-brief.md`), check relevant files in `docs/specs/`, check for existing ADRs in `docs/specs/adr/`
 2. PLAN — propose what to build, present to architect for review
 3. APPROVE — architect reviews, adjusts, records significant decisions as ADRs
 4. IMPLEMENT — build it

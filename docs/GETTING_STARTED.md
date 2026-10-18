@@ -74,7 +74,7 @@ CSFLite/
 ├── data/            # Reference data & CSF mappings
 │   └── csf_lookup.csv
 ├── docs/
-│   ├── adr/         # Architectural decision records
+│   ├── specs/       # Spec brief, ADRs, Phase 4 design
 │   ├── reference/   # CSFLite framework reference docs (includes crosswalks: SOC 2, HIPAA, SP 800-53)
 │   ├── soc2/        # SOC 2 readiness deliverables
 │   └── hipaa/       # HIPAA readiness deliverables
@@ -161,7 +161,7 @@ Governance assessment heatmap written to: output/governance_heatmap.csv
 | `severity` | Coverage severity: `high` (absent), `medium` (partial), or `none` (covered) |
 | `gap_score` | Size of the gap |
 
-The heatmap prioritizes your remediation efforts. Focus on `high` severity items first — these represent the largest weighted gaps in your security posture.
+The heatmap prioritizes your remediation efforts. Severity reflects coverage only: `high` means the control is absent. Within the same severity, a higher `gap_score` means a more heavily weighted subcategory — work those first.
 
 ```bash
 # View the assessment
@@ -177,7 +177,7 @@ xdg-open output/governance_assessment.csv  # Linux
 
 ### Step 4: Address Gaps
 
-For each gap identified, refer to [`docs/reference/manual_remediation.md`](reference/manual_remediation.md) for specific, actionable remediation steps organized by CSF subcategory.
+Each row in the assessment output carries a `recommendation`. For step-by-step guidance on the governance-focused subcategories, see [`docs/reference/manual_remediation.md`](reference/manual_remediation.md).
 
 ---
 
@@ -327,8 +327,8 @@ poetry install
 #### "Permission denied" on output
 
 ```bash
-mkdir -p scans output
-chmod -R 755 scans/ output/
+mkdir -p output
+chmod -R 755 output/
 ```
 
 ---
@@ -339,11 +339,11 @@ chmod -R 755 scans/ output/
 
 - [`docs/reference/top_25_sub_categories.md`](reference/top_25_sub_categories.md) — Subcategory definitions and selection rationale
 - [`docs/reference/automatable_subcategories.md`](reference/automatable_subcategories.md) — Automation classification per subcategory
-- [`docs/reference/manual_remediation.md`](reference/manual_remediation.md) — Remediation guidance for every governance gap
+- [`docs/reference/manual_remediation.md`](reference/manual_remediation.md) — Step-by-step remediation for governance-focused gaps
 ### Customize Your Assessments
 
 - **Adjust weights**: Edit `data/csf_lookup.csv` to change subcategory weights
-- **Extend the questionnaire**: Add rows to `templates/governance_checks_template.csv`
+- **Change the subcategory set**: Edit `data/csf_lookup.csv` first. The CLI rejects any checklist row whose ID is not in the lookup
 
 ---
 
@@ -356,4 +356,4 @@ This project is in early development. For questions or issues:
 
 ---
 
-*Last updated: 2026-02-06*
+*Last updated: 2026-10-18*

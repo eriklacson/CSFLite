@@ -27,6 +27,9 @@ reweighting "requires only changing this file", and this is what makes that chan
 Only when the behaviour change is deliberate. Re-record and commit the new files in the same commit
 as the change that caused it, so review sees both together.
 
+The examples in `input/examples/` and `output/examples/` are byte-identical copies of these files.
+`test_published_examples_match_recording` fails until you copy the new recordings over them.
+
 ```
 poetry run python tools/governance_check.py \
   --governance_checklist tests/fixtures/golden/governance_checklist.csv \

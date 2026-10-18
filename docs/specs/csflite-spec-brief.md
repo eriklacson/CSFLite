@@ -208,7 +208,6 @@ CSFLite/
 │   ├── CONTRIBUTING.md             ← Contribution guidelines
 │   ├── reference/                  ← Framework reference documents
 │   │   ├── top_25_sub_categories.md
-│   │   ├── automatable_subcategories.md
 │   │   ├── manual_remediation.md
 │   │   └── csflite-800-53-crosswalk.md
 │   ├── soc2/                       ← SOC 2 crosswalk and readiness templates

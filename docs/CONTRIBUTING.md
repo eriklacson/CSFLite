@@ -191,7 +191,7 @@ Open an issue with:
    ```bash
    poetry run black --check .
    poetry run ruff check .
-   poetry run bandit -r tools --severity-level high
+   poetry run bandit -r . -x .venv,venv,build,dist,docs,migrations --severity-level high
    poetry run pytest
    ```
 3. **Write or update tests** for any code changes

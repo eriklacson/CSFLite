@@ -177,7 +177,7 @@ xdg-open output/governance_assessment.csv  # Linux
 
 ### Step 4: Address Gaps
 
-Each row in the assessment output carries a `recommendation`. For step-by-step guidance on the governance-focused subcategories, see [`docs/reference/manual_remediation.md`](reference/manual_remediation.md).
+Each row in the assessment output carries a `recommendation`. For step-by-step guidance on every subcategory, see [`docs/reference/manual_remediation.md`](reference/manual_remediation.md).
 
 ---
 
@@ -338,8 +338,7 @@ chmod -R 755 output/
 ### Reference Documentation
 
 - [`docs/reference/top_25_sub_categories.md`](reference/top_25_sub_categories.md) — Subcategory definitions and selection rationale
-- [`docs/reference/automatable_subcategories.md`](reference/automatable_subcategories.md) — Automation classification per subcategory
-- [`docs/reference/manual_remediation.md`](reference/manual_remediation.md) — Step-by-step remediation for governance-focused gaps
+- [`docs/reference/manual_remediation.md`](reference/manual_remediation.md) — Step-by-step remediation for all 25 subcategories
 ### Customize Your Assessments
 
 - **Adjust weights**: Edit `data/csf_lookup.csv` to change subcategory weights

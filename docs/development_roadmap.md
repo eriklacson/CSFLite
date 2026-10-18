@@ -29,12 +29,11 @@ CSFLite follows a governance-first development sequence: define the framework, v
 - [x] Validate subcategory IDs against NIST CSWP 29 (CSF 2.0, February 2024)
 - [x] Document assessment philosophy (`assessment_philosophy.md`)
 - [x] Document subcategory rationale (`docs/reference/top_25_sub_categories.md`)
-- [x] Document automation classification (`docs/reference/automatable_subcategories.md`)
+- [x] Document automation classification (`automatable_subcategories.md` — removed 2026-10-18; scanning is outside CSFLite)
 
 **Key artifacts:**
 - `assessment_philosophy.md` — Authoritative methodology document
 - `docs/reference/top_25_sub_categories.md` — Subcategory definitions with selection rationale
-- `docs/reference/automatable_subcategories.md` — Full/Partial/Manual classification per subcategory
 
 ---
 

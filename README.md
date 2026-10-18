@@ -19,7 +19,7 @@ See the [Assessment Philosophy](docs/assessment_philosophy.md) for the full desi
 - **Governance assessment pipeline** — Complete end-to-end workflow for manual governance baseline assessment
 - **Weighted scoring and heatmaps** — Gap analysis with severity ratings across all CSF Functions
 - **Top 25 subcategory framework** — Curated, validated against NIST CSWP 29
-- **Remediation guidance** — A recommendation for every subcategory in the scored output, plus step-by-step guides for the governance-focused gaps
+- **Remediation guidance** — Step-by-step remediation for all 25 subcategories
 - **Governance questionnaire template** — Ready-to-use CSV covering all 25 subcategories with evidence requirements
 - **SOC 2 readiness assessment** — CSFLite-to-Trust Services Criteria crosswalk (CC1–CC9, A1, C1), supplement questionnaire for gap domains, gap analysis template, and executive summary template
 - **HIPAA readiness assessment** — CSFLite-to-HIPAA Security Rule crosswalk (§164.308, §164.310, §164.312) and Breach Notification Rule, 9-question supplement questionnaire for gap domains, gap analysis template, and executive summary template; scoped for Business Associates serving US healthcare Covered Entities
@@ -131,7 +131,6 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 ### Reference Documentation
 
 - [Top 25 Subcategories](docs/reference/top_25_sub_categories.md) — Selection criteria and definitions
-- [Automatable Subcategories](docs/reference/automatable_subcategories.md) — Automation classification
 - [Manual Remediation Guide](docs/reference/manual_remediation.md) — Step-by-step remediation for governance gaps
 - [docs/specs/](docs/specs/) — Spec brief, ADRs, Phase 4 design, and doc templates for Claude Code workflows
 

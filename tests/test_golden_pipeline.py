@@ -13,6 +13,8 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from tools.assess_helpers import (  # noqa: E402
@@ -65,3 +67,18 @@ def test_golden_input_covers_every_response_and_subcategory():
 
     assert {r["response"] for r in rows} == {"Yes", "Partial", "No"}
     assert {r["csf_subcategory_id"] for r in rows} == {item["csf_subcategory_id"] for item in lookup}
+
+
+@pytest.mark.parametrize(
+    ("example", "recorded_name"),
+    [
+        ("input/examples/governance_check/governance_check_sample.csv", "governance_checklist.csv"),
+        ("output/examples/governance_assessment/governance_assessment_example.csv", "governance_assessment.csv"),
+        ("output/examples/governance_assessment/governance_heatmap_example.csv", "governance_heatmap.csv"),
+    ],
+)
+def test_published_examples_match_recording(example, recorded_name):
+    """The user-facing examples are copies of the recording. Re-recording must update them too."""
+    assert (PROJECT_ROOT / example).read_bytes() == (
+        GOLDEN / recorded_name
+    ).read_bytes(), f"{example} differs from tests/fixtures/golden/{recorded_name}. Copy the recording over it."

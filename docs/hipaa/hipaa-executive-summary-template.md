@@ -58,5 +58,5 @@
 
 ---
 
-*Prepared using CSFLite v1.0.0 — [csflite-hipaa-crosswalk.md](csflite-hipaa-crosswalk.md)*
+*Prepared using CSFLite v0.1.0 — [csflite-hipaa-crosswalk.md](csflite-hipaa-crosswalk.md)*
 *This readiness assessment does not constitute HIPAA compliance, a HIPAA audit, or certification of any kind.*

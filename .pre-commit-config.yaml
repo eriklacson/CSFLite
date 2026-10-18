@@ -26,6 +26,6 @@ repos:
     hooks:
     - id: pytest-quick
       name: pytest (quick)
-      entry: poetry run python -m pytest -q -m "not slow"
+      entry: poetry run python -m pytest -q
       language: system
       pass_filenames: false

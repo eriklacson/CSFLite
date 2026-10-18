@@ -22,7 +22,7 @@ the reference the web rewrite is tested against, so the rubric was reviewed befo
 | 1 | Fixed | Unanswered control classified as `low` severity |
 | 2 | Accepted | Heatmap severity ignores subcategory weight |
 | 3 | Fixed | Assessment and heatmap can report different `gap_score` |
-| 4 | Open | `notes` dropped despite §3 saying preserved |
+| 4 | Won't Fix | `notes` dropped despite §3 saying preserved |
 
 ---
 
@@ -221,7 +221,7 @@ A weight of `0` would classify a "Yes" as `high`, since `assessment_score` would
 
 ## 4. notes dropped despite contract saying preserved
 
-**Status:** Open
+**Status:** Won't Fix
 
 **Location:** `get_governance_checklist_results()`, the `required_columns` projection
 
@@ -257,6 +257,12 @@ as the CLI exists.
 **Recommendation.** Decide alongside the Phase 4 web form design, since that is where notes become
 user-visible. If notes appear in the delivered report, take the first option and update §3 to match.
 Whichever way it goes, the code and §3 need to agree.
+
+**Resolution (2026-10-18).** Won't fix in the CLI. The CLI is deleted once the web app reaches golden
+parity ([ADR-0005](../../docs/specs/adr/ADR-0005-web-application-replaces-cli.md)). The web app
+persists notes per response (`Response.notes`, Phase 4 design §8). The CSV exports stay without a
+notes column so byte-identical parity holds. Spec §3 now describes `notes` as kept with the
+assessment record, not carried into the CSV output, so the code and the contract agree.
 
 ---
 

@@ -82,7 +82,7 @@ The questionnaire filled by the assessor. Produced by the human operator, consum
 | `csf_subcategory_name` | `string` | Yes | Human-readable outcome description |
 | `question` | `string` | No | Assessment question text (informational, not consumed by scoring) |
 | `evidence` | `string` | No | Expected evidence types (informational, not consumed by scoring) |
-| `notes` | `string` | No | Assessor notes (preserved in output, not consumed by scoring) |
+| `notes` | `string` | No | Assessor notes (kept with the assessment record from Phase 4; not consumed by scoring or the CSV exports) |
 | `response` | `string` | Yes | One of: `Yes`, `Partial`, `No`. Case-sensitive. |
 
 ### CSF Lookup Reference (CSV)
@@ -316,21 +316,20 @@ Phase 3 complete. The governance assessment pipeline runs end to end as a CLI.
 
 ## 10. Key Design Decisions — Locked
 
-These become ADRs when decomposed into the template.
+Each row links to its ADR in `adr/`. Decisions made after this table was written are ADR-0004 (single reference file) and ADR-0007 (operator-declared public mode).
 
-| Decision | Choice | Rationale |
-|---|---|---|
-| Scope limited to 25 subcategories | Fixed at 25, additions require a removal | Keeps framework lean and assessable by resource-constrained teams. Broader coverage available through later-stage maturity assessments. |
-| Coverage-only scoring | Yes/Partial/No (1.0/0.5/0.0) — no maturity levels | Small teams cannot defend nuanced maturity scores. Binary or near-binary answers are defensible and actionable. |
-| Evidence required for "Yes" | Assertions without proof score Partial or No | Prevents attestation theater. Most critical quality control mechanism. |
-| Compliance crosswalks as reference docs | Stored in `docs/reference/`, `docs/soc2/`, and `docs/hipaa/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. |
-| Assessment philosophy as authoritative | `assessment_philosophy.md` overrides all other docs on conflicts | Single source of truth for methodology prevents drift across documentation. |
-| Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. |
-| Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds client data, which resolves the §7 local-first conflict rather than deferring it. |
-| Cloud-native scope | Portable and operable, not elastic | pandas import cost rules out scale-to-zero, and a single operator generates no load. Recorded so the application is not later "fixed" into a serverless deployment. |
-| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same path as the hosted deployment. |
-| Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. |
-
+| Decision | Choice | Rationale | ADR |
+|---|---|---|---|
+| Scope limited to 25 subcategories | Fixed at 25, additions require a removal | Keeps framework lean and assessable by resource-constrained teams. Broader coverage available through later-stage maturity assessments. | [ADR-0002](adr/ADR-0002-fixed-25-subcategory-scope.md) |
+| Coverage-only scoring | Yes/Partial/No (1.0/0.5/0.0) — no maturity levels | Small teams cannot defend nuanced maturity scores. Binary or near-binary answers are defensible and actionable. | [ADR-0003](adr/ADR-0003-coverage-only-scoring.md) |
+| Evidence required for "Yes" | Assertions without proof score Partial or No | Prevents attestation theater. Most critical quality control mechanism. | [ADR-0003](adr/ADR-0003-coverage-only-scoring.md) |
+| Compliance crosswalks as reference docs | Stored in `docs/reference/`, `docs/soc2/`, and `docs/hipaa/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. | [ADR-0001](adr/ADR-0001-full-csf-crosswalk.md), [ADR-0008](adr/ADR-0008-supplements-collected-not-scored.md) |
+| Assessment philosophy as authoritative | `assessment_philosophy.md` overrides all other docs on conflicts | Single source of truth for methodology prevents drift across documentation. | — (document precedence rule) |
+| Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. | [ADR-0005](adr/ADR-0005-web-application-replaces-cli.md) |
+| Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds client data, which resolves the §7 local-first conflict rather than deferring it. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
+| Cloud-native scope | Portable and operable, not elastic | pandas import cost rules out scale-to-zero, and a single operator generates no load. Recorded so the application is not later "fixed" into a serverless deployment. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
+| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same path as the hosted deployment. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
+| Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. | — (tooling) |
 ---
 
 ## 11. What This Project Does Not Own

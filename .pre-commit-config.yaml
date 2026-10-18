@@ -13,8 +13,6 @@ repos:
     hooks:
       - id: ruff-check     # the linter
       # args: [--fix]    # optional: auto-fix
-      - id: ruff-format    # the formatter
-      # args: [--fix]    # optional: auto-fix
 
   # Bandit — security scan (only HIGH severity blocks commits)
   - repo: https://github.com/PyCQA/bandit

@@ -2,7 +2,7 @@ repos:
 
   # Black — verify formatting (do not auto‑rewrite on commit)
   - repo: https://github.com/psf/black
-    rev: 25.1.0
+    rev: 26.3.1
     hooks:
       - id: black
         args: ["--check"]

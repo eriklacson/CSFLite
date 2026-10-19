@@ -2,7 +2,7 @@
 
 Thank you for your interest in CSFLite. This document explains how to contribute effectively.
 
-CSFLite is a lean cybersecurity framework for startups and SMEs. Contributions should preserve this intent: startup-first, governance-driven, actionable over aspirational, compliance as output not driver. If you haven't already, read the [Assessment Philosophy](docs/csflite-assessment-philosophy.md) before contributing — it governs all design decisions.
+CSFLite is a lean cybersecurity framework for startups and SMEs. Contributions should preserve this intent: startup-first, governance-driven, actionable over aspirational, compliance as output not driver. If you haven't already, read the [Assessment Philosophy](assessment_philosophy.md) before contributing — it governs all design decisions.
 
 ---
 
@@ -109,8 +109,7 @@ CSFLite/
 ├── config/          # Runtime configuration (path_config.json)
 ├── docs/            # Documentation
 │   └── reference/   # Framework reference docs (subcategories, mappings, remediation)
-├── scans/           # Generated scan outputs (gitignored)
-├── output/          # Generated assessment outputs (gitignored)
+├── output/          # Generated assessment outputs (output/clients/ is gitignored)
 └── .github/         # CI workflows
 ```
 
@@ -121,7 +120,7 @@ CSFLite/
 | `data/csf_lookup.csv` | Subcategory weights and recommendations | Yes — affects all scoring |
 | `templates/governance_checks_template.csv` | Governance questionnaire | Yes — changes user-facing assessment |
 | `config/path_config.json` | Centralized path configuration | Yes — breaks tools if misconfigured |
-| `csflite-assessment-philosophy.md` | Authoritative methodology document | Requires maintainer approval |
+| `assessment_philosophy.md` | Authoritative methodology document | Requires maintainer approval |
 | `docs/reference/csflite-800-53-crosswalk.md` | SP 800-53 assessment method reference | Yes — do not modify control mappings or assessment methods |
 
 ---
@@ -154,7 +153,7 @@ Open an issue before working on these — they affect framework integrity:
 
 **Scoring Methodology Changes** — Modifications to the weighted scoring, gap calculation, or heatmap severity thresholds in `tools/assess_helpers.py`.
 
-**Assessment Philosophy Changes** — Any change that contradicts `csflite-assessment-philosophy.md` will be rejected. If you believe the philosophy should evolve, open a discussion issue.
+**Assessment Philosophy Changes** — Any change that contradicts `assessment_philosophy.md` will be rejected. If you believe the philosophy should evolve, open a discussion issue.
 
 ---
 
@@ -192,7 +191,7 @@ Open an issue with:
    ```bash
    poetry run black --check .
    poetry run ruff check .
-   poetry run bandit -r tools --severity-level high
+   poetry run bandit -r . -x .venv,venv,build,dist,docs,migrations --severity-level high
    poetry run pytest
    ```
 3. **Write or update tests** for any code changes

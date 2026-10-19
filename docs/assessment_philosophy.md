@@ -441,7 +441,7 @@ A cloud-only SaaS company and an on-premise healthcare provider would receive id
 
 | Gap | Framework Weight | Generic Priority |
 |-----|-----------------|-----------------|
-| Physical access controls | 1.25 | Medium |
+| Hardware inventory | 1.20 | Medium |
 | Vulnerability management | 1.50 | High |
 | Incident response plan | 1.50 | High |
 
@@ -449,7 +449,7 @@ A cloud-only SaaS company and an on-premise healthcare provider would receive id
 
 | Gap | SaaS Company | Healthcare Provider |
 |-----|--------------|-------------------|
-| Physical access controls | **Low** (no data centers) | **High** (server rooms, medical devices) |
+| Hardware inventory | **Low** (few owned devices) | **High** (server rooms, medical devices) |
 | Vulnerability management | **Critical** (public attack surface) | **Medium** (limited external exposure) |
 | Incident response plan | **High** (customer trust) | **Critical** (HIPAA requirements) |
 
@@ -577,7 +577,7 @@ Apply lower multipliers when:
 
 | Scenario | Multiplier | Example |
 |----------|-----------|---------|
-| Control addresses threat client doesn't face | 0.5x | Cloud-only + physical security gap |
+| Control addresses threat client doesn't face | 0.5x | Cloud-only + hardware inventory gap |
 | Industry-specific control, client in different industry | 0.6x | Healthcare-specific + fintech client |
 | Client has strong compensating controls | 0.7x | Limited vendors + supply chain risk |
 | Legacy concern, not current threat vector | 0.6x | Floppy disk encryption for cloud startup |
@@ -599,10 +599,10 @@ Apply lower multipliers when:
 |-----|------------|-----------|------------|----------------|
 | **ID.RA-01** Vulnerability management | 1.50 | Public SaaS = high attack surface | **1.5x** | **2.25** |
 | **PR.AA-01** IAM | 1.50 | Customer data access = critical | **1.5x** | **2.25** |
-| **DE.CM-01** Network monitoring | 1.25 | SaaS uptime = revenue | **1.5x** | **1.88** |
+| **DE.CM-01** Network monitoring | 1.20 | SaaS uptime = revenue | **1.5x** | **1.80** |
 | **GV.RM-01** Risk management | 1.50 | Standard importance | **1.0x** | **1.50** |
 | **RS.MA-01** Incident response | 1.50 | Customer trust dependency | **1.3x** | **1.95** |
-| **PR.AC-07** Physical security | 1.25 | Cloud-only, no data centers | **0.5x** | **0.63** |
+| **ID.AM-01** Hardware inventory | 1.20 | Cloud-only, no data centers | **0.5x** | **0.60** |
 
 **Top 3 Adjusted Gaps:**
 1. ID.RA-01 (2.25) - Vuln mgmt critical for public services
@@ -625,15 +625,15 @@ Apply lower multipliers when:
 | Gap | Base Score | Reasoning | Multiplier | Adjusted Score |
 |-----|------------|-----------|------------|----------------|
 | **PR.DS-01** Data-at-rest encryption | 1.00 | PHI = mandatory encryption | **2.0x** | **2.00** |
-| **GV.PO-01** Security policy | 1.25 | HIPAA compliance requirement | **1.8x** | **2.25** |
-| **PR.AC-07** Physical security | 1.25 | On-prem servers, medical devices | **1.5x** | **1.88** |
+| **GV.PO-01** Security policy | 1.50 | HIPAA compliance requirement | **1.8x** | **2.70** |
+| **ID.AM-01** Hardware inventory | 1.20 | On-prem servers, medical devices | **1.5x** | **1.80** |
 | **RS.MA-01** Incident response | 1.50 | HIPAA breach notification rules | **1.8x** | **2.70** |
 | **ID.RA-01** Vulnerability management | 1.50 | Limited external exposure | **1.0x** | **1.50** |
-| **DE.CM-01** Network monitoring | 1.25 | Internal network primary concern | **1.2x** | **1.50** |
+| **DE.CM-01** Network monitoring | 1.20 | Internal network primary concern | **1.2x** | **1.44** |
 
 **Top 3 Adjusted Gaps:**
 1. RS.MA-01 (2.70) - IR plan required for HIPAA breach response
-2. GV.PO-01 (2.25) - Security policy is HIPAA prerequisite
+2. GV.PO-01 (2.70) - Security policy is HIPAA prerequisite
 3. PR.DS-01 (2.00) - PHI encryption is regulatory mandate
 
 ---
@@ -653,15 +653,15 @@ Apply lower multipliers when:
 |-----|------------|-----------|------------|----------------|
 | **ID.RA-01** Vulnerability management | 1.50 | Public e-commerce site = target | **1.5x** | **2.25** |
 | **PR.DS-02** Data-in-transit encryption | 1.20 | Customer payment flow protection | **1.5x** | **1.80** |
-| **DE.CM-01** Network monitoring | 1.25 | Fraud detection needs | **1.4x** | **1.75** |
-| **GV.SC-01** Supply chain risk | 1.25 | Heavy reliance on SaaS vendors | **1.3x** | **1.63** |
-| **PR.AC-07** Physical security | 1.25 | Cloud-only, no physical assets | **0.5x** | **0.63** |
+| **DE.CM-01** Network monitoring | 1.20 | Fraud detection needs | **1.4x** | **1.68** |
+| **GV.SC-01** Supply chain risk | 1.00 | Heavy reliance on SaaS vendors | **1.3x** | **1.30** |
+| **ID.AM-01** Hardware inventory | 1.20 | Cloud-only, no physical assets | **0.5x** | **0.60** |
 | **ID.AM-05** Asset criticality | 1.50 | Standard importance | **1.0x** | **1.50** |
 
 **Top 3 Adjusted Gaps:**
 1. ID.RA-01 (2.25) - Public site vulnerability = revenue impact
 2. PR.DS-02 (1.80) - Customer payment data in transit
-3. DE.CM-01 (1.75) - Fraud and abuse detection
+3. DE.CM-01 (1.68) - Fraud and abuse detection
 
 ---
 
@@ -743,8 +743,8 @@ Include "Context" column showing multiplier and brief reason:
 CSFLite uses a weighted scoring model that:
 
 - Assigns each subcategory a weight based on its relative importance
-- Produces scores at the subcategory, category, and function levels
-- Generates an overall framework score
+- Produces a weighted score and gap score for each subcategory
+- Severity reflects coverage only (Yes = none, Partial = medium, No = high); weight sets priority through the gap score
 
 ### What Scores Represent
 
@@ -874,7 +874,7 @@ CSFLite works because it respects the constraints of small and mid-sized teams w
 | Field | Value |
 |-------|-------|
 | Version | 1.0 |
-| Last Updated | 2025-02-09 |
+| Last Updated | 2026-10-18 |
 | Status | Active |
 | Authoritative | Yes |
 

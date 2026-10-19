@@ -27,14 +27,13 @@ CSFLite follows a governance-first development sequence: define the framework, v
 - [x] Select Top 25 CSF subcategories with documented selection criteria
 - [x] Classify each subcategory as Full / Partial / Manual automation level
 - [x] Validate subcategory IDs against NIST CSWP 29 (CSF 2.0, February 2024)
-- [x] Document assessment philosophy (`csflite-assessment-philosophy.md`)
+- [x] Document assessment philosophy (`assessment_philosophy.md`)
 - [x] Document subcategory rationale (`docs/reference/top_25_sub_categories.md`)
-- [x] Document automation classification (`docs/reference/automatable_subcategories.md`)
+- [x] Document automation classification (`automatable_subcategories.md` — removed 2026-10-18; scanning is outside CSFLite)
 
 **Key artifacts:**
-- `csflite-assessment-philosophy.md` — Authoritative methodology document
+- `assessment_philosophy.md` — Authoritative methodology document
 - `docs/reference/top_25_sub_categories.md` — Subcategory definitions with selection rationale
-- `docs/reference/automatable_subcategories.md` — Full/Partial/Manual classification per subcategory
 
 ---
 
@@ -82,7 +81,7 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 
 **Goal:** Replace the CLI with a web application. After this phase CSFLite is not operable from a terminal.
 
-Solution design: `docs/design/phase-4-web-interface.md`. Locked decisions: `.claude/docs/csflite-spec-brief.md` §10 and §12.
+Solution design: `docs/specs/design/phase-4-web-interface.md`. Locked decisions: `docs/specs/csflite-spec-brief.md` §10 and §12.
 
 CSFLite ships as a container image the operator runs themselves. Local profile first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
 
@@ -96,7 +95,7 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - [ ] Database persistence — assessments, responses, evidence, immutable result snapshots
 - [ ] Container image and local `docker compose` profile
 - [ ] Railway deployment profile — Postgres addon, mounted volume, always-on
-- [ ] Operator password guard — refuse to bind a non-loopback address without `CSFLITE_PASSWORD`
+- [ ] Operator password guard — refuse to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`, or with `CSFLITE_ALLOWED_HOSTS` widened while `CSFLITE_PUBLIC` is not `true` (design §10)
 - [ ] CSV import for assessments already completed with the CLI
 - [ ] Retire `governance_check.py` and `config/path_config.json`
 
@@ -142,7 +141,6 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 
 **Deliverables:**
 - [ ] Publish v0.1.0 release on GitHub with release notes
-- [ ] Create GitHub issue templates
 - [ ] Create discussion templates for subcategory nominations and mapping proposals
 - [x] Add SOC 2 compliance crosswalk and readiness assessment deliverables (crosswalk, supplement questionnaire, gap analysis template, executive summary — completed 2026-03-26)
 - [x] Add HIPAA compliance crosswalk and readiness assessment deliverables (crosswalk, 9-question supplement questionnaire, gap analysis template, executive summary — completed 2026-03-30; scoped for Business Associates serving US healthcare Covered Entities)
@@ -166,6 +164,7 @@ These items are not blocking release but should be addressed before v1.0.0:
 | Item | Location | Impact | Resolution Plan |
 |------|----------|--------|-----------------|
 | `pytest` in both main and dev dependency groups | `pyproject.toml` | Should only be in dev | Move to dev-only in Phase 4 |
+| Default `governance_checklist` path points at `scans/`, which does not exist | `config/path_config.json` | CLI fails without an explicit `--governance_checklist` | Retired with `path_config.json` in Phase 4 |
 
 ---
 

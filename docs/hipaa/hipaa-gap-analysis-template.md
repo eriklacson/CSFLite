@@ -3,7 +3,7 @@
 **Organization:** [Client Name]
 **Assessment Date:** [Date]
 **Assessor:** [Name / Firm]
-**CSFLite Version:** 1.0.0
+**CSFLite Version:** 0.1.0
 **Client Type:** Business Associate (BA)
 **HIPAA Scope:** Security Rule (45 CFR §164.308, §164.310, §164.312), Organizational Requirements — BAA provisions (§164.314(a)(2)(i)), Breach Notification Rule — BA obligations (§164.400–414)
 
@@ -242,4 +242,4 @@ Rank by HIPAA impact: Required specifications with `coverage missing` status fir
 | Review date | |
 | Next assessment recommended | |
 
-*This readiness gap analysis does not constitute a HIPAA audit, HIPAA compliance certification, or a legal opinion. Prepared using CSFLite v1.0.0 — [csflite-hipaa-crosswalk.md](csflite-hipaa-crosswalk.md)*
+*This readiness gap analysis does not constitute a HIPAA audit, HIPAA compliance certification, or a legal opinion. Prepared using CSFLite v0.1.0 — [csflite-hipaa-crosswalk.md](csflite-hipaa-crosswalk.md)*

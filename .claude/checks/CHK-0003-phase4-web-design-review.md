@@ -6,7 +6,7 @@
 
 ## Scope
 
-`docs/design/phase-4-web-interface.md` against `tools/assess_helpers.py` and the golden fixtures
+`docs/specs/design/phase-4-web-interface.md` against `tools/assess_helpers.py` and the golden fixtures
 in `tests/fixtures/golden/`, before implementation starts.
 
 Prompted by the design review ahead of Phase 4 build-out. The design's acceptance criteria

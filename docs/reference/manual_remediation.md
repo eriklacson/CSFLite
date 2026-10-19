@@ -1,6 +1,6 @@
-# CSFLite Manual Questionnaire — Remediation Guidance
+# CSFLite Remediation Guidance
 
-Actionable remediation guidance for each governance-focused subcategory in the CSFLite Top 25. Use as follow-up actions after identifying gaps through the manual questionnaire.
+Actionable remediation guidance for each of the CSFLite Top 25 subcategories. Use it after the governance assessment flags a gap. The `recommendation` column in the assessment output is the one-line summary; this document expands it into steps.
 
 ---
 
@@ -115,6 +115,21 @@ Actionable remediation guidance for each governance-focused subcategory in the C
 
 ---
 
+### ID.RA-01 — Vulnerabilities are identified and recorded
+
+**Gap Indicator:** No regular vulnerability scanning, or findings not tracked
+
+**Remediation Steps:**
+1. Choose a scanner suited to your environment (external, internal, cloud, or container image)
+2. Scan internet-facing systems at least monthly and after major changes
+3. Record every finding in a vulnerability register with owner and status
+4. Validate high and critical findings to remove false positives
+5. Track each finding to closure and re-scan to confirm the fix
+
+**Quick Win:** Run one external scan of your public IPs and domains this week and log the results.
+
+---
+
 ### ID.RA-05 — Risk prioritization informs response
 
 **Gap Indicator:** Vulnerabilities remediated randomly or by CVSS alone
@@ -132,6 +147,66 @@ Actionable remediation guidance for each governance-focused subcategory in the C
 
 ## PROTECT
 
+### PR.AA-01 — Identities and credentials are managed
+
+**Gap Indicator:** Weak or shared passwords, no MFA, default credentials in use
+
+**Remediation Steps:**
+1. Publish a password policy (length over complexity; no reuse; password manager encouraged)
+2. Enforce MFA for all privileged, remote, and email/SSO access
+3. Remove or change all default credentials on devices and services
+4. Give every person and service its own account; eliminate shared logins
+5. Review accounts quarterly and disable leavers on their last day
+
+**Quick Win:** Turn on MFA for your identity provider and email admin accounts today.
+
+---
+
+### PR.AA-03 — Users and services are authenticated
+
+**Gap Indicator:** Admin panels, APIs, or file shares reachable without login
+
+**Remediation Steps:**
+1. List every administrative interface (cloud consoles, routers, CMS admin, databases)
+2. Require authentication on each one; remove anonymous and guest access
+3. Restrict admin interfaces to VPN or trusted IP ranges where possible
+4. Use service accounts or API keys with least privilege for machine-to-machine access
+5. Review authentication logs for failed or unexpected access
+
+**Quick Win:** Check that no admin panel or database port is open to the internet without a login.
+
+---
+
+### PR.DS-01 — Data-at-rest is protected
+
+**Gap Indicator:** Unencrypted laptops, databases, or storage holding sensitive data
+
+**Remediation Steps:**
+1. Identify where sensitive data is stored (endpoints, databases, cloud buckets, backups)
+2. Enable full-disk encryption on all laptops and desktops
+3. Enable encryption on databases and cloud storage
+4. Store encryption keys separately from the data, using a managed key service where available
+5. Block public access on cloud storage buckets by default
+
+**Quick Win:** Confirm full-disk encryption is on for every company laptop.
+
+---
+
+### PR.DS-02 — Data-in-transit is protected
+
+**Gap Indicator:** Plain HTTP, outdated TLS versions, or expired certificates
+
+**Remediation Steps:**
+1. Enforce TLS 1.2 or later on all websites, APIs, and mail servers
+2. Disable SSL, TLS 1.0, TLS 1.1, and weak cipher suites
+3. Redirect HTTP to HTTPS and enable HSTS
+4. Keep a certificate inventory with expiry dates; automate renewal
+5. Replace insecure protocols (FTP, Telnet) with secure alternatives (SFTP, SSH)
+
+**Quick Win:** Run a free TLS check against your public domains and fix any grade below A.
+
+---
+
 ### PR.DS-11 — Backups are created and tested
 
 **Gap Indicator:** No backups, untested backups, or all backups online
@@ -146,6 +221,21 @@ Actionable remediation guidance for each governance-focused subcategory in the C
 **Quick Win:** Verify you have at least one offline/immutable backup of critical data.
 
 **Critical:** Untested backups are not backups. Schedule restoration test this quarter.
+
+---
+
+### PR.IR-01 — Networks are protected from unauthorized access
+
+**Gap Indicator:** Flat network, undocumented firewall rules, unnecessary open ports
+
+**Remediation Steps:**
+1. Draw a simple network diagram showing zones (office, production, guest)
+2. Separate production, office, and guest networks
+3. Default-deny inbound firewall rules; allow only what is needed and document why
+4. Close unused ports and disable unnecessary services
+5. Review firewall and security group rules quarterly
+
+**Quick Win:** Put guest Wi-Fi on its own network, isolated from company systems.
 
 ---
 

@@ -55,6 +55,8 @@ CSFLite's governance assessment pipeline, scoring engine, or `data/csf_lookup.cs
   the supplement questionnaire.
 - The supplement questionnaire is currently a standalone CSV (Tier 1). Integration into the
   CSFLite scoring engine is deferred to Tier 2.
+  *Update 2026-09-13:* superseded. Supplements enter the web app in Phase 5 as collected,
+  unscored tracks (`docs/specs/design/phase-4-web-interface.md` §16). They are not scored.
 
 ## Alternatives Considered
 

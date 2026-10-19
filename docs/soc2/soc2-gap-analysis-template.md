@@ -3,7 +3,7 @@
 **Organization:** [Client Name]
 **Assessment Date:** [Date]
 **Assessor:** [Name / Firm]
-**CSFLite Version:** 1.0.0
+**CSFLite Version:** 0.1.0
 **SOC 2 Categories in Scope:** Security (CC1–CC9), Availability (A1), Confidentiality (C1)
 
 > **Readiness Assessment Notice**

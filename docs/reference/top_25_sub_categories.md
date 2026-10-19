@@ -161,19 +161,9 @@ Restoring operations after an incident. Lean selection — recovery is where tes
 
 ---
 
-## Automation Coverage
+## Scanner Evidence
 
-| Category | Fully Automatable | Partially Automatable | Manual Only |
-|----------|-------------------|----------------------|-------------|
-| GOVERN | 0 | 0 | 4 |
-| IDENTIFY | 0 | 4 | 1 |
-| PROTECT | 0 | 5 | 1 |
-| DETECT | 0 | 4 | 0 |
-| RESPOND | 0 | 0 | 4 |
-| RECOVER | 0 | 0 | 2 |
-
-**Automatable (full or partial): 13/25 (52%)**  
-**Manual governance checks: 12/25 (48%)**
+Scanning is outside CSFLite. Scanner output is still valid evidence for a "Yes". It is most useful for ID.AM-01, ID.AM-02, ID.RA-01, PR.AA-01, PR.AA-03, PR.DS-01, PR.DS-02, and PR.IR-01 (network discovery, vulnerability, authentication, and TLS scans). Every subcategory is assessed through the questionnaire.
 
 ---
 

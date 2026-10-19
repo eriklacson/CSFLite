@@ -1,7 +1,7 @@
 # Phase 4 Scope — Web Interface
 
-**Source:** `.claude/docs/csflite-spec-brief.md` §12, read against §2, §6, §7, §9, §10, §11.
-**Full design:** `docs/design/phase-4-web-interface.md` — stack, data model, routes, container, retirement sequence.
+**Source:** `docs/specs/csflite-spec-brief.md` §12, read against §2, §6, §7, §9, §10, §11.
+**Full design:** `docs/specs/design/phase-4-web-interface.md` — stack, data model, routes, container, retirement sequence.
 **Status:** Scoped, not built.
 
 This is a scope summary, not a second contract. Where this document and the spec brief disagree, the spec brief wins.
@@ -22,7 +22,7 @@ Ships as a container image the operator runs themselves — locally first, then 
 - Database persistence: assessments, responses, evidence, and an immutable result snapshot per assessment
 - CSV import for assessments already completed with the CLI
 - Container image; local `docker compose` profile and a Railway profile
-- Operator password guard when bound to a non-loopback address
+- Operator password guard when the operator declares the deployment public (`CSFLITE_PUBLIC=true`)
 
 ## Out of scope for Phase 4
 

@@ -60,5 +60,5 @@ above would materially improve readiness for a SOC 2 Security examination."]
 
 ---
 
-*Prepared using CSFLite v1.0.0 — [csflite-soc2-crosswalk.md](csflite-soc2-crosswalk.md)*
+*Prepared using CSFLite v0.1.0 — [csflite-soc2-crosswalk.md](csflite-soc2-crosswalk.md)*
 *This readiness assessment does not constitute SOC 2 compliance or certification.*

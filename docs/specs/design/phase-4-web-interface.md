@@ -431,10 +431,10 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 
 | Risk | Handling |
 |---|---|
-| Docker required on the assessor's laptop | Accepted. One artifact, and running locally exercises the deployment path |
+| Docker required on the assessor's laptop | Accepted. One artifact, and running locally exercises the same container, entrypoint, and configuration model as a hosted deploy. Storage differs — see ADR-0006 |
 | pandas image size and boot cost | Accepted. Always-on deployment pays it once |
-| Object storage credentials are now part of hosted configuration | Accepted. They are environment settings like every other, and startup guard 3 fails fast when they are incomplete |
-| DigitalOcean is a proof of concept, not a supported platform | Stated in §11. Phase 7 adds the AWS, Azure, and GCP profiles. Nothing provider-specific is written, so the move is a settings change |
+| Object storage credentials are now part of hosted configuration | Accepted. They are environment settings like every other, and the §9 storage guard fails fast when they are incomplete |
+| DigitalOcean is a proof of concept, not a supported platform | Stated in §11. Phase 7 adds the AWS, Azure, and GCP profiles. No application code branches on the provider, so each move is a settings change plus, for GCP and Azure, a storage dependency (§11) |
 | Evidence files are unencrypted at rest | Depends on the host. An operator responsibility, not solved in the application |
 | Evidence files are not scanned for malware | Operator responsibility. The application never opens or renders them, and serves them only as downloads |
 | An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container, but not sufficient on its own either (§10): `CSFLITE_ALLOWED_HOSTS` stays at the loopback names, so Django rejects any request whose Host header isn't one of them with a 400. Serving the app to anything else also requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 in §10 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD` |

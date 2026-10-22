@@ -31,8 +31,8 @@ The app refuses to start when:
 2. `CSFLITE_ALLOWED_HOSTS` is widened beyond the loopback defaults (`localhost`, `127.0.0.1`) and
    `CSFLITE_PUBLIC` is not `true`.
 
-The Railway template ships with `CSFLITE_PUBLIC=true` and the assigned domain in
-`CSFLITE_ALLOWED_HOSTS`.
+The hosted environment template ships with `CSFLITE_PUBLIC=true` and the platform's assigned
+domain in `CSFLITE_ALLOWED_HOSTS`.
 
 ## Consequences
 

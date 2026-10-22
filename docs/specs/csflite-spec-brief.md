@@ -350,7 +350,7 @@ The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable f
 
 Carries over unchanged: the 25 curated subcategories, `csf_lookup.csv` as their single source of truth, the output contracts in §3, and `assess_helpers.py`.
 
-CSFLite ships as a container image that the operator runs on their own machine or in their own cloud account. Local first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
+CSFLite ships as a container image that the operator runs on their own machine or in their own cloud account. Local first, then a self-hosted profile on DigitalOcean as a proof of concept. AWS, Azure, and GCP are Phase 7.
 
 Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements arrive in Phase 5 as collected, unscored tracks, so the crosswalk decision in §10 and the boundary in §11 do not move.
 

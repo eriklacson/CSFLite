@@ -16,6 +16,7 @@ CSFLite follows a governance-first development sequence: define the framework, v
 | 4 | Web Interface | ⬚ Not Started |
 | 5 | Release Hardening | ⬚ Not Started |
 | 6 | Community & Iteration | ⬚ Not Started |
+| 7 | Multi-Cloud Deployment Profiles | ⬚ Not Started |
 
 ---
 
@@ -83,7 +84,13 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 
 Solution design: `docs/specs/design/phase-4-web-interface.md`. Locked decisions: `docs/specs/csflite-spec-brief.md` §10 and §12.
 
-CSFLite ships as a container image the operator runs themselves. Local profile first, then a self-hosted profile on Railway. AWS, Azure, and GCP are later phases.
+CSFLite ships as a container image the operator runs themselves. The deployment sequence is three steps:
+
+1. Local container — `docker compose up` (Phase 4)
+2. DigitalOcean as a proof of concept — App Platform, Managed Postgres, Spaces (Phase 4)
+3. AWS, Azure, and GCP (Phase 7)
+
+Step 2 is a proof of concept, not a supported platform. It exists to prove the container runs unchanged off the operator's laptop, on the same three building blocks the big clouds use.
 
 Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5.
 
@@ -94,7 +101,7 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - [ ] Web-rendered report and heatmap, with CSV download
 - [ ] Database persistence — assessments, responses, evidence, immutable result snapshots
 - [ ] Container image and local `docker compose` profile
-- [ ] Railway deployment profile — Postgres addon, mounted volume, always-on
+- [ ] DigitalOcean proof-of-concept profile — App Platform, Managed Postgres, Spaces for evidence, always-on, no volume
 - [ ] Operator password guard — refuse to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`, or with `CSFLITE_ALLOWED_HOSTS` widened while `CSFLITE_PUBLIC` is not `true` (design §10)
 - [ ] CSV import for assessments already completed with the CLI
 - [ ] Retire `governance_check.py` and `config/path_config.json`
@@ -157,6 +164,25 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 
 ---
 
+## ⬚ Phase 7: Multi-Cloud Deployment Profiles
+
+**Goal:** Add AWS, Azure, and GCP deployment profiles. Step 3 of the deployment sequence in Phase 4.
+
+Nothing provider-specific is written in Phase 4 (ADR-0006), so each profile is a settings change and a deployment template, not a code change.
+
+**Deliverables:**
+- [ ] AWS profile — container service, managed Postgres, S3 for evidence
+- [ ] Azure profile — container service, managed Postgres, Blob storage. Blob does not accept the S3 API, so this needs a different `django-storages` backend
+- [ ] GCP profile — container service, managed Postgres, Cloud Storage
+- [ ] Document the cost of each profile alongside the DigitalOcean proof of concept
+
+**Acceptance criteria:**
+- Each profile runs the same image with no code change, verified by diff against the Phase 4 image
+- Evidence files are in object storage on every profile. No profile uses a mounted volume
+- The startup guards in design §10 hold on every profile
+
+---
+
 ## Known Technical Debt
 
 These items are not blocking release but should be addressed before v1.0.0:
@@ -177,4 +203,4 @@ These items are not blocking release but should be addressed before v1.0.0:
 
 ---
 
-*Last updated: 2026-08-30*
+*Last updated: 2026-10-22*

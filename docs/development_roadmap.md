@@ -91,7 +91,7 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - [ ] Move `pytest` to the dev dependency group only (`pyproject.toml`)
 - [ ] Django application skeleton, server-rendered, no build step
 - [ ] Web questionnaire form with notes and an optional evidence upload per question (replaces the checklist CSV)
-- [ ] Web-rendered report and heatmap, with CSV/JSON download
+- [ ] Web-rendered report and heatmap, with CSV download
 - [ ] Database persistence — assessments, responses, evidence, immutable result snapshots
 - [ ] Container image and local `docker compose` profile
 - [ ] Railway deployment profile — Postgres addon, mounted volume, always-on

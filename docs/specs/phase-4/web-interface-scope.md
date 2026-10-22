@@ -18,7 +18,7 @@ Ships as a container image the operator runs themselves — locally first, then 
 
 - Web questionnaire replacing the governance checklist CSV, covering the core 25 subcategories only
 - Optional per-question evidence upload, alongside the existing evidence prompt — scoring ignores it (§16 of the design doc)
-- Web-rendered report and heatmap, plus CSV/JSON download matching the §3 output contracts exactly
+- Web-rendered report and heatmap, plus CSV download matching the §3 output contracts exactly
 - Database persistence: assessments, responses, evidence, and an immutable result snapshot per assessment
 - CSV import for assessments already completed with the CLI
 - Container image; local `docker compose` profile and a Railway profile
@@ -42,7 +42,7 @@ Ships as a container image the operator runs themselves — locally first, then 
 
 - `governance_check.py`
 - `config/path_config.json`, replaced by environment variables
-- §2, §4, §5, §6, §7, and the §5 boundary rules are rewritten once Phase 4 ships
+- §2, the §3 Path Configuration contract, §4, §5, §6, §7, and the §5 boundary rules are rewritten once Phase 4 ships
 
 ## Acceptance
 

@@ -24,6 +24,7 @@ The application ships as a container image. The operator runs it on their own ma
 |---|---|
 | The 25 subcategories, `data/csf_lookup.csv` as their single source of truth — weights, recommendations, **and** the questionnaire content (`csf_function`, `csf_subcategory_name`, `question`, `evidence`) | Reference data, not application state. Previously split across `csf_lookup.csv`, the retired `heat_map_lookup.csv`, and `templates/governance_checks_template.csv`, which disagreed with each other on most display names (§8 notes the merge) |
 | `tools/assess_helpers.py` | Pure functions over dicts, no I/O, callable from a view |
+| `write_to_csv()` in `tools/global_helpers.py` | The export writer. It wrote the golden recordings, so byte-identical parity depends on it (§8). `write_to_json()` also stays. `get_paths()` does not carry over; it is deleted with `config/path_config.json` (§15) |
 | The output contracts in spec brief §3 | A form producing the same records satisfies the same contracts |
 | Golden fixtures in `tests/fixtures/golden/` | Become the parity gate between CLI and web output |
 
@@ -70,7 +71,7 @@ Django view  ── intake: form validation, evidence upload
 assess_helpers  ── scoring: unchanged, in-process call
    │
    ├──► Result snapshot (database)
-   └──► Rendered report + CSV/JSON download
+   └──► Rendered report + CSV download
 ```
 
 There is no HTTP boundary between the web layer and the scoring core, and no service abstraction. The view imports the module.
@@ -79,7 +80,18 @@ There is no HTTP boundary between the web layer and the scoring core, and no ser
 
 `generate_governance_assessement()` does not sort. It returns rows in whatever order the input list arrives in (`assess_helpers.py` — the merge preserves left-frame order). The CLI's order comes entirely from `get_governance_checklist_results()`, which sorts the intake rows descending by `csf_subcategory_id` before scoring. That sort is what the golden fixtures in `tests/fixtures/golden/` encode.
 
-The web view does not call `get_governance_checklist_results()` — it builds the checklist list from `Response` rows in the database. Before calling `generate_governance_assessement()`, the view must order those rows the same way: descending by `csf_subcategory_id`. Skipping this reproduces every score correctly but breaks the byte-identical parity check in §15, because `assessment.csv` and `heatmap.csv` row order would no longer match the recordings. Pinned by `test_generate_governance_assessement_preserves_input_order` in `tests/test_assess_helpers.py`.
+The web view does not call `get_governance_checklist_results()` — it builds the checklist list from `Response` rows in the database. Before calling `generate_governance_assessement()`, the view must order those rows the same way: descending by `csf_subcategory_id`. Skipping this reproduces every score correctly but breaks the byte-identical parity check in §15, because `governance_assessment.csv` and `governance_heatmap.csv` row order would no longer match the recordings. Pinned by `test_generate_governance_assessement_preserves_input_order` in `tests/test_assess_helpers.py`.
+
+### The view supplies the display name
+
+The checklist list the view builds must carry the same four fields the CLI's intake produced: `csf_function`, `csf_subcategory_id`, `csf_subcategory_name`, and `response`. `csf_subcategory_name` is not a column on `Response`. The view takes it from the loaded `csf_lookup.csv`, the same file the questionnaire view renders from (§8).
+
+The name is part of the scored output. `generate_governance_assessement()` selects it from the input list, not from the lookup (`assess_helpers.py:88` merges only `csf_subcategory_id`, `weight`, and `recommendation`). A row without it fails:
+
+```
+generate_governance_assessement([{csf_subcategory_id, response, notes}], lookup)
+→ KeyError: "['csf_subcategory_name'] not in index"
+```
 
 ---
 
@@ -103,7 +115,7 @@ Each question shows the subcategory ID, the subcategory name, the question text,
 
 ### Results
 
-Weighted coverage as a percentage, the weighted-point detail behind it, severity counts, coverage-by-group bars, and a gap heatmap sorted by gap descending then subcategory ID. Exports for `assessment.csv` and `heatmap.csv`. Start over.
+Weighted coverage as a percentage, the weighted-point detail behind it, severity counts, coverage-by-group bars, and a gap heatmap sorted by gap descending then subcategory ID. Exports for `governance_assessment.csv` and `governance_heatmap.csv`. Start over.
 
 ### Prototype configuration left open
 
@@ -140,7 +152,7 @@ Django is chosen because the portability seam this design needs is its default. 
 
 ## 8. Data model
 
-Reference data stays in version-controlled files and is loaded at boot. It does not move into the database. Spec brief §8 holds: reweighting a subcategory means editing `csf_lookup.csv`, nothing more.
+Reference data stays in version-controlled files and is loaded once at boot, from the path in `CSFLITE_CSF_LOOKUP` (§9). It does not move into the database. Spec brief §8 holds: reweighting a subcategory means editing `csf_lookup.csv`, with no code change. Because the file ships in the image (§12) and is read at boot, the edit takes effect on the next image build and restart.
 
 ### Reference data source for the questionnaire
 
@@ -159,11 +171,11 @@ Only assessment data is persisted.
 | `Evidence` | response, file, original_filename, uploaded_at | Zero or more per response |
 | `Result` | assessment, generated_at, assessment_json, heatmap_json, lookup_digest | Immutable snapshot |
 
-`Result` exists because scoring is deterministic from responses **and** `csf_lookup.csv`, and that file changes over time. Without a snapshot, reweighting a subcategory would silently rewrite the history of every past assessment. `lookup_digest` records which version of the reference data produced the result.
+`Result` exists because scoring is deterministic from responses **and** `csf_lookup.csv`, and that file changes over time. Without a snapshot, reweighting a subcategory would silently rewrite the history of every past assessment. `lookup_digest` records which version of the reference data produced the result. It is a SHA-256 hash of the file's bytes as loaded at boot.
 
 The model covers the core 25 only. Phase 4 adds no track field. Supplement persistence is designed with Phase 5.
 
-`Response.notes` resolves CHK-0001 #4. The spec says notes are preserved in output; the CLI's four-column projection dropped them. The web form persists them.
+`Response.notes` resolves CHK-0001 #4. Spec brief §3 says notes are kept with the assessment record from Phase 4, and are not consumed by scoring or the CSV exports. The web form persists them. The CSV exports carry no `notes` column, so byte-identical parity holds.
 
 ### Evidence files
 
@@ -183,6 +195,8 @@ Evidence upload is optional. A response can have zero or more files. The evidenc
 
 **Exports.** The CSV exports do not include evidence. The spec brief §3 contracts have no evidence column, and adding one would break byte-identical parity.
 
+The exports are written by `write_to_csv()` in `tools/global_helpers.py`, the same function that wrote the golden recordings. It uses `csv.DictWriter` with `QUOTE_MINIMAL` and takes the field names from the first row. A different writer, such as Django's `csv.writer` over an `HttpResponse`, can differ in quoting and line endings, and would fail the parity gate in a way that looks like a scoring bug. `write_to_csv()` writes to a file path, so the export view writes to a temporary file and streams that file back.
+
 ---
 
 ## 9. Configuration
@@ -194,15 +208,16 @@ All configuration comes from the environment. There is no per-environment settin
 | `CSFLITE_SECRET_KEY` | none | Required. Application refuses to start without it |
 | `CSFLITE_PUBLIC` | `false` | Declares this deployment is reachable beyond the operator's own machine. See §10 |
 | `CSFLITE_PASSWORD` | none | Required when `CSFLITE_PUBLIC` is `true`. Application refuses to start otherwise |
-| `PORT` | `8000` | Not `CSFLITE_`-prefixed — the platform convention Railway and similar hosts use. Gunicorn always binds `0.0.0.0:$PORT` inside the container; see §10 for why |
-| `DATABASE_URL` | `sqlite:///data/csflite.db` | |
+| `PORT` | `8000` | Not `CSFLITE_`-prefixed — the platform convention Railway and similar hosts use. Gunicorn binds `0.0.0.0:$PORT` inside the container; see §10 for why. The local compose file forwards `PORT` into the container and publishes the same number on the host (§11) |
+| `DATABASE_URL` | `sqlite:////data/csflite.db` | Absolute path, so the SQLite file lands in `/data` alongside the evidence directory whatever the working directory |
 | `CSFLITE_MEDIA_ROOT` | `/data/evidence` | Filesystem storage path |
-| `CSFLITE_ALLOWED_HOSTS` | `localhost` | Widening this beyond the default requires `CSFLITE_PUBLIC=true`. See §10 |
+| `CSFLITE_CSF_LOOKUP` | `/app/data/csf_lookup.csv` | Path to the reference data. The image ships this file (§12). `lookup_digest` (§8) is computed over its bytes |
+| `CSFLITE_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Loopback names only. Widening this beyond the loopback defaults requires `CSFLITE_PUBLIC=true`. See §10 |
 | `CSFLITE_DEBUG` | off | |
 
 `CSFLITE_BIND` does not exist. An earlier draft of this design used it to toggle loopback vs. public binding, and used that address to decide whether `CSFLITE_PASSWORD` was required. It doesn't work in a container: Docker's published ports reach the container through its internal network namespace, not `127.0.0.1`, so gunicorn must always bind `0.0.0.0:$PORT` inside the container just for `docker compose up` to work at all — including for the local profile. An address the app can only ever see as `0.0.0.0` carries no usable signal about whether traffic is reaching it from the operator's own machine or from the internet. §10 replaces it.
 
-`config/path_config.json` is deleted. It solved path resolution for a CLI reading fixed project paths, which no longer exists.
+`config/path_config.json` is deleted. It solved path resolution for a CLI reading fixed project paths, which no longer exists. `get_paths()` in `tools/global_helpers.py`, which reads it, is deleted with it (§15).
 
 ---
 
@@ -217,16 +232,16 @@ The application cannot tell, from inside the container, whether it is reachable 
 **Startup guards:** the application exits with an error, not a warning, when:
 
 1. `CSFLITE_PUBLIC` is `true` and `CSFLITE_PASSWORD` is unset.
-2. `CSFLITE_ALLOWED_HOSTS` is set to anything other than its default (`localhost`) and `CSFLITE_PUBLIC` is not `true`.
+2. `CSFLITE_ALLOWED_HOSTS` is widened beyond the loopback defaults (`localhost`, `127.0.0.1`) and `CSFLITE_PUBLIC` is not `true`.
 
-Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password. Guard 2 closes the gap guard 1 leaves open: ties widening `ALLOWED_HOSTS` — the one change that lets Django accept requests from anything other than `localhost` — to the same declaration, so a host can't be added to the allowlist without also turning on the password requirement. Neither guard is a substitute for the network-level control below, which the declaration is supposed to match.
+Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password. Guard 2 closes the gap guard 1 leaves open: ties widening `ALLOWED_HOSTS` — the one change that lets Django accept requests from anything other than a loopback name — to the same declaration, so a host can't be added to the allowlist without also turning on the password requirement. Neither guard is a substitute for the network-level control below, which the declaration is supposed to match.
 
 **The network-level control, concretely:**
 
-- Local profile: the shipped `docker-compose.yml` publishes the port as `127.0.0.1:${PORT:-8000}:8000` — bound to the host's loopback only. This, not the application, is what keeps a default local deployment unreachable from the network.
+- Local profile: the shipped `docker-compose.yml` publishes the port as `127.0.0.1:${PORT:-8000}:${PORT:-8000}` — bound to the host's loopback only. This, not the application, is what keeps a default local deployment unreachable from the network.
 - Railway profile: Railway assigns a public domain to any service with networking enabled — there is no loopback-only option. The Railway environment template ships with `CSFLITE_ALLOWED_HOSTS` set to that domain and `CSFLITE_PUBLIC=true`, so both the password requirement and the host allowlist are correct from the first deploy.
 
-**Why editing only the port mapping isn't enough.** An operator who edits the local compose file's port mapping to `0.0.0.0:8000:8000`, without touching any environment variable, has made the port reachable from their network — but `CSFLITE_ALLOWED_HOSTS` is still `localhost`. Django rejects any request whose `Host` header doesn't match the allowlist with a 400, before the request reaches a view. A request from a LAN or public address arrives with that address as its `Host` header, not `localhost`, and gets rejected. The application still can't detect the edited port mapping — but the mapping alone no longer produces a working, unauthenticated deployment. Making it one requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD`. See §18.
+**Why editing only the port mapping isn't enough.** An operator who edits the local compose file's port mapping to `0.0.0.0:8000:8000`, without touching any environment variable, has made the port reachable from their network — but `CSFLITE_ALLOWED_HOSTS` still holds only the loopback names. Django rejects any request whose `Host` header doesn't match the allowlist with a 400, before the request reaches a view. A request from a LAN or public address arrives with that address as its `Host` header, not a loopback name, and gets rejected. The application still can't detect the edited port mapping — but the mapping alone no longer produces a working, unauthenticated deployment. Making it one requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD`. See §18.
 
 ---
 
@@ -234,9 +249,13 @@ Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgettin
 
 ### Local — Phase 4
 
-Container. `docker compose up`, one service, a bind-mounted `./data` directory holding the SQLite file and evidence uploads. Compose rather than a long `docker run` because the volume mount and environment are the part users get wrong.
+Container. `docker compose up`, one service, the host's `./var` directory bind-mounted at `/data` in the container, holding the SQLite file and evidence uploads. `./var`, not `./data`: the repository's `data/` holds the version-controlled `csf_lookup.csv`, and client data must not land beside it. `var/` is already in `.gitignore`. Compose rather than a long `docker run` because the volume mount and environment are the part users get wrong.
 
-`ports: ["127.0.0.1:${PORT:-8000}:8000"]` in the shipped compose file, not `"8000:8000"`. This is the actual enforcement of "local means local" — see §10. `CSFLITE_PUBLIC` is left unset.
+`ports: ["127.0.0.1:${PORT:-8000}:${PORT:-8000}"]` in the shipped compose file, not `"8000:8000"`. This is the actual enforcement of "local means local" — see §10. `CSFLITE_PUBLIC` is left unset.
+
+The compose file passes `PORT` into the container environment. Gunicorn listens on the same port the host publishes, so setting `PORT=9000` moves both sides together. Left unset, both sides are 8000.
+
+Browse to `http://localhost:$PORT` or `http://127.0.0.1:$PORT` (8000 when `PORT` is unset). Both are in the default `CSFLITE_ALLOWED_HOSTS`. Any other host in the allowlist requires the public profile (§10).
 
 ### Railway — Phase 4
 
@@ -257,6 +276,7 @@ Not designed here. The commitment Phase 4 makes to keep them cheap: no cloud SDK
 - Multi-stage build on `python:3.12-slim`
 - Poetry exports to requirements in the build stage; Poetry is absent from the runtime layer
 - Runs as a non-root user
+- `data/csf_lookup.csv` is copied into the runtime image at `/app/data/csf_lookup.csv`. The local profile does not bind-mount it, so reweighting a subcategory means rebuilding the image. This keeps `lookup_digest` (§8) tied to a file that shipped with a known image
 - Gunicorn binds `0.0.0.0:$PORT` unconditionally. Network exposure is controlled entirely by the deployment profile (§10, §11), never by the bind address
 - Logs unbuffered to stdout. No log files, no rotation
 - `HEALTHCHECK` against `/healthz`
@@ -276,7 +296,7 @@ Follows the three-step flow in §6. The assessment list has no prototype screen 
 | `/assessments/new` | Scope — organisation name |
 | `/assessments/<id>/section/<n>` | One CSF Function group per screen. Responses, notes, and evidence uploads post here |
 | `/assessments/<id>/results` | Coverage, severity counts, group bars, gap heatmap |
-| `/assessments/<id>/export/<artifact>.csv` | `assessment.csv` and `heatmap.csv`, generated server-side |
+| `/assessments/<id>/export/<artifact>.csv` | `governance_assessment.csv` and `governance_heatmap.csv`, the spec brief §3 output names. Generated server-side by `write_to_csv()` (§8) |
 | `/assessments/<id>/evidence/<evidence_id>` | Download one evidence file, as an attachment |
 | `/assessments/<id>/evidence/<evidence_id>/delete` | Remove one evidence file (POST) |
 | `/assessments/import` | Upload an existing checklist CSV |
@@ -287,7 +307,9 @@ Follows the three-step flow in §6. The assessment list has no prototype screen 
 
 ## 14. Migration from CSV
 
-`/assessments/import` accepts the existing governance checklist CSV, runs it through the same validation the web form uses, and persists it as a completed assessment. Existing client work is not stranded.
+`/assessments/import` accepts the existing governance checklist CSV. It validates it with the same rules the web form enforces: every one of the 25 subcategories present exactly once, and each response present and exactly `Yes`, `Partial`, or `No`, case-sensitive, no synonyms. The scoring guards do not catch a missing or duplicated row, so the import must. It then scores it through `generate_governance_assessement()`, whose guards reject a `csf_subcategory_id` that is not in `csf_lookup.csv`. Only then is it persisted as a completed assessment. Existing client work is not stranded.
+
+The web form cannot produce an unknown subcategory ID, but an imported file can. Validating only as the form does would miss it. The unknown-ID check lives in the scoring layer, not in intake.
 
 Rejected input fails the same way it does today: the assessment is not created, and the error names the offending subcategories.
 
@@ -299,8 +321,8 @@ Ordered so that parity is provable before the CLI is deleted:
 
 1. Build the web application alongside the CLI
 2. Extend the golden test to assert web output is byte-identical to `tests/fixtures/golden/`
-3. Delete `tools/governance_check.py`, `tests/test_governance_check.py`, and `config/path_config.json`
-4. Rewrite spec brief §2, §4, §5, §6, §7, and the §5 boundary rules
+3. Delete `tools/governance_check.py`, `tests/test_governance_check.py`, and `config/path_config.json`. Delete `get_paths()` from `tools/global_helpers.py` and its `__all__` in the same step, with its two tests (`test_get_paths` in `tests/test_global_helpers.py` and in `tests/test_assess_helpers.py`). `governance_check.py` is its only production caller
+4. Rewrite spec brief §2, the §3 Path Configuration contract, §4, §5, §6, §7, and the §5 boundary rules
 5. Rewrite `docs/GETTING_STARTED.md`
 
 Step 2 gates step 3. The CLI is not deleted before the web application reproduces its output exactly.
@@ -320,7 +342,7 @@ The prototype is a design artifact. It reimplemented scoring in JavaScript to re
 | Severity derived from the weighted `assessment_score` | Derived from `score` alone | Equivalent for positive weights, but it diverges at weight 0 and reintroduces the weight coupling CHK-0002 removed |
 | Scoring and CSV generation in JavaScript | `assess_helpers.py` is the only scoring implementation | The server generates both exports. No scoring in the browser |
 | `assessment.csv` omits `recommendation` | Spec §3 includes it | Add the column |
-| No notes field | CHK-0001 #4 — notes are preserved in output | The form persists notes per response |
+| No notes field | Spec §3 — notes are kept with the assessment record from Phase 4; not consumed by scoring or the CSV exports (CHK-0001 #4) | The form persists notes per response. The CSV exports carry no `notes` column |
 
 ### Decided — 2026-10-16
 
@@ -354,11 +376,13 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - Web output is byte-identical to the golden fixtures for the same responses
 - `tools/assess_helpers.py` is unchanged, verified by diff
 - The view orders `Response` rows descending by `csf_subcategory_id` before calling `generate_governance_assessement()` — see §5
+- The view supplies `csf_subcategory_name` from the loaded reference data when it builds the checklist list, not only the row ordering — see §5
 - No scoring runs in the browser — exports are generated server-side
 - The questionnaire cannot be completed with an unanswered question, and no response is ever defaulted
 - The container starts from `docker compose up` with no host Python
 - The application refuses to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`
-- The application refuses to start with `CSFLITE_ALLOWED_HOSTS` widened beyond `localhost` and `CSFLITE_PUBLIC` not `true`
+- The application refuses to start with `CSFLITE_ALLOWED_HOSTS` widened beyond `localhost,127.0.0.1` and `CSFLITE_PUBLIC` not `true`
+- The local profile answers on both `http://localhost:$PORT` and `http://127.0.0.1:$PORT`, with `PORT` unset and set to a non-default value
 - A request whose `Host` header is not in `CSFLITE_ALLOWED_HOSTS` gets Django's 400, regardless of which address the port is published on
 - The shipped local `docker-compose.yml` publishes the port as `127.0.0.1:...`, not `0.0.0.0:...`
 - The shipped Railway environment template sets `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the assigned domain
@@ -366,6 +390,7 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - Evidence files are reachable only through the application download view. None has a public URL
 - A file with a disallowed extension or over 25 MB is rejected, and the section keeps its answers
 - Attaching or removing evidence changes no score. Golden parity holds with evidence attached
+- An import naming an unknown subcategory ID, or missing or repeating one of the 25, is rejected, and no assessment row is left behind
 
 ---
 
@@ -378,8 +403,9 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 | Railway volume is not stateless | Accepted and labelled. Removed on the move to object storage |
 | Evidence files are unencrypted at rest | Depends on the host. An operator responsibility, not solved in the application |
 | Evidence files are not scanned for malware | Operator responsibility. The application never opens or renders them, and serves them only as downloads |
-| An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container, but not sufficient on its own either (§10): `CSFLITE_ALLOWED_HOSTS` stays `localhost`, so Django rejects any request whose Host header isn't `localhost` with a 400. Serving the app to anything else also requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 in §10 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD` |
+| An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container, but not sufficient on its own either (§10): `CSFLITE_ALLOWED_HOSTS` stays at the loopback names, so Django rejects any request whose Host header isn't one of them with a 400. Serving the app to anything else also requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 in §10 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD` |
+| An operator browses the local profile by an address that is not a loopback name | Django returns 400. Only `localhost` and `127.0.0.1` work locally. Adding another host trips guard 2 and requires the public profile. Accepted: the local profile is for the operator's own machine |
 
 ---
 
-*Last updated: 2026-10-16*
+*Last updated: 2026-10-22*

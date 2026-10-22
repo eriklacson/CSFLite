@@ -28,7 +28,8 @@ The operator declares exposure with `CSFLITE_PUBLIC`.
 The app refuses to start when:
 
 1. `CSFLITE_PUBLIC=true` and `CSFLITE_PASSWORD` is unset.
-2. `CSFLITE_ALLOWED_HOSTS` is widened beyond `localhost` and `CSFLITE_PUBLIC` is not `true`.
+2. `CSFLITE_ALLOWED_HOSTS` is widened beyond the loopback defaults (`localhost`, `127.0.0.1`) and
+   `CSFLITE_PUBLIC` is not `true`.
 
 The Railway template ships with `CSFLITE_PUBLIC=true` and the assigned domain in
 `CSFLITE_ALLOWED_HOSTS`.
@@ -38,11 +39,19 @@ The Railway template ships with `CSFLITE_PUBLIC=true` and the assigned domain in
 **Positive:**
 - A default local run is not reachable from the network.
 - Editing only the compose port mapping does not produce an open deployment. Django rejects
-  requests whose `Host` is not `localhost`.
+  requests whose `Host` is not a loopback name.
+- The local profile works at both `localhost` and `127.0.0.1`. Neither widens exposure.
 
 **Negative / trade-offs:**
 - The control depends on the operator's declaration matching reality. The app cannot detect a
   mismatch.
+
+## Amendments
+
+**2026-10-22.** The default `CSFLITE_ALLOWED_HOSTS` changed from `localhost` to
+`localhost,127.0.0.1`. With `localhost` alone, `http://127.0.0.1:8000` returned 400, and allowing it
+tripped guard 2. Both are loopback names, so the control is unchanged. Source: Phase 4 spec
+consistency review, W3 (`docs/specs/phase-4/spec-consistency-remediation.md`).
 
 ## Alternatives Considered
 

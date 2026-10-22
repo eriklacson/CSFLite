@@ -1,6 +1,6 @@
 # Plan — Phase 4 Spec Consistency Remediation
 
-**Status:** Open — findings verified, no work items applied
+**Status:** Applied — W1–W10 done 2026-10-22 (see §7)
 **Date:** 2026-10-19
 **Baseline:** `master` @ `6e97166` (synced with `origin/master`)
 **Branch:** `review/minimax`
@@ -66,7 +66,7 @@ Recorded so the implementer knows what has already been checked and needs no re-
 | B8 | Medium | §14 CSV import points at the wrong validation set | design §14 |
 | B9 | Low | Export filenames diverge from the contract and golden names | design §6 / §13 |
 | B10 | Low | `DATABASE_URL` and `CSFLITE_MEDIA_ROOT` disagree about where state lives | design §9 / §11 |
-| B11 | Low | Design §16 cites the superseded wording of the `notes` contract | design §8 / §16 |
+| B11 | Low | Design §8 and §16 cite the superseded wording of the `notes` contract | design §8 / §16 |
 | C1 | Low | SOC 2 supplement template has ragged rows | `templates/soc2-supplement-questionnaire.csv` |
 
 ---
@@ -341,10 +341,12 @@ the mount target.
 **B11 — stale contract citation.** Design §16 line 323 cites the contract as "CHK-0001 #4 — notes
 are preserved in output". The spec brief §3 row now reads "kept with the assessment record from
 Phase 4; not consumed by scoring or the CSV exports", and CHK-0001 #4 is `Won't Fix` with a dated
-resolution. Design §8 line 166 ("`Response.notes` resolves CHK-0001 #4") is fine — the web form
-does persist them — but §16's quoted contract wording is superseded. Update the §16 row to the
-current §3 wording, and note that the CSV exports deliberately carry no `notes` column so
-byte-identical parity holds.
+resolution. Design §8 line 166 has the same defect. Its first clause ("`Response.notes` resolves
+CHK-0001 #4") is fine — the web form does persist them — but its next sentence says "The spec
+says notes are preserved in output", which is the superseded wording. *(Corrected 2026-10-22: the
+first pass marked line 166 as fine.)* Update both line 166 and the §16 row to the current §3
+wording, and note that the CSV exports deliberately carry no `notes` column so byte-identical
+parity holds.
 
 ---
 
@@ -420,6 +422,35 @@ After all work items, a final consistency sweep:
 4. **`git grep` for the superseded contract wording** — "preserved in output" for `notes`,
    "largest weighted gaps" for severity, "non-loopback" for the auth guard. (W9)
 5. **All three templates parse to 7 fields.** (W10)
+
+---
+
+## 7. Resolution — 2026-10-22
+
+All ten work items applied on `review/minimax`. Where a work item offered a choice, the
+recommended option was taken, except W2.
+
+| Item | What changed |
+|---|---|
+| W1 | Design §5 gains "The view supplies the display name", citing the KeyError. §17 gains the matching criterion |
+| W2 | **Alternative taken, not the recommendation.** Compose maps `${PORT:-8000}:${PORT:-8000}` and forwards `PORT` into the container. Pinning the container to 8000 would contradict §11's Railway profile, where Railway sets `PORT` and gunicorn must bind it. The forwarding option keeps "gunicorn binds `0.0.0.0:$PORT` in every profile" true. §9, §10 and §11 state it; §17 gains a criterion |
+| W3 | Default `CSFLITE_ALLOWED_HOSTS` is `localhost,127.0.0.1`. Guard 2 reworded in design §10 and ADR-0007. ADR-0007 gains a dated amendment. §11 names both URLs. §18 gains a row |
+| W4 | Design §15 step 4 and the scope doc name the §3 Path Configuration contract |
+| W5 | JSON dropped from the scope doc, roadmap, and design §5 diagram |
+| W6 | Design §2 gains a `global_helpers.py` row. §8 names `write_to_csv()` as the export writer, via a temporary file. §9 and §15 step 3 delete `get_paths()`, its `__all__` entry, and its two tests. §13 cites the writer |
+| W7 | Design §9 adds `CSFLITE_CSF_LOOKUP`. §8 defines `lookup_digest` as a SHA-256 of the file bytes. §12 ships the file in the image, not bind-mounted. §8 now says a reweight takes effect on the next build and restart |
+| W8 | Design §14 names both validation sets, and adds the completeness check (all 25 rows, no repeats) that the scoring guards do not cover. §17 gains the import criterion |
+| W9 | B9: design §6 and §13 use `governance_assessment.csv` / `governance_heatmap.csv`. B10: `DATABASE_URL` is `sqlite:////data/csflite.db`; §11 mounts the host's `./var` (already gitignored) at `/data`, so client data never lands in the tracked `data/` directory. B11: design §8 and §16 use the current §3 wording |
+| W10 | The three SOC 2 `question` fields are quoted. All three templates parse to 7 fields |
+
+Two corrections to this plan:
+
+- **B11** missed design §8 line 166 (corrected in place above).
+- **W10** says to quote the field "exactly as the other 25 rows are quoted". The other rows are
+  not quoted. Their `question` text has no commas, so they need no quotes. Only the three rows with
+  commas were quoted.
+
+`CHK-0004` still states the old `localhost` default. It is a dated review record and was not edited.
 
 ---
 

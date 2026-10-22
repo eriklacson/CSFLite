@@ -141,12 +141,12 @@ Phase 4 follows the prototype. The admin/client split stays a non-goal under §3
 | Rendering | Server-rendered templates | No build step, no `node_modules` in the image |
 | Interactivity | htmx, if needed | One script tag; not adopted until a page needs it |
 | Database | SQLite locally, Postgres hosted | Selected by `DATABASE_URL`; no code difference |
-| File storage | Django `STORAGES` | `FileSystemStorage` local, `django-storages` in cloud; one setting |
+| File storage | Django `STORAGES` | `FileSystemStorage` local, `django-storages` against S3-compatible object storage hosted. Selected by `CSFLITE_STORAGE_BACKEND` (§9) |
 | Static files | WhiteNoise | Removes the need for a CDN or a second service |
 | Server | Gunicorn | Handles SIGTERM correctly, which disposability requires |
 | Scoring | `tools/assess_helpers.py` | Unchanged |
 
-Django is chosen because the portability seam this design needs is its default. `DATABASE_URL` and `STORAGES` are the two switches that carry the application from a laptop to Railway to AWS without a code change. Building the same seam over FastAPI would mean owning it.
+Django is chosen because the portability seam this design needs is its default. `DATABASE_URL` and `STORAGES` are the two seams that carry the application from a laptop to DigitalOcean to AWS without an application code change. `DATABASE_URL` is a single setting; storage takes a backend selector and, for object storage, its bucket and credentials (§9). Building the same seam over FastAPI would mean owning it.
 
 ---
 
@@ -187,9 +187,9 @@ Evidence upload is optional. A response can have zero or more files. The evidenc
 
 **Size.** 25 MB per file. A rejected file shows a form error, and the section keeps its answers.
 
-**Storage.** Files are written through Django `STORAGES` as `<assessment id>/<random name>.<ext>`. The original filename is kept only in the `Evidence` row. It is never used to build a path.
+**Storage.** Files are written through Django `STORAGES` as `<assessment id>/<random name>.<ext>`. The local profile uses `FileSystemStorage` under `CSFLITE_MEDIA_ROOT`. The hosted profile uses `django-storages` against S3-compatible object storage, selected by `CSFLITE_STORAGE_BACKEND` (§9). No host volume holds client data in the hosted profile. The original filename is kept only in the `Evidence` row. It is never used to build a path.
 
-**Serving.** Files download only through an application view, behind the same access control as every other page. The view streams the file with `Content-Disposition: attachment`. There is no public media URL, and WhiteNoise never serves the evidence directory. The view streams from storage rather than redirecting to a storage URL, so this holds when object storage replaces the volume.
+**Serving.** Files download only through an application view, behind the same access control as every other page. The view streams the file with `Content-Disposition: attachment`. There is no public media URL, and WhiteNoise never serves the evidence directory. The view streams from storage rather than redirecting to a storage URL, so this holds for object storage as well as the local filesystem. No object storage URL, signed or otherwise, ever reaches the browser.
 
 **Removal.** Removing a file deletes the stored file as well as the row.
 
@@ -208,14 +208,21 @@ All configuration comes from the environment. There is no per-environment settin
 | `CSFLITE_SECRET_KEY` | none | Required. Application refuses to start without it |
 | `CSFLITE_PUBLIC` | `false` | Declares this deployment is reachable beyond the operator's own machine. See §10 |
 | `CSFLITE_PASSWORD` | none | Required when `CSFLITE_PUBLIC` is `true`. Application refuses to start otherwise |
-| `PORT` | `8000` | Not `CSFLITE_`-prefixed — the platform convention Railway and similar hosts use. Gunicorn binds `0.0.0.0:$PORT` inside the container; see §10 for why. The local compose file forwards `PORT` into the container and publishes the same number on the host (§11) |
+| `PORT` | `8000` | Not `CSFLITE_`-prefixed — the platform convention DigitalOcean App Platform and similar hosts use. Gunicorn binds `0.0.0.0:$PORT` inside the container; see §10 for why. The local compose file forwards `PORT` into the container and publishes the same number on the host (§11) |
 | `DATABASE_URL` | `sqlite:////data/csflite.db` | Absolute path, so the SQLite file lands in `/data` alongside the evidence directory whatever the working directory |
-| `CSFLITE_MEDIA_ROOT` | `/data/evidence` | Filesystem storage path |
+| `CSFLITE_MEDIA_ROOT` | `/data/evidence` | Filesystem storage path. Read only when `CSFLITE_STORAGE_BACKEND` is `filesystem` |
+| `CSFLITE_STORAGE_BACKEND` | `filesystem` | `filesystem` or `s3`. Selects the Django `STORAGES` backend (§7) |
+| `CSFLITE_S3_BUCKET` | none | Required when the backend is `s3` |
+| `CSFLITE_S3_ENDPOINT` | none | S3-compatible endpoint. Set for DigitalOcean Spaces; left unset for AWS S3 |
+| `CSFLITE_S3_ACCESS_KEY` | none | Required when the backend is `s3` |
+| `CSFLITE_S3_SECRET_KEY` | none | Required when the backend is `s3` |
 | `CSFLITE_CSF_LOOKUP` | `/app/data/csf_lookup.csv` | Path to the reference data. The image ships this file (§12). `lookup_digest` (§8) is computed over its bytes |
 | `CSFLITE_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Loopback names only. Widening this beyond the loopback defaults requires `CSFLITE_PUBLIC=true`. See §10 |
 | `CSFLITE_DEBUG` | off | |
 
 `CSFLITE_BIND` does not exist. An earlier draft of this design used it to toggle loopback vs. public binding, and used that address to decide whether `CSFLITE_PASSWORD` was required. It doesn't work in a container: Docker's published ports reach the container through its internal network namespace, not `127.0.0.1`, so gunicorn must always bind `0.0.0.0:$PORT` inside the container just for `docker compose up` to work at all — including for the local profile. An address the app can only ever see as `0.0.0.0` carries no usable signal about whether traffic is reaching it from the operator's own machine or from the internet. §10 replaces it.
+
+**Storage startup guard.** The application exits with an error when `CSFLITE_STORAGE_BACKEND` is `s3` and any of `CSFLITE_S3_BUCKET`, `CSFLITE_S3_ACCESS_KEY`, or `CSFLITE_S3_SECRET_KEY` is unset. A declared configuration that cannot work is a startup error, not a runtime surprise when the first evidence file is uploaded. This is a configuration guard, not one of the authentication guards in §10, and ADR-0007 does not cover it.
 
 `config/path_config.json` is deleted. It solved path resolution for a CLI reading fixed project paths, which no longer exists. `get_paths()` in `tools/global_helpers.py`, which reads it, is deleted with it (§15).
 
@@ -239,7 +246,7 @@ Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgettin
 **The network-level control, concretely:**
 
 - Local profile: the shipped `docker-compose.yml` publishes the port as `127.0.0.1:${PORT:-8000}:${PORT:-8000}` — bound to the host's loopback only. This, not the application, is what keeps a default local deployment unreachable from the network.
-- Railway profile: Railway assigns a public domain to any service with networking enabled — there is no loopback-only option. The Railway environment template ships with `CSFLITE_ALLOWED_HOSTS` set to that domain and `CSFLITE_PUBLIC=true`, so both the password requirement and the host allowlist are correct from the first deploy.
+- DigitalOcean profile: App Platform assigns a public domain to every app — there is no loopback-only option. The committed environment template ships with `CSFLITE_ALLOWED_HOSTS` set to that domain and `CSFLITE_PUBLIC=true`, so both the password requirement and the host allowlist are correct from the first deploy.
 
 **Why editing only the port mapping isn't enough.** An operator who edits the local compose file's port mapping to `0.0.0.0:8000:8000`, without touching any environment variable, has made the port reachable from their network — but `CSFLITE_ALLOWED_HOSTS` still holds only the loopback names. Django rejects any request whose `Host` header doesn't match the allowlist with a 400, before the request reaches a view. A request from a LAN or public address arrives with that address as its `Host` header, not a loopback name, and gets rejected. The application still can't detect the edited port mapping — but the mapping alone no longer produces a working, unauthenticated deployment. Making it one requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD`. See §18.
 
@@ -257,17 +264,39 @@ The compose file passes `PORT` into the container environment. Gunicorn listens 
 
 Browse to `http://localhost:$PORT` or `http://127.0.0.1:$PORT` (8000 when `PORT` is unset). Both are in the default `CSFLITE_ALLOWED_HOSTS`. Any other host in the allowlist requires the public profile (§10).
 
-### Railway — Phase 4
+### DigitalOcean — Phase 4, proof of concept
 
-Same image. A Postgres addon supplies `DATABASE_URL`. A Railway volume mounted at `/data` holds evidence files. Always-on, one instance.
+The first hosted profile, and a proof of concept rather than a supported platform. Its job is to prove the container runs unchanged off the operator's laptop, on the same three building blocks AWS, Azure, and GCP use.
 
-The volume is the single deliberate deviation from statelessness. It is accepted because Railway offers no object storage, and the alternative is adding an external provider before it is needed. The trigger for removing it is the move off Railway.
+Same image. Three managed pieces:
 
-Railway sets `PORT` itself; gunicorn binds `0.0.0.0:$PORT`, as it does in every profile (§9). The committed Railway environment template sets `CSFLITE_PUBLIC=true`, so the §10 startup guard is live by default and a deploy with no `CSFLITE_PASSWORD` set fails immediately rather than going live unauthenticated.
+| Piece | Service | Setting |
+|---|---|---|
+| Compute | App Platform, always-on, one instance | Platform sets `PORT` |
+| Database | Managed Postgres | `DATABASE_URL` |
+| Evidence files | Spaces, S3-compatible | `CSFLITE_STORAGE_BACKEND=s3` plus the `CSFLITE_S3_*` settings (§9) |
 
-### AWS, Azure, GCP — later phases
+No volume, and no host filesystem holding client data. The export view's temporary file (§8) lives on the container's own ephemeral filesystem and does not survive a restart. Spaces speaks the S3 API, so `django-storages` runs the same code path AWS S3 will. This is why DigitalOcean is the proof of concept: the seam that carries the app to the three big clouds is exercised here rather than deferred.
 
-Not designed here. The commitment Phase 4 makes to keep them cheap: no cloud SDK, no provider API, no provider-specific code. `DATABASE_URL` points at a managed Postgres, `STORAGES` points at object storage through `django-storages`, and nothing else moves.
+App Platform sets `PORT` itself; gunicorn binds `0.0.0.0:$PORT`, as it does in every profile (§9). The committed environment template sets `CSFLITE_PUBLIC=true`, so the §10 startup guards are live by default and a deploy with no `CSFLITE_PASSWORD` set fails immediately rather than going live unauthenticated.
+
+DigitalOcean has no free tier for this shape. App Platform's free tier covers static sites only, and neither Managed Postgres nor Spaces has one. Checked 2026-10-22 against third-party pricing summaries, not the official pages — confirm current prices before deploying.
+
+### AWS, Azure, GCP — Phase 7
+
+Not designed here. Owned by Phase 7 in `docs/development_roadmap.md`. The commitment Phase 4 makes to keep them cheap: no provider API is called from application code, and nothing branches on which provider it is running on. `DATABASE_URL` points at a managed Postgres, `STORAGES` points at object storage through `django-storages`, and nothing else moves.
+
+This is not a claim that the image carries no cloud SDK. `django-storages` reaches S3-compatible storage through `boto3`, so the Phase 4 image carries it (§12). The commitment is about application code, not dependencies.
+
+What each profile needs on top of the DigitalOcean settings:
+
+| Provider | Storage | Carries over |
+|---|---|---|
+| AWS | S3 | Directly. Leave `CSFLITE_S3_ENDPOINT` unset |
+| GCP | Cloud Storage | Partly. Its S3 compatibility is an interoperability mode needing HMAC keys and `CSFLITE_S3_ENDPOINT` set, or the native `django-storages` GCS backend and its dependency |
+| Azure | Blob | No. Blob does not accept the S3 API, so it needs the `django-storages` Azure backend and its dependency |
+
+None of these changes application code. GCP and Azure each add a dependency to the image, so a Phase 7 image is not byte-identical to the Phase 4 one.
 
 ---
 
@@ -281,6 +310,8 @@ Not designed here. The commitment Phase 4 makes to keep them cheap: no cloud SDK
 - Logs unbuffered to stdout. No log files, no rotation
 - `HEALTHCHECK` against `/healthz`
 - Migrations run as an explicit release command, never on application boot
+
+- `boto3` ships in the image for the hosted profile's S3-compatible storage (§8). It is a dependency, not provider-specific application code, and it is inert under the local filesystem default
 
 Known cost: pandas and numpy put roughly 100MB in the image. Accepted, because keeping `assess_helpers.py` unchanged is worth more than image size for an always-on single instance.
 
@@ -385,7 +416,9 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - The local profile answers on both `http://localhost:$PORT` and `http://127.0.0.1:$PORT`, with `PORT` unset and set to a non-default value
 - A request whose `Host` header is not in `CSFLITE_ALLOWED_HOSTS` gets Django's 400, regardless of which address the port is published on
 - The shipped local `docker-compose.yml` publishes the port as `127.0.0.1:...`, not `0.0.0.0:...`
-- The shipped Railway environment template sets `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the assigned domain
+- The shipped DigitalOcean environment template sets `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the assigned App Platform domain
+- The application refuses to start with `CSFLITE_STORAGE_BACKEND=s3` and any required `CSFLITE_S3_*` setting unset
+- The hosted profile stores evidence in object storage. No host volume holds client data
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application download view. None has a public URL
 - A file with a disallowed extension or over 25 MB is rejected, and the section keeps its answers
@@ -398,9 +431,10 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 
 | Risk | Handling |
 |---|---|
-| Docker required on the assessor's laptop | Accepted. One artifact, and running locally exercises the deployment path |
+| Docker required on the assessor's laptop | Accepted. One artifact, and running locally exercises the same container, entrypoint, and configuration model as a hosted deploy. Storage differs — see ADR-0006 |
 | pandas image size and boot cost | Accepted. Always-on deployment pays it once |
-| Railway volume is not stateless | Accepted and labelled. Removed on the move to object storage |
+| Object storage credentials are now part of hosted configuration | Accepted. They are environment settings like every other, and the §9 storage guard fails fast when they are incomplete |
+| DigitalOcean is a proof of concept, not a supported platform | Stated in §11. Phase 7 adds the AWS, Azure, and GCP profiles. No application code branches on the provider, so each move is a settings change plus, for GCP and Azure, a storage dependency (§11) |
 | Evidence files are unencrypted at rest | Depends on the host. An operator responsibility, not solved in the application |
 | Evidence files are not scanned for malware | Operator responsibility. The application never opens or renders them, and serves them only as downloads |
 | An operator edits the local compose file's port mapping to `0.0.0.0:8000:8000` without setting `CSFLITE_PUBLIC` | Not detectable from inside the container, but not sufficient on its own either (§10): `CSFLITE_ALLOWED_HOSTS` stays at the loopback names, so Django rejects any request whose Host header isn't one of them with a 400. Serving the app to anything else also requires widening `CSFLITE_ALLOWED_HOSTS`, which guard 2 in §10 ties to `CSFLITE_PUBLIC` and `CSFLITE_PASSWORD` |

@@ -12,7 +12,7 @@ This is a scope summary, not a second contract. Where this document and the spec
 
 Replace the CSFLite CLI with a web application. After Phase 4, CSFLite is not operable from a terminal.
 
-Ships as a container image the operator runs themselves — locally first, then on Railway. The operator owns the infrastructure, so client data still never leaves an environment they control. This is what resolves the §7 local-first conflict rather than deferring it (§10).
+Ships as a container image the operator runs themselves — locally first, then on DigitalOcean as a proof of concept. The operator owns the infrastructure, so client data still never leaves an environment they control. This is what resolves the §7 local-first conflict rather than deferring it (§10).
 
 ## In scope
 
@@ -21,14 +21,14 @@ Ships as a container image the operator runs themselves — locally first, then 
 - Web-rendered report and heatmap, plus CSV download matching the §3 output contracts exactly
 - Database persistence: assessments, responses, evidence, and an immutable result snapshot per assessment
 - CSV import for assessments already completed with the CLI
-- Container image; local `docker compose` profile and a Railway profile
+- Container image; local `docker compose` profile and a DigitalOcean profile (App Platform, Managed Postgres, Spaces for evidence) as a proof of concept
 - Operator password guard when the operator declares the deployment public (`CSFLITE_PUBLIC=true`)
 
 ## Out of scope for Phase 4
 
 - SOC 2 and HIPAA supplement tracks — move to Phase 5, collected and exported but not scored, so the §10 crosswalk decision and §11 boundary don't move
 - Multi-user accounts, roles, organizations, tenancy
-- AWS, Azure, GCP deployment profiles
+- AWS, Azure, GCP deployment profiles — Phase 7
 - A public or third-party API
 - Any JavaScript framework or build step
 

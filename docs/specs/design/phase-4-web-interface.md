@@ -141,12 +141,12 @@ Phase 4 follows the prototype. The admin/client split stays a non-goal under §3
 | Rendering | Server-rendered templates | No build step, no `node_modules` in the image |
 | Interactivity | htmx, if needed | One script tag; not adopted until a page needs it |
 | Database | SQLite locally, Postgres hosted | Selected by `DATABASE_URL`; no code difference |
-| File storage | Django `STORAGES` | `FileSystemStorage` local, `django-storages` in cloud; one setting |
+| File storage | Django `STORAGES` | `FileSystemStorage` local, `django-storages` against S3-compatible object storage hosted. Selected by `CSFLITE_STORAGE_BACKEND` (§9) |
 | Static files | WhiteNoise | Removes the need for a CDN or a second service |
 | Server | Gunicorn | Handles SIGTERM correctly, which disposability requires |
 | Scoring | `tools/assess_helpers.py` | Unchanged |
 
-Django is chosen because the portability seam this design needs is its default. `DATABASE_URL` and `STORAGES` are the two switches that carry the application from a laptop to DigitalOcean to AWS without a code change. Building the same seam over FastAPI would mean owning it.
+Django is chosen because the portability seam this design needs is its default. `DATABASE_URL` and `STORAGES` are the two seams that carry the application from a laptop to DigitalOcean to AWS without an application code change. `DATABASE_URL` is a single setting; storage takes a backend selector and, for object storage, its bucket and credentials (§9). Building the same seam over FastAPI would mean owning it.
 
 ---
 
@@ -222,6 +222,8 @@ All configuration comes from the environment. There is no per-environment settin
 
 `CSFLITE_BIND` does not exist. An earlier draft of this design used it to toggle loopback vs. public binding, and used that address to decide whether `CSFLITE_PASSWORD` was required. It doesn't work in a container: Docker's published ports reach the container through its internal network namespace, not `127.0.0.1`, so gunicorn must always bind `0.0.0.0:$PORT` inside the container just for `docker compose up` to work at all — including for the local profile. An address the app can only ever see as `0.0.0.0` carries no usable signal about whether traffic is reaching it from the operator's own machine or from the internet. §10 replaces it.
 
+**Storage startup guard.** The application exits with an error when `CSFLITE_STORAGE_BACKEND` is `s3` and any of `CSFLITE_S3_BUCKET`, `CSFLITE_S3_ACCESS_KEY`, or `CSFLITE_S3_SECRET_KEY` is unset. A declared configuration that cannot work is a startup error, not a runtime surprise when the first evidence file is uploaded. This is a configuration guard, not one of the authentication guards in §10, and ADR-0007 does not cover it.
+
 `config/path_config.json` is deleted. It solved path resolution for a CLI reading fixed project paths, which no longer exists. `get_paths()` in `tools/global_helpers.py`, which reads it, is deleted with it (§15).
 
 ---
@@ -238,9 +240,8 @@ The application cannot tell, from inside the container, whether it is reachable 
 
 1. `CSFLITE_PUBLIC` is `true` and `CSFLITE_PASSWORD` is unset.
 2. `CSFLITE_ALLOWED_HOSTS` is widened beyond the loopback defaults (`localhost`, `127.0.0.1`) and `CSFLITE_PUBLIC` is not `true`.
-3. `CSFLITE_STORAGE_BACKEND` is `s3` and any of `CSFLITE_S3_BUCKET`, `CSFLITE_S3_ACCESS_KEY`, or `CSFLITE_S3_SECRET_KEY` is unset.
 
-Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password. Guard 2 closes the gap guard 1 leaves open: ties widening `ALLOWED_HOSTS` — the one change that lets Django accept requests from anything other than a loopback name — to the same declaration, so a host can't be added to the allowlist without also turning on the password requirement. Guard 3 is the same shape as guard 1: a declared configuration that cannot work is a startup error, not a runtime surprise when the first evidence file is uploaded. Neither host guard is a substitute for the network-level control below, which the declaration is supposed to match.
+Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgetting the password. Guard 2 closes the gap guard 1 leaves open: ties widening `ALLOWED_HOSTS` — the one change that lets Django accept requests from anything other than a loopback name — to the same declaration, so a host can't be added to the allowlist without also turning on the password requirement. Neither guard is a substitute for the network-level control below, which the declaration is supposed to match.
 
 **The network-level control, concretely:**
 
@@ -275,7 +276,7 @@ Same image. Three managed pieces:
 | Database | Managed Postgres | `DATABASE_URL` |
 | Evidence files | Spaces, S3-compatible | `CSFLITE_STORAGE_BACKEND=s3` plus the `CSFLITE_S3_*` settings (§9) |
 
-No volume, and no host filesystem holding client data. Spaces speaks the S3 API, so `django-storages` runs the same code path AWS S3 will. This is why DigitalOcean is the proof of concept: the seam that carries the app to the three big clouds is exercised here rather than deferred.
+No volume, and no host filesystem holding client data. The export view's temporary file (§8) lives on the container's own ephemeral filesystem and does not survive a restart. Spaces speaks the S3 API, so `django-storages` runs the same code path AWS S3 will. This is why DigitalOcean is the proof of concept: the seam that carries the app to the three big clouds is exercised here rather than deferred.
 
 App Platform sets `PORT` itself; gunicorn binds `0.0.0.0:$PORT`, as it does in every profile (§9). The committed environment template sets `CSFLITE_PUBLIC=true`, so the §10 startup guards are live by default and a deploy with no `CSFLITE_PASSWORD` set fails immediately rather than going live unauthenticated.
 
@@ -283,9 +284,19 @@ DigitalOcean has no free tier for this shape. App Platform's free tier covers st
 
 ### AWS, Azure, GCP — Phase 7
 
-Not designed here. Owned by Phase 7 in `docs/development_roadmap.md`. The commitment Phase 4 makes to keep them cheap: no cloud SDK, no provider API, no provider-specific code. `DATABASE_URL` points at a managed Postgres, `STORAGES` points at object storage through `django-storages`, and nothing else moves.
+Not designed here. Owned by Phase 7 in `docs/development_roadmap.md`. The commitment Phase 4 makes to keep them cheap: no provider API is called from application code, and nothing branches on which provider it is running on. `DATABASE_URL` points at a managed Postgres, `STORAGES` points at object storage through `django-storages`, and nothing else moves.
 
-AWS and GCP storage accept the S3 API, so the DigitalOcean profile's storage settings carry over. Azure Blob does not, and needs a different `django-storages` backend. That is still a settings change, not a code change.
+This is not a claim that the image carries no cloud SDK. `django-storages` reaches S3-compatible storage through `boto3`, so the Phase 4 image carries it (§12). The commitment is about application code, not dependencies.
+
+What each profile needs on top of the DigitalOcean settings:
+
+| Provider | Storage | Carries over |
+|---|---|---|
+| AWS | S3 | Directly. Leave `CSFLITE_S3_ENDPOINT` unset |
+| GCP | Cloud Storage | Partly. Its S3 compatibility is an interoperability mode needing HMAC keys and `CSFLITE_S3_ENDPOINT` set, or the native `django-storages` GCS backend and its dependency |
+| Azure | Blob | No. Blob does not accept the S3 API, so it needs the `django-storages` Azure backend and its dependency |
+
+None of these changes application code. GCP and Azure each add a dependency to the image, so a Phase 7 image is not byte-identical to the Phase 4 one.
 
 ---
 
@@ -299,6 +310,8 @@ AWS and GCP storage accept the S3 API, so the DigitalOcean profile's storage set
 - Logs unbuffered to stdout. No log files, no rotation
 - `HEALTHCHECK` against `/healthz`
 - Migrations run as an explicit release command, never on application boot
+
+- `boto3` ships in the image for the hosted profile's S3-compatible storage (§8). It is a dependency, not provider-specific application code, and it is inert under the local filesystem default
 
 Known cost: pandas and numpy put roughly 100MB in the image. Accepted, because keeping `assess_helpers.py` unchanged is worth more than image size for an always-on single instance.
 

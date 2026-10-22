@@ -328,7 +328,7 @@ Each row links to its ADR in `adr/`. Decisions made after this table was written
 | Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. | [ADR-0005](adr/ADR-0005-web-application-replaces-cli.md) |
 | Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds client data, which resolves the §7 local-first conflict rather than deferring it. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
 | Cloud-native scope | Portable and operable, not elastic | pandas import cost rules out scale-to-zero, and a single operator generates no load. Recorded so the application is not later "fixed" into a serverless deployment. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
-| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same path as the hosted deployment. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
+| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same container, entrypoint, and configuration model as the hosted deployment. Storage differs: local writes evidence to the filesystem, hosted to object storage. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
 | Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. | — (tooling) |
 ---
 

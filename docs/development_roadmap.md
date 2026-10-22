@@ -103,6 +103,7 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - [ ] Container image and local `docker compose` profile
 - [ ] DigitalOcean proof-of-concept profile — App Platform, Managed Postgres, Spaces for evidence, always-on, no volume
 - [ ] Operator password guard — refuse to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`, or with `CSFLITE_ALLOWED_HOSTS` widened while `CSFLITE_PUBLIC` is not `true` (design §10)
+- [ ] Storage configuration guard — refuse to start with the `s3` backend declared and its bucket or credentials unset (design §9)
 - [ ] CSV import for assessments already completed with the CLI
 - [ ] Retire `governance_check.py` and `config/path_config.json`
 
@@ -113,6 +114,8 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - The container starts from `docker compose up` with no host Python
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application, never by a public URL
+- The application refuses to start with the `s3` storage backend declared and its bucket or credentials unset
+- The DigitalOcean profile stores evidence in object storage, with no mounted volume
 - Attaching evidence changes no score
 
 ---
@@ -168,18 +171,18 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 
 **Goal:** Add AWS, Azure, and GCP deployment profiles. Step 3 of the deployment sequence in Phase 4.
 
-Nothing provider-specific is written in Phase 4 (ADR-0006), so each profile is a settings change and a deployment template, not a code change.
+No application code branches on which provider it runs on (ADR-0006), so each profile is a settings change and a deployment template. GCP and Azure each add a storage dependency to the image, so they are not a zero-change build.
 
 **Deliverables:**
 - [ ] AWS profile — container service, managed Postgres, S3 for evidence
 - [ ] Azure profile — container service, managed Postgres, Blob storage. Blob does not accept the S3 API, so this needs a different `django-storages` backend
-- [ ] GCP profile — container service, managed Postgres, Cloud Storage
+- [ ] GCP profile — container service, managed Postgres, Cloud Storage. Its S3 compatibility needs HMAC keys and an endpoint override, or the native `django-storages` GCS backend
 - [ ] Document the cost of each profile alongside the DigitalOcean proof of concept
 
 **Acceptance criteria:**
-- Each profile runs the same image with no code change, verified by diff against the Phase 4 image
-- Evidence files are in object storage on every profile. No profile uses a mounted volume
-- The startup guards in design §10 hold on every profile
+- No application code changes for any profile, verified by diff against Phase 4. A profile may add a storage backend dependency to the image
+- Every hosted profile stores evidence in object storage, with no mounted volume. The local profile keeps its filesystem storage
+- The authentication guards in design §10 and the storage guard in §9 hold on every profile
 
 ---
 

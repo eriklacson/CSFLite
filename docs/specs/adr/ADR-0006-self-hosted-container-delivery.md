@@ -33,9 +33,14 @@ no load.
 
 **Positive:**
 - Client data stays in the operator's environment. This resolves the local-first constraint.
-- Running locally exercises the same path as a hosted deployment.
+- Running locally exercises the same container, entrypoint, configuration model, and startup
+  guards as a hosted deployment.
 
 **Negative / trade-offs:**
+- Local and hosted no longer share a storage path. Local writes evidence to the filesystem;
+  hosted writes it to object storage. Under the retired Railway profile both used a mounted
+  volume. The object-storage path is exercised by the DigitalOcean proof of concept, not by a
+  local run, which is part of why that profile exists.
 - Docker is required on the assessor's machine.
 - The image is about 100 MB larger because of pandas and numpy.
 

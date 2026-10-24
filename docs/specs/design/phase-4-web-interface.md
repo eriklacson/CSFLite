@@ -127,9 +127,9 @@ Weighted coverage as a percentage, the weighted-point detail behind it, severity
 
 ### Explored and not taken
 
-`Wireframes.dc.html` explored an admin workspace listing multiple client engagements, with a "create + send link" flow to a separate client-facing questionnaire. The built prototype did not take it and is labelled single tenant.
+`Wireframes.dc.html` explored an admin workspace listing multiple organisation engagements, with a "create + send link" flow to a separate organisation-facing questionnaire. The built prototype did not take it and is labelled single tenant.
 
-Phase 4 follows the prototype. The admin/client split stays a non-goal under §3, because it needs accounts, invitation links, and a second trust boundary — none of which a single operator assessing their own clients requires.
+Phase 4 follows the prototype. The admin/organisation split stays a non-goal under §3, because it needs accounts, invitation links, and a second trust boundary — none of which a single operator assessing their own organisations requires.
 
 ---
 
@@ -187,7 +187,7 @@ Evidence upload is optional. A response can have zero or more files. The evidenc
 
 **Size.** 25 MB per file. A rejected file shows a form error, and the section keeps its answers.
 
-**Storage.** Files are written through Django `STORAGES` as `<assessment id>/<random name>.<ext>`. The local profile uses `FileSystemStorage` under `CSFLITE_MEDIA_ROOT`. The hosted profile uses `django-storages` against S3-compatible object storage, selected by `CSFLITE_STORAGE_BACKEND` (§9). No host volume holds client data in the hosted profile. The original filename is kept only in the `Evidence` row. It is never used to build a path.
+**Storage.** Files are written through Django `STORAGES` as `<assessment id>/<random name>.<ext>`. The local profile uses `FileSystemStorage` under `CSFLITE_MEDIA_ROOT`. The hosted profile uses `django-storages` against S3-compatible object storage, selected by `CSFLITE_STORAGE_BACKEND` (§9). No host volume holds organisation data in the hosted profile. The original filename is kept only in the `Evidence` row. It is never used to build a path.
 
 **Serving.** Files download only through an application view, behind the same access control as every other page. The view streams the file with `Content-Disposition: attachment`. There is no public media URL, and WhiteNoise never serves the evidence directory. The view streams from storage rather than redirecting to a storage URL, so this holds for object storage as well as the local filesystem. No object storage URL, signed or otherwise, ever reaches the browser.
 
@@ -256,7 +256,7 @@ Guard 1 is a backstop against deploying with `CSFLITE_PUBLIC=true` and forgettin
 
 ### Local — Phase 4
 
-Container. `docker compose up`, one service, the host's `./var` directory bind-mounted at `/data` in the container, holding the SQLite file and evidence uploads. `./var`, not `./data`: the repository's `data/` holds the version-controlled `csf_lookup.csv`, and client data must not land beside it. `var/` is already in `.gitignore`. Compose rather than a long `docker run` because the volume mount and environment are the part users get wrong.
+Container. `docker compose up`, one service, the host's `./var` directory bind-mounted at `/data` in the container, holding the SQLite file and evidence uploads. `./var`, not `./data`: the repository's `data/` holds the version-controlled `csf_lookup.csv`, and organisation data must not land beside it. `var/` is already in `.gitignore`. Compose rather than a long `docker run` because the volume mount and environment are the part users get wrong.
 
 `ports: ["127.0.0.1:${PORT:-8000}:${PORT:-8000}"]` in the shipped compose file, not `"8000:8000"`. This is the actual enforcement of "local means local" — see §10. `CSFLITE_PUBLIC` is left unset.
 
@@ -276,7 +276,7 @@ Same image. Three managed pieces:
 | Database | Managed Postgres | `DATABASE_URL` |
 | Evidence files | Spaces, S3-compatible | `CSFLITE_STORAGE_BACKEND=s3` plus the `CSFLITE_S3_*` settings (§9) |
 
-No volume, and no host filesystem holding client data. The export view's temporary file (§8) lives on the container's own ephemeral filesystem and does not survive a restart. Spaces speaks the S3 API, so `django-storages` runs the same code path AWS S3 will. This is why DigitalOcean is the proof of concept: the seam that carries the app to the three big clouds is exercised here rather than deferred.
+No volume, and no host filesystem holding organisation data. The export view's temporary file (§8) lives on the container's own ephemeral filesystem and does not survive a restart. Spaces speaks the S3 API, so `django-storages` runs the same code path AWS S3 will. This is why DigitalOcean is the proof of concept: the seam that carries the app to the three big clouds is exercised here rather than deferred.
 
 App Platform sets `PORT` itself; gunicorn binds `0.0.0.0:$PORT`, as it does in every profile (§9). The committed environment template sets `CSFLITE_PUBLIC=true`, so the §10 startup guards are live by default and a deploy with no `CSFLITE_PASSWORD` set fails immediately rather than going live unauthenticated.
 
@@ -338,7 +338,7 @@ Follows the three-step flow in §6. The assessment list has no prototype screen 
 
 ## 14. Migration from CSV
 
-`/assessments/import` accepts the existing governance checklist CSV. It validates it with the same rules the web form enforces: every one of the 25 subcategories present exactly once, and each response present and exactly `Yes`, `Partial`, or `No`, case-sensitive, no synonyms. The scoring guards do not catch a missing or duplicated row, so the import must. It then scores it through `generate_governance_assessement()`, whose guards reject a `csf_subcategory_id` that is not in `csf_lookup.csv`. Only then is it persisted as a completed assessment. Existing client work is not stranded.
+`/assessments/import` accepts the existing governance checklist CSV. It validates it with the same rules the web form enforces: every one of the 25 subcategories present exactly once, and each response present and exactly `Yes`, `Partial`, or `No`, case-sensitive, no synonyms. The scoring guards do not catch a missing or duplicated row, so the import must. It then scores it through `generate_governance_assessement()`, whose guards reject a `csf_subcategory_id` that is not in `csf_lookup.csv`. Only then is it persisted as a completed assessment. Existing organisation work is not stranded.
 
 The web form cannot produce an unknown subcategory ID, but an imported file can. Validating only as the form does would miss it. The unknown-ID check lives in the scoring layer, not in intake.
 
@@ -387,7 +387,7 @@ These are not the same feature, and both are defensible. The prompt is what make
 
 **Supplement tracks.** The prototype scores SOC 2 (28 questions) and HIPAA (9 questions) as selectable tracks alongside the core 25, weighting every supplement question at a flat 1.0.
 
-This conflicts with two locked decisions. Spec §10 stores crosswalks as reference documents "not consumed by the scoring engine". Spec §11 assigns readiness assessments to client delivery engagements rather than to CSFLite. Scoring the supplements moves both.
+This conflicts with two locked decisions. Spec §10 stores crosswalks as reference documents "not consumed by the scoring engine". Spec §11 assigns readiness assessments to organisation delivery engagements rather than to CSFLite. Scoring the supplements moves both.
 
 It also has no reference data behind it. `csf_lookup.csv` holds weights for the core 25 only, so the flat 1.0 is invented at render time rather than derived, which contradicts spec §8.
 
@@ -418,7 +418,7 @@ Decision: option 1 for Phase 4, and option 2 in Phase 5. The supplements are not
 - The shipped local `docker-compose.yml` publishes the port as `127.0.0.1:...`, not `0.0.0.0:...`
 - The shipped DigitalOcean environment template sets `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the assigned App Platform domain
 - The application refuses to start with `CSFLITE_STORAGE_BACKEND=s3` and any required `CSFLITE_S3_*` setting unset
-- The hosted profile stores evidence in object storage. No host volume holds client data
+- The hosted profile stores evidence in object storage. No host volume holds organisation data
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application download view. None has a public URL
 - A file with a disallowed extension or over 25 MB is rejected, and the section keeps its answers

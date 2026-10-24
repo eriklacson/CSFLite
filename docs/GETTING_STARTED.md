@@ -242,7 +242,7 @@ Open [`docs/soc2/soc2-gap-analysis-template.md`](soc2/soc2-gap-analysis-template
 
 ### Step 5: Complete the Executive Summary
 
-Open [`docs/soc2/soc2-executive-summary-template.md`](soc2/soc2-executive-summary-template.md) and fill in the overall coverage score, criteria breakdown counts, and the top 3 priority remediation items identified in the gap analysis. This is the primary client-facing deliverable.
+Open [`docs/soc2/soc2-executive-summary-template.md`](soc2/soc2-executive-summary-template.md) and fill in the overall coverage score, criteria breakdown counts, and the top 3 priority remediation items identified in the gap analysis. This is the primary organisation-facing deliverable.
 
 ---
 
@@ -294,7 +294,7 @@ Open [`docs/hipaa/hipaa-gap-analysis-template.md`](hipaa/hipaa-gap-analysis-temp
 
 ### Step 5: Complete the Executive Summary
 
-Open [`docs/hipaa/hipaa-executive-summary-template.md`](hipaa/hipaa-executive-summary-template.md) and fill in the overall coverage score, HIPAA standards breakdown counts, and the top 3 priority remediation items. This is the primary client-facing deliverable and is limited to one page.
+Open [`docs/hipaa/hipaa-executive-summary-template.md`](hipaa/hipaa-executive-summary-template.md) and fill in the overall coverage score, HIPAA standards breakdown counts, and the top 3 priority remediation items. This is the primary organisation-facing deliverable and is limited to one page.
 
 ---
 

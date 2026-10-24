@@ -15,3 +15,4 @@ found. A finding settled by a decision links to the ADR.
 | [0006](ADR-0006-self-hosted-container-delivery.md) | Self-hosted container, portable not elastic |
 | [0007](ADR-0007-operator-declared-public-mode.md) | Password required only when declared public |
 | [0008](ADR-0008-supplements-collected-not-scored.md) | Supplements collected, not scored |
+| [0009](ADR-0009-tenant-ready-data-model.md) | Single-tenant MVP on a tenant-ready data model |

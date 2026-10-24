@@ -18,7 +18,7 @@ source: docs/specs/design/phase-4-web-interface.md
 
 ## 1. Purpose
 
-CSFLite is a self-hosted web application that records whether each of 25 NIST CSF v2.0 controls exists at a client organisation, for the single operator who assesses their own clients. It measures coverage, not maturity. Evidence: ADR-0002, ADR-0003, ADR-0005.
+CSFLite is a self-hosted web application that records whether each of 25 NIST CSF v2.0 controls exists in an organisation, for the single operator who does the assessment. It measures coverage, not maturity. Evidence: ADR-0002, ADR-0003, ADR-0005.
 
 ---
 
@@ -29,7 +29,7 @@ CSFLite is a self-hosted web application that records whether each of 25 NIST CS
 **Talks to.**
 
 - Local profile: a SQLite file and the host filesystem, both mounted into the container.
-- Hosted profile: DigitalOcean Managed PostgreSQL and DigitalOcean Spaces, reached through `boto3` (design §11, ADR-0006).
+- Hosted profile: DigitalOcean Managed PostgreSQL and DigitalOcean Spaces, reached through `boto3` (design §11, ADR-0006). (As proof of concept)
 - Later profiles: AWS S3, Azure Blob and Google Cloud Storage (Phase 7).
 
 **Not responsible for.**
@@ -84,7 +84,7 @@ TB-1 differs by profile, and that is the main finding: the local profile has no 
 
 | ID | Boundary | From → To | Enforcement mechanism | Enforcement location | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| TB-1 | Unauthenticated → authenticated | Anyone → operator | Local: no login. The compose file publishes `127.0.0.1` only, and `CSFLITE_ALLOWED_HOSTS` holds loopback names. Hosted: one password and a Django session cookie | Local: compose file and Django Host check. Hosted: the application, with the exact point UNSPECIFIED | PARTIAL | design §10, ADR-0007 |
+| TB-1 | Unauthenticated → authenticated | Anyone → operator | Local: no login. The compose file publishes `127.0.0.1` only, and `CSFLITE_ALLOWED_HOSTS` holds loopback names. Hosted: one password and a Django session cookie | Local: compose file and Django Host check. Hosted: middleware, for now (OI-2) | PARTIAL | design §10, ADR-0007 |
 | TB-2 | Tenant A → tenant B | n/a | n/a. One operator, no tenants | n/a | CONFIRMED | design §3 |
 | TB-3 | User role → elevated action | n/a | n/a. No user table, no roles | n/a | CONFIRMED | design §10, ADR-0007 |
 | TB-4 | Application → external service | App → database, app → object storage | Credentials from environment. The app refuses to start if the S3 backend is chosen and its bucket or keys are missing | Application startup (settings) | PARTIAL | design §9 |
@@ -132,17 +132,18 @@ In design mode this section is the contract. A coding agent reads it before chan
 | AD-9 | Django, server-rendered, no JavaScript framework and no build step | The portability seam this design needs is Django's default | CONFIRMED | design §7 |
 | AD-10 | Exports are written by `write_to_csv()` and must match the golden fixtures byte for byte. That match gates deleting the CLI | A different CSV writer can change quoting and line endings | CONFIRMED | design §8, §15 |
 | AD-11 | Every dependency is pinned to an exact version. Runtime packages are held in poetry.lock. The container base image is pinned to a patch version. Poetry and the CI tools are pinned, never latest. Django stays on the 5.2 LTS line | A security assessment tool must build the same way twice. 5.2 LTS gets security fixes to April 2028 and changes least before 6.2 LTS arrives in April 2027 | CONFIRMED | This document. Not yet in an ADR |
+| AD-12 | The hosted login is enforced in middleware, for now | Closes OI-2 for now. Reopen it only if it blocks | CONFIRMED | This document, 2026-10-24. Not yet in an ADR |
 
 ---
 
 ## 8. Open items
 
-Fourteen open gaps, carried forward from sections 3 to 6. OI-1 is resolved by the pins in section 3. OI-2 to OI-7 and OI-10 are security-relevant. The Owner column is a placeholder for you to assign.
+Thirteen open gaps, carried forward from sections 3 to 6. OI-1 is resolved by the pins in section 3, and OI-2 is decided for now (AD-12). OI-3 to OI-7 and OI-10 are security-relevant. The Owner column is a placeholder for you to assign. Open items are dealt with just before they block.
 
 | ID | Item | Why unresolved | Owner | Blocks |
 | --- | --- | --- | --- | --- |
 | OI-1 | RESOLVED 2026-10-24. Versions of Django, PostgreSQL, Gunicorn, WhiteNoise, htmx and `django-storages` are now pinned in section 3 | Pinned by AD-11 | Architect | none |
-| OI-2 | Where the hosted login is checked: middleware or each view | Design §10 says a session cookie but not the enforcement point | Architect | TB-1 |
+| OI-2 | Where the hosted login is checked. Decided for now: in middleware (AD-12) | Design §10 says a session cookie but not the enforcement point. Middleware chosen 2026-10-24. Reopen only if it blocks | Architect | TB-1 |
 | OI-3 | How the operator password is stored and compared | Design §9 says it comes from the environment, not how it is checked | Architect | TB-1 |
 | OI-4 | Session cookie flags (`Secure`, `HttpOnly`, `SameSite`) and session lifetime | Not specified. A password on a public domain needs them stated | Architect | TB-1, hosted profile |
 | OI-5 | Rate limiting on the login route | Not specified. One password on a public domain is open to guessing | Architect | TB-1, hosted profile |

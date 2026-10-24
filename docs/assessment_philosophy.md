@@ -256,7 +256,7 @@ This is the most critical quality control mechanism in CSFLite assessments. With
 
 ### Scoring Decision Framework
 
-| Client Statement | Evidence Provided | Score | Rationale |
+| Organization Statement | Evidence Provided | Score | Rationale |
 |-----------------|-------------------|-------|-----------|
 | "We do backups" | Last 3 restoration test reports | **Yes** | Control exists, enforced, and tested |
 | "We do backups" | Backup schedule documentation only | **Partial** | Control exists but not validated |
@@ -367,7 +367,7 @@ Acceptable evidence must meet three criteria:
 
 ### When Evidence is Unavailable
 
-If a client cannot provide evidence:
+If an organization cannot provide evidence:
 
 **Scenario 1: Control is documented but not enforced**
 - **Score:** Partial
@@ -391,14 +391,14 @@ If a client cannot provide evidence:
 
 ### Assessor Guidance
 
-**When a client claims a control exists:**
+**When an organization claims a control exists:**
 
 1. **Request specific evidence:** "Can you show me [artifact]?"
 2. **Verify currency:** "When was this last updated/tested?"
 3. **Check scope:** "Does this cover all [systems/users/locations]?"
 4. **Confirm enforcement:** "How do you verify this is being followed?"
 
-**If client hesitates or cannot provide evidence:**
+**If the organization hesitates or cannot provide evidence:**
 
 - Explain that "Yes" requires proof, not trust
 - Offer to score as "Partial" if documentation exists
@@ -419,7 +419,7 @@ Before finalizing any assessment, verify:
 - [ ] Evidence meets currency standards (tested controls within 12 months)
 - [ ] Evidence is specific (not generic templates)
 - [ ] Partial/No scores have clear gap explanations
-- [ ] No scores are based solely on client assertions
+- [ ] No scores are based solely on organization assertions
 
 ---
 
@@ -427,7 +427,7 @@ Before finalizing any assessment, verify:
 
 ### Beyond Framework Weights
 
-CSFLite framework weights (stored in `data/csf_lookup.csv`) reflect general importance across organizations. However, **gap priority must be adjusted for each client's specific risk profile.**
+CSFLite framework weights (stored in `data/csf_lookup.csv`) reflect general importance across organizations. However, **gap priority must be adjusted for each organization's specific risk profile.**
 
 Framework weights answer: "Which controls matter most in general?"
 
@@ -558,18 +558,18 @@ Apply higher multipliers when:
 
 | Scenario | Multiplier | Example |
 |----------|-----------|---------|
-| Control protects high-sensitivity data client handles | 1.5x | B2B SaaS handling customer PII + IAM gap |
+| Control protects high-sensitivity data the organization handles | 1.5x | B2B SaaS handling customer PII + IAM gap |
 | Gap directly blocks stated compliance requirement | 1.8x - 2.0x | SOC 2 deadline + governance gap |
-| Client has public-facing services (attack surface) | 1.5x | SaaS product + vulnerability management gap |
-| Client operates in regulated industry | 1.5x | Healthcare + data protection gap |
-| Client has experienced related incidents | 1.8x | Past breach + monitoring gap |
+| Organization has public-facing services (attack surface) | 1.5x | SaaS product + vulnerability management gap |
+| Organization operates in regulated industry | 1.5x | Healthcare + data protection gap |
+| Organization has experienced related incidents | 1.8x | Past breach + monitoring gap |
 
 #### Normal Priority (1.0x)
 
 Apply standard multiplier when:
 - Standard applicability
 - No specific heightened risk factors
-- General importance but not client-specific urgency
+- General importance but not organization-specific urgency
 
 #### Decrease Priority (0.5x - 0.75x)
 
@@ -577,16 +577,16 @@ Apply lower multipliers when:
 
 | Scenario | Multiplier | Example |
 |----------|-----------|---------|
-| Control addresses threat client doesn't face | 0.5x | Cloud-only + hardware inventory gap |
-| Industry-specific control, client in different industry | 0.6x | Healthcare-specific + fintech client |
-| Client has strong compensating controls | 0.7x | Limited vendors + supply chain risk |
+| Control addresses threat the organization doesn't face | 0.5x | Cloud-only + hardware inventory gap |
+| Industry-specific control, organization in different industry | 0.6x | Healthcare-specific + fintech organization |
+| Organization has strong compensating controls | 0.7x | Limited vendors + supply chain risk |
 | Legacy concern, not current threat vector | 0.6x | Floppy disk encryption for cloud startup |
 
 ### Practical Examples
 
 #### Example 1: B2B SaaS Company
 
-**Client Profile:**
+**Organization Profile:**
 - B2B SaaS platform (project management software)
 - Handles customer PII and business data
 - Cloud-only (AWS infrastructure)
@@ -613,7 +613,7 @@ Apply lower multipliers when:
 
 #### Example 2: Healthcare Clinic
 
-**Client Profile:**
+**Organization Profile:**
 - Medical clinic with electronic health records (EHR)
 - Handles protected health information (PHI)
 - Hybrid infrastructure (on-premise servers + cloud EHR)
@@ -640,7 +640,7 @@ Apply lower multipliers when:
 
 #### Example 3: E-Commerce Startup
 
-**Client Profile:**
+**Organization Profile:**
 - Online retail marketplace
 - Processes payments (uses Stripe, no card data stored)
 - Cloud-native (AWS, Shopify)
@@ -673,10 +673,10 @@ For each adjusted gap in the Top 10, document the context rationale:
 
 > **Gap:** [Control ID] [Control Name]  
 > **Base Score:** [Framework weight × gap severity]  
-> **Context:** [Brief client situation]  
+> **Context:** [Brief organization situation]  
 > **Multiplier:** [1.5x] ([reason])  
 > **Adjusted Score:** [Final priority]  
-> **Risk if Unaddressed:** [Client-specific consequence]
+> **Risk if Unaddressed:** [Organization-specific consequence]
 
 **Example:**
 
@@ -685,7 +685,7 @@ For each adjusted gap in the Top 10, document the context rationale:
 > **Context:** B2B SaaS with public-facing application  
 > **Multiplier:** 1.5x (High attack surface)  
 > **Adjusted Score:** 2.25  
-> **Risk if Unaddressed:** Exploitable known vulnerabilities in customer-facing platform = data breach affecting multiple clients, loss of trust, contract cancellations
+> **Risk if Unaddressed:** Exploitable known vulnerabilities in customer-facing platform = data breach affecting multiple organizations, loss of trust, contract cancellations
 
 ---
 
@@ -697,9 +697,9 @@ After context adjustment:
 2. **Sort by adjusted_gap_score** (descending)
 3. **Select Top 10** (or Top 15 if multiple ties at position 10)
 4. **Document context rationale** for each
-5. **Validate with assessor judgment**: Do these make sense for this client?
+5. **Validate with assessor judgment**: Do these make sense for this organization?
 
-**Critical Rule:** Never show base framework scores to clients. Always present context-adjusted scores.
+**Critical Rule:** Never show base framework scores to organizations. Always present context-adjusted scores.
 
 ### Quality Control for Context Adjustment
 
@@ -708,7 +708,7 @@ Before finalizing prioritization:
 - [ ] Threat context gathered (5 questions answered)
 - [ ] Context multipliers applied to all gaps
 - [ ] Top 10 gaps have different adjusted scores (not all identical)
-- [ ] Risk rationale is client-specific (mentions their data, industry, or threat)
+- [ ] Risk rationale is organization-specific (mentions their data, industry, or threat)
 - [ ] Physical/irrelevant controls de-prioritized appropriately
 - [ ] Compliance-blocking gaps elevated if timeline pressure exists
 
@@ -718,13 +718,13 @@ Before finalizing prioritization:
 
 > **Scoring Methodology:**
 > 
-> Gap priorities were adjusted based on [Client]'s specific risk profile:
+> Gap priorities were adjusted based on [Organization]'s specific risk profile:
 > - Data sensitivity: [PII / Payment / Health / etc.]
 > - Infrastructure: [Cloud-only / Hybrid / On-premise]
 > - Compliance: [SOC 2 / HIPAA / None]
 > - Threat profile: [SaaS attack surface / etc.]
 > 
-> Priorities reflect [Client]'s actual risk, not generic framework weights.
+> Priorities reflect [Organization]'s actual risk, not generic framework weights.
 
 **In Top 10 Table:**
 

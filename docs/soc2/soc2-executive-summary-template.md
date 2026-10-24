@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Organization** | [Client Name] |
+| **Organization** | [Organization Name] |
 | **Assessment Date** | [Date] |
 | **Prepared by** | [Assessor Name / Firm] |
 | **SOC 2 Categories Assessed** | Security (CC1–CC9), Availability (A1), Confidentiality (C1) |

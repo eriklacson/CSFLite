@@ -39,7 +39,7 @@ weight=0.0, response=No  ->  gap 0.00  ->  severity "none"
 ```
 
 An entirely absent control read as `low`. At weight 0 it read `none`, which the spec defined as
-"Control is covered" — a false statement in a client deliverable. The pre-change code returned
+"Control is covered" — a false statement in an organization deliverable. The pre-change code returned
 `high` for a zero score at every weight, so this class of defect was introduced by the fix.
 
 Weights are maintainer-editable in `data/csf_lookup.csv` and the thresholds were documented as

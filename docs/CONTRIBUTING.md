@@ -109,7 +109,7 @@ CSFLite/
 ├── config/          # Runtime configuration (path_config.json)
 ├── docs/            # Documentation
 │   └── reference/   # Framework reference docs (subcategories, mappings, remediation)
-├── output/          # Generated assessment outputs (output/clients/ is gitignored)
+├── output/          # Generated assessment outputs (output/organizations/ is gitignored)
 └── .github/         # CI workflows
 ```
 

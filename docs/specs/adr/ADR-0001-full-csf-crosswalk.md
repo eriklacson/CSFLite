@@ -26,7 +26,7 @@ CSFLite 25. Restricting the crosswalk to the CSFLite 25 would leave these areas 
 blind spots rather than explicitly identified gaps.
 
 A readiness gap analysis that silently omits coverage for SOC 2 criteria would be misleading to
-organisations and their auditors. The purpose of the assessment is to surface gaps, not obscure them.
+organizations and their auditors. The purpose of the assessment is to surface gaps, not obscure them.
 
 ## Decision
 
@@ -46,7 +46,7 @@ CSFLite's governance assessment pipeline, scoring engine, or `data/csf_lookup.cs
 **Positive:**
 - Every in-scope SOC 2 criterion is explicitly accounted for — either covered by the CSFLite 25 or
   documented as a gap requiring supplement questionnaire responses.
-- Organisations and their US customers or auditors receive an honest picture of coverage and gaps.
+- Organizations and their US customers or auditors receive an honest picture of coverage and gaps.
 - The supplement questionnaire addresses gap areas without modifying the existing pipeline.
 
 **Negative / trade-offs:**

@@ -12,7 +12,7 @@ This is a scope summary, not a second contract. Where this document and the spec
 
 Replace the CSFLite CLI with a web application. After Phase 4, CSFLite is not operable from a terminal.
 
-Ships as a container image the operator runs themselves — locally first, then on DigitalOcean as a proof of concept. The operator owns the infrastructure, so organisation data still never leaves an environment they control. This is what resolves the §7 local-first conflict rather than deferring it (§10).
+Ships as a container image the operator runs themselves — locally first, then on DigitalOcean as a proof of concept. The operator owns the infrastructure, so organization data still never leaves an environment they control. This is what resolves the §7 local-first conflict rather than deferring it (§10).
 
 ## In scope
 

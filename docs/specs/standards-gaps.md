@@ -25,19 +25,21 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-1 | CONFLICT | Tenancy timing. You directed that tenancy is a later phase. ADR-0009 and schema put `organization_id`, composite foreign keys, a seeded Organization row and `current_organization(request)` into the Phase 4 tables. Scope and design §3 say organizations and tenancy are out of Phase 4. `CLAUDE.md` says there are no tenants. arch TB-2 says n/a | ADR-0009. schema §1 to §4, §6. scope "Out of scope". design §3. `CLAUDE.md` "Doc templates". arch §5 TB-2 | Writes no tenancy rules. Data model rules cover Assessment, Response, Evidence and Result only. ADR-0009 and schema need amending, or the direction needs revisiting | Architect | Scope, §2 Data model, INV-12 |
+| G-1 | CONFLICT | Tenancy timing. The architect directed that tenancy is a later phase. Design §3 and scope agree: organizations and tenancy are out of Phase 4. ADR-0009 and schema still put `organization_id`, composite foreign keys, a seeded Organization row and `current_organization(request)` into the Phase 4 tables. ADR-0009, `CLAUDE.md` and arch TB-2 agree there are no tenants in Phase 4. The disagreement is only about the tenant-ready columns and the Organization row | ADR-0009. schema §1 to §4, §6. scope "Out of scope". design §3 | Writes no tenancy rules. Data model rules cover Assessment, Response, Evidence and Result only. ADR-0009 and schema need amending, or the direction needs revisiting | Architect | Scope, §2 Data model, INV-12 |
 | G-2 | CONFLICT | Evidence storage path. Design: `<assessment id>/<random name>.<ext>`. Schema: `org/<organization_id>/<random>`, with no extension shown. The `org/` prefix is a tenancy feature (G-1) | design §8. schema M-4. ADR-0009 | INV-12 requires only a random name and no original filename. The path prefix and the extension are not decided | Architect | INV-12 |
-| G-3 | CONFLICT | The design's data model is stale. Design §8 lists `Evidence.file` and one snapshot per assessment. Schema has `file_key`, UUID keys and many Results per assessment. Scope says "an immutable result snapshot per assessment" | design §8. schema M-4, M-5. scope "In scope" | Follows schema for Result count and field names | Architect | INV-8 |
+| G-3 | CONFLICT | Results per assessment. Scope says "an immutable result snapshot per assessment", which reads as one. Schema and ADR-0009 say an assessment can have many, and the latest is current. Design §8 says only "Immutable snapshot", with no count | scope "In scope". schema M-5. ADR-0009. design §8 | Follows schema | Architect | INV-8 |
 | G-4 | CONFLICT | Base image tag. Design: `python:3.12-slim`. AD-11 and arch §3: `python:3.12.15-slim`, pinned to a patch | design §12. arch §3, AD-11 | Follows AD-11 | Architect | CO-12 |
-| G-5 | CONFLICT | Path configuration while Phase 4 is built. The binding brief says paths resolve through `path_config.json`. Design §9 replaces it with environment variables. Brief §12 says those sections are rewritten only once Phase 4 ships. Until then, new web code that follows design §9 breaks the binding brief | brief §3 Design Rules, §5 Boundary Rules, §12. design §9, §15 | Follows design §9 for web code. The brief rule stays in force for CLI code | Architect | CO-8 |
-| G-6 | CONFLICT | Document precedence. Brief §5 and §10 say `docs/assessment_philosophy.md` overrides all other docs. Arch, schema and design say the brief is the binding document. The two claims are not reconciled. `assessment_philosophy.md` was not reviewed for this pass | brief §5, §10. arch header. design header | Treats the brief as binding | Architect | Precedence note |
+| G-5 | CONFLICT | The brief contradicts itself on path configuration. Its §3 Path Configuration contract says it is retired in Phase 4 and replaced by the design §9 environment variables. Its §3 Design Rules and §5 Boundary Rules still say paths resolve only through `path_config.json`, and §12 says those are rewritten only once Phase 4 ships. It is unclear which applies to web code built before then | brief §3, §5, §12. design §9, §15 | Follows design §9 for web code. The `path_config.json` rule stays in force for CLI code | Architect | CO-8 |
+| G-23 | CONFLICT | Changing a subcategory. Brief §8 (binding) says a change needs `csf_lookup.csv` "and the corresponding governance template row". ADR-0004 and design §8 say the template is regenerated once and then frozen | brief §8. ADR-0004. design §8 | CO-15 follows ADR-0004 | Architect | CO-15 |
+| G-24 | CONFLICT | AD-11 relies on `poetry.lock` for exact versions. `.gitignore` lists `poetry.lock`. The file is tracked, so the pin holds today. If it is deleted and regenerated, git ignores the new file | arch AD-11. `.gitignore` | CO-12 notes it | Architect | CO-12 |
 
 ---
 
-## 2. Decisions without an ADR
+## 2. Decisions without an ADR, and precedence
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
+| G-6 | UNVERIFIED | Document precedence. Brief §5 and §10 say `docs/assessment_philosophy.md` wins methodology conflicts. Arch and design call the brief contract-binding. These can both hold, but `assessment_philosophy.md` was not reviewed, so no rule here has been checked against it | brief §5, §10. arch header. design header | Precedence note names it | Architect | Precedence note |
 | G-7 | UNRECORDED | AD-11 (pin every dependency) and AD-12 (hosted login in middleware) are marked "Not yet in an ADR" | arch §7 | Cites arch alone for both | Architect | CO-12, INV-17 |
 
 ---
@@ -55,7 +57,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-10 | SILENT | `/healthz` and the hosted login. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks | design §12, §13. AD-12 | INV-17 exempts only `/login` | Architect | INV-17, INV-26 |
+| G-10 | SILENT | `/healthz`. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks. Also, the hosted template sets `CSFLITE_ALLOWED_HOSTS` to the App Platform domain only. A health check that probes `localhost` would then get Django's 400 | design §10, §12, §13. AD-12 | INV-17 exempts only `/login` (a Proposed clause) | Architect | INV-15, INV-16, INV-17, INV-26 |
 | G-11 | SILENT | Transactions. A rejected import must leave no row. Removing evidence deletes a file and a row. No source says where transactions are used, or what happens when the file delete fails | design §8, §14, §17 | INV-2 and INV-13 state the outcome only | Architect | INV-2, INV-13 |
 | G-12 | SILENT | Assessment lifecycle. `status` is `draft`, `in_progress` or `completed`. No rule says when it changes, whether a completed assessment can be edited, or when a new Result is generated | schema M-2, M-5 | No rule | Architect | INV-8 |
 | G-13 | SILENT | CSRF. Design picks Django partly for CSRF. No source requires CSRF protection | design §7 | INV-19 is Proposed (not derived) | Architect | INV-19 |
@@ -92,6 +94,7 @@ These are recorded in the sources already. They are listed here only for the sta
 | arch OI-5 | Rate limiting on `/login` | §6, F-12 |
 | arch OI-6 | Upload checks beyond the extension | INV-3 |
 | arch OI-7 | Evidence not encrypted or scanned by the app. Accepted in design §18 | none |
+| arch OI-8 | No audit trail. Schema says M-10 AuditLog closes it, but M-10 is tenancy work and out of scope, so it is open again for Phase 4 | No row |
 | arch OI-9 | No backup or restore procedure | §5 production row |
 | arch OI-10 | Encryption in transit to PostgreSQL and Spaces not stated | No row. Needs a rule once decided |
 | arch OI-11 | `django-storages` not confirmed on Django 5.2 | CO-12, INV-11 |
@@ -117,9 +120,9 @@ These are recorded in the sources already. They are listed here only for the sta
 
 | Measure | Count |
 |---|---|
-| Conflicts | 6 |
-| Decisions without an ADR | 1 |
-| Silent | 14 |
-| Unverified | 1 |
-| Source open items referenced | 13 |
-| Proposed rules in `standards.md` that rest on a gap | 4 (INV-19, INV-20, two in §4) |
+| Conflicts | 7 (G-1 to G-5, G-23, G-24) |
+| Decisions without an ADR | 1 (G-7) |
+| Silent | 14 (G-8 to G-15, G-17 to G-22) |
+| Unverified | 2 (G-6, G-16) |
+| Source open items referenced | 14 |
+| Proposed rules in `standards.md` that rest on a gap | 5 (CO-8, INV-19, INV-20, two in §4). Plus Proposed clauses in INV-17 and INV-18 |

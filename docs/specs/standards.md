@@ -31,7 +31,7 @@ This file is authoritative for the rules of this system. Rules are stack-depende
 
 ADR-0009 and `schema.md` put some of these in the Phase 4 tables. That conflict is G-1.
 
-**Precedence.** The spec brief is binding and wins (`architecture.md` header, design header). The sources set no order among the rest. Where they disagree, the rule says which source it follows, and the conflict is recorded in `standards-gaps.md`.
+**Precedence.** The spec brief is the contract-binding document (`architecture.md` header, design header). Scope says the brief wins where the two disagree. The brief itself says `docs/assessment_philosophy.md` wins methodology conflicts. That file was not reviewed (G-6). The sources set no order among the rest. Where they disagree, the rule says which source it follows, and the conflict is recorded in `standards-gaps.md`.
 
 **Short names.** *arch* = `docs/specs/architecture.md`. *schema* = `docs/specs/schema.md`. *design* = `docs/specs/design/phase-4-web-interface.md`. *brief* = `docs/specs/csflite-spec-brief.md`. *scope* = `docs/specs/phase-4/web-interface-scope.md`. *G-n* = a gap in `standards-gaps.md`.
 
@@ -43,24 +43,25 @@ How the codebase is arranged. `architecture.md` §3 records what the stack is. T
 
 | ID | Convention | Applies to | Enforcement mechanism | Locus | Install status | Status | Evidence |
 |---|---|---|---|---|---|---|---|
-| CO-1 | Organization data (the SQLite file and evidence) **MUST** live under the host's `./var`, mounted at `/data`. It **MUST NOT** be written under the repository's `data/` | repo, local profile | `var/` in `.gitignore`. The compose bind mount | [P] | installed (`.gitignore`). Compose file unbuilt | CONFIRMED | design §11 |
+| CO-1 | Organization data (the SQLite file and evidence) **MUST** live under the host's `./var`, mounted at `/data`. It **MUST NOT** be written under the repository's `data/` | repo, local profile | The compose file bind-mounts `./var` at `/data`. `.gitignore` keeps `var/` out of git, but does not stop writes to `data/` | [P] | unbuilt | CONFIRMED | design §11 |
 | CO-2 | Django project and app layout: where settings, apps, models, views, forms and templates live | repo | none | — | unbuilt | UNSPECIFIED | No source. G-8 |
 | CO-3 | Scoring **MUST** live only in `tools/assess_helpers.py`. Views **MUST** import and call it in-process. There **MUST NOT** be an HTTP boundary, a service wrapper, or a second scoring implementation, including in JavaScript | all code | Acceptance test: exports generated server-side, no scoring in the browser | [P] | unbuilt | CONFIRMED | design §2, §5, §16, §17. ADR-0005. AD-1 |
 | CO-4 | `tools/assess_helpers.py` **MUST NOT** change during Phase 4 | `tools/assess_helpers.py` | Diff against a baseline. No baseline commit is named | [P] | unbuilt | PARTIAL | design §17. scope "What carries over unchanged". ADR-0005. G-9 |
 | CO-5 | Intake validation **MUST** live in the Django form and the import view. The unknown-subcategory check **MUST** stay in the scoring layer, not intake | views, forms | Import acceptance test | [P] | unbuilt | CONFIRMED | design §14, §17. arch TB-8 |
-| CO-6 | Before calling `generate_governance_assessement()`, the view **MUST** sort rows descending by `csf_subcategory_id`. It **MUST** take `csf_subcategory_name` from the loaded `csf_lookup.csv` | results and export views | `test_generate_governance_assessement_preserves_input_order`. The web golden test | [P] | installed (helper test). Web golden test unbuilt | CONFIRMED | design §5, §17 |
+| CO-6 | Before calling `generate_governance_assessement()`, the view **MUST** sort rows descending by `csf_subcategory_id`. It **MUST** take `csf_subcategory_name` from the loaded `csf_lookup.csv` | results and export views | The web golden test. `test_generate_governance_assessement_preserves_input_order` pins the helper only. It cannot fail if the view skips the sort | [P] | unbuilt | CONFIRMED | design §5, §15, §17 |
 | CO-7 | Reference data **MUST** be loaded once at boot from `CSFLITE_CSF_LOOKUP`. It **MUST NOT** be stored in the database | settings, boot | *mechanism proposed*: a test that no model holds weights or recommendations | [G] | unbuilt | PARTIAL | design §8. ADR-0004. AD-6 |
-| CO-8 | Environment variables **MUST** use the `CSFLITE_` prefix. `PORT` and `DATABASE_URL` are the only exceptions | settings | *mechanism proposed*: reviewer check against the design §9 table | [G] | unbuilt | PARTIAL | design §9. G-5 |
+| CO-8 | **Proposed (not derived).** Environment variables **MUST** use the `CSFLITE_` prefix. `PORT` and `DATABASE_URL` are the only exceptions | settings | *mechanism proposed*: reviewer check against the design §9 table | [G] | unbuilt | UNSPECIFIED | Reason: every variable in design §9 follows this pattern, but no source states it as a rule. G-5 |
 | CO-9 | Export files **MUST** be named `governance_assessment.csv` and `governance_heatmap.csv` | export route | Web golden test | [P] | unbuilt | CONFIRMED | design §13. brief §3 |
 | CO-10 | Each `tools/x.py` **MUST** have a matching `tests/test_x.py` | `tools/`, `tests/` | *mechanism proposed*: reviewer check | [G] | unbuilt | PARTIAL | brief §5 Boundary Rules. Rewritten when Phase 4 ships (brief §12). G-8 |
 | CO-11 | Code **MUST** pass Black (line length 120), Ruff (`E, F, B, I, S, PT`, `E501` ignored) and Bandit (HIGH severity) | repo | CI workflow and pre-commit hooks | [P] | installed | CONFIRMED | arch §3 CI row. `pyproject.toml`. `.github/workflows/python-lint.yaml` |
-| CO-12 | Every runtime package **MUST** be pinned to an exact version in `poetry.lock`. The base image **MUST** be pinned to a patch version (`python:3.12.15-slim`). Poetry and CI tools **MUST** be pinned, never `latest`. Django **MUST** stay on the 5.2 LTS line | `pyproject.toml`, `poetry.lock`, Dockerfile, CI | `poetry.lock`. Pinned pre-commit revisions. Poetry in CI is not pinned | [P] | installed (in part) | PARTIAL | AD-11. arch §3, OI-13. G-4, G-7 |
+| CO-12 | Every runtime package **MUST** be pinned to an exact version in `poetry.lock`. The base image **MUST** be pinned to a patch version (`python:3.12.15-slim`). Poetry and CI tools **MUST** be pinned, never `latest`. Django **MUST** stay on the 5.2 LTS line | `pyproject.toml`, `poetry.lock`, Dockerfile, CI | `poetry.lock`, which is tracked but also listed in `.gitignore`. Pinned pre-commit revisions. Poetry in CI is not pinned | [P] | installed (in part) | PARTIAL | AD-11. arch §3, OI-13. G-4, G-7, G-24 |
 | CO-13 | CSV exports **MUST** be written by `write_to_csv()` in `tools/global_helpers.py`. Another CSV writer **MUST NOT** be used | export view | Web golden test | [P] | unbuilt | CONFIRMED | AD-10. design §8 |
-| CO-14 | Every schema change **MUST** be a Django migration. Manual schema changes **MUST NOT** happen | migrations | *mechanism proposed*: CI runs `manage.py makemigrations --check` | [P] | unbuilt | PARTIAL | schema §4. design §12 |
-| CO-15 | `templates/governance_checks_template.csv` **MUST** stay frozen. It changes only by regeneration from `csf_lookup.csv` | `templates/` | `test_lookup_ids_match_the_checklist_template`. It checks IDs only | [P] | installed | PARTIAL | ADR-0004. design §8 |
+| CO-14 | Every schema change **MUST** be a Django migration. Manual schema changes **MUST NOT** happen | migrations | *mechanism proposed*: CI runs `manage.py makemigrations --check` | [P] | unbuilt | PARTIAL | schema §4 |
+| CO-15 | `templates/governance_checks_template.csv` **MUST** stay frozen. It changes only by regeneration from `csf_lookup.csv` | `templates/` | `test_lookup_ids_match_the_checklist_template`. It checks IDs only | [P] | installed | PARTIAL | ADR-0004. design §8. Brief §8 says otherwise: G-23 |
 | CO-16 | There **MUST NOT** be a JavaScript framework, a build step, a `package.json` or `node_modules`. htmx **MAY** be added as one script tag, only when a page needs it | repo, image | *mechanism proposed*: CI check that no `package.json` exists | [P] | unbuilt | PARTIAL | AD-9. design §3, §7. scope |
 | CO-17 | Application code **MUST NOT** call a cloud provider API or branch on the provider. Cloud SDKs are reached only through `django-storages` | application code | *mechanism proposed*: Ruff `TID251` banning `boto3` imports in application code | [P] | unbuilt | PARTIAL | design §4, §11. ADR-0006 |
 | CO-18 | There **MUST NOT** be background jobs, task queues, Redis or Celery | dependencies | *mechanism proposed*: reviewer check of `poetry.lock` | [G] | unbuilt | PARTIAL | design §3 |
+| CO-19 | Until the CLI is deleted (design §15 step 3), `tools/` modules **MUST NOT** import from `tools/governance_check.py` | `tools/` | *mechanism proposed*: Ruff `TID251` banning that module | [P] | unbuilt | PARTIAL | brief §5 Boundary Rules |
 
 ---
 
@@ -88,7 +89,8 @@ The template's tenant rows (tenant identity from the session, tenant scoping in 
 | INV-7 | A Result **MUST** require all 25 responses answered | Result | Scoring guard for blank responses. Missing rows are not caught by it | [P] | installed (in part) | PARTIAL | schema M-3. design §14. G-19 |
 | INV-8 | A `Result` row **MUST NOT** be updated after it is written. It **MUST** store `lookup_digest`, the SHA-256 of `csf_lookup.csv` as loaded at boot. A past result **MUST NOT** change when the lookup is reweighted | Result | Reweighting acceptance test. *mechanism proposed*: model code that refuses an update | [P] | unbuilt | PARTIAL | design §8, §17. schema M-5. arch TB-7. G-3, G-12 |
 | INV-9 | Web CSV exports **MUST** be byte-identical to `tests/fixtures/golden/` for the same responses. They **MUST NOT** carry `notes` or evidence columns. This match gates deleting the CLI | export route | `tests/test_golden_pipeline.py` | [P] | installed (CLI only). Web extension unbuilt | CONFIRMED | AD-10. design §8, §15, §17 |
-| INV-10 | `data/csf_lookup.csv` **MUST** pass `tests/test_csf_lookup_data.py` | `data/csf_lookup.csv` | `tests/test_csf_lookup_data.py` | [P] | installed | CONFIRMED | ADR-0004. arch TB-7. Behavior on a bad file at boot is open: G-18 |
+| INV-10 | `data/csf_lookup.csv` **MUST** pass `tests/test_csf_lookup_data.py` | `data/csf_lookup.csv` | `tests/test_csf_lookup_data.py` | [P] | installed | CONFIRMED | arch TB-7. Behavior on a bad file at boot is open: G-18 |
+| INV-27 | Every `csf_subcategory_id` in reference data **MUST** be validated against NIST CSWP 29 before it is added | `data/csf_lookup.csv` | `tests/test_csf_lookup_data.py` checks the ID format (`ID_PATTERN`) only, not that the ID exists in CSWP 29 | [P] | installed (in part) | PARTIAL | brief §3 Design Rules |
 
 ### Evidence files
 
@@ -102,13 +104,13 @@ The template's tenant rows (tenant identity from the session, tenant scoping in 
 
 | ID | Invariant | Scope | Enforcement mechanism | Locus | Install status | Status | Evidence |
 |---|---|---|---|---|---|---|---|
-| INV-14 | The app **MUST** exit with an error, not a warning, when: (a) `CSFLITE_SECRET_KEY` is unset; (b) `CSFLITE_PUBLIC=true` and `CSFLITE_PASSWORD` is unset; (c) `CSFLITE_ALLOWED_HOSTS` goes beyond `localhost,127.0.0.1` and `CSFLITE_PUBLIC` is not `true`; (d) `CSFLITE_STORAGE_BACKEND=s3` and any of `CSFLITE_S3_BUCKET`, `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY` is unset | startup | Startup acceptance tests for (b), (c), (d). *mechanism proposed* for (a): design §17 lists no test | [P] | unbuilt | CONFIRMED | design §9, §10, §17. ADR-0007. arch TB-4 |
+| INV-14 | The app **MUST** exit with an error, not a warning, when: (a) `CSFLITE_SECRET_KEY` is unset; (b) `CSFLITE_PUBLIC=true` and `CSFLITE_PASSWORD` is unset; (c) `CSFLITE_ALLOWED_HOSTS` goes beyond `localhost,127.0.0.1` and `CSFLITE_PUBLIC` is not `true`; (d) `CSFLITE_STORAGE_BACKEND=s3` and any of `CSFLITE_S3_BUCKET`, `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY` is unset | startup | Startup acceptance tests for (b), (c), (d). *mechanism proposed* for (a): design §17 lists no test | [P] | unbuilt | PARTIAL | design §9, §10, §17. ADR-0007. arch TB-4 |
 | INV-15 | The local compose file **MUST** publish the port on `127.0.0.1` only. The local profile **MUST** answer on `localhost` and `127.0.0.1`, with `PORT` unset and set. A request whose `Host` is not in `CSFLITE_ALLOWED_HOSTS` **MUST** get Django's 400 | local profile | Compose, host and port acceptance tests | [P] | unbuilt | CONFIRMED | design §10, §11, §17. ADR-0007. arch TB-1 |
 | INV-16 | The DigitalOcean environment template **MUST** set `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the App Platform domain | hosted profile | Template acceptance test | [P] | unbuilt | CONFIRMED | design §10, §11, §17. ADR-0007 |
-| INV-17 | With `CSFLITE_PUBLIC=true`, every route except `/login` **MUST** require a signed-in session. Middleware checks it | hosted profile | *mechanism proposed*: a test that each design §13 route refuses a request with no session | [P] | unbuilt | PARTIAL | AD-12. design §10. ADR-0007. `/healthz` is open: G-10. Password check: OI-3. Cookie flags: OI-4. G-7 |
-| INV-18 | Secret values **MUST** come only from the environment: `CSFLITE_SECRET_KEY`, `CSFLITE_PASSWORD`, `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY`, `DATABASE_URL`. They **MUST NOT** appear in source or git history | repo | Ruff `S105` to `S107`, through the `S` rule set. Source only. No history scan | [P] | installed (in part) | PARTIAL | arch §6. design §9. G-15 |
-| INV-19 | **Proposed (not derived).** `CsrfViewMiddleware` **MUST** stay enabled for every POST route | all POST routes | Settings test | [P] | unbuilt | UNSPECIFIED | Reason: design §7 picks Django partly for CSRF, but no source requires it, and the hosted profile is public with a session cookie. G-13 |
-| INV-20 | **Proposed (not derived).** The app **MUST** refuse to start when `CSFLITE_DEBUG` is on and `CSFLITE_PUBLIC=true` | startup | Startup test | [P] | unbuilt | UNSPECIFIED | Reason: debug pages show settings and stack traces on a public domain, and no source forbids the pairing. G-14 |
+| INV-17 | With `CSFLITE_PUBLIC=true`, every page **MUST** require a signed-in session. Middleware checks it. **Proposed (not derived):** `/login` is the only route exempt | hosted profile | *mechanism proposed*: a test that each design §13 route refuses a request with no session | [P] | unbuilt | PARTIAL | AD-12. design §8 ("the same access control as every other page"), §10. ADR-0007. Reason for the exemption: the login page cannot require a login, and no source lists exemptions. `/healthz` is open: G-10. Password check: OI-3. Cookie flags: OI-4. G-7 |
+| INV-18 | Secret values **MUST** come only from the environment: `CSFLITE_SECRET_KEY`, `CSFLITE_PASSWORD`, `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY`, `DATABASE_URL`. **Proposed (not derived):** they **MUST NOT** appear in git history | repo | Ruff `S105` to `S107`, through the `S` rule set. Source only. No history scan | [P] | installed (in part) | PARTIAL | arch §6 ("Environment only"). design §9. Reason for the history clause: a secret removed from source stays readable in history. G-15 |
+| INV-19 | **Proposed (not derived).** `CsrfViewMiddleware` **MUST** stay enabled for every POST route | all POST routes | *mechanism proposed*: settings test | [P] | unbuilt | UNSPECIFIED | Reason: design §7 picks Django partly for CSRF, but no source requires it, and the hosted profile is public with a session cookie. G-13 |
+| INV-20 | **Proposed (not derived).** The app **MUST** refuse to start when `CSFLITE_DEBUG` is on and `CSFLITE_PUBLIC=true` | startup | *mechanism proposed*: startup test | [P] | unbuilt | UNSPECIFIED | Reason: debug pages show settings and stack traces on a public domain, and no source forbids the pairing. G-14 |
 
 ### Data model
 
@@ -124,7 +126,7 @@ The template's tenant rows (tenant identity from the session, tenant scoping in 
 |---|---|---|---|---|---|---|---|
 | INV-24 | A change **MUST** pass Black, Ruff, Bandit and pytest in CI before merge | pipeline | `.github/workflows/python-lint.yaml` runs on every PR. Whether a branch rule requires it is not visible in the repo | [P] | installed | UNVERIFIED | arch §3 CI row. `CLAUDE.md`. G-16 |
 | INV-25 | Migrations **MUST** run as an explicit release command. They **MUST NOT** run on app boot | container, release | *mechanism proposed*: reviewer check that the entrypoint and `AppConfig.ready()` never call `migrate` | [G] | unbuilt | PARTIAL | design §4, §12. schema §4 |
-| INV-26 | The container **MUST** be multi-stage, run as a non-root user, and leave Poetry out of the runtime layer. Gunicorn **MUST** bind `0.0.0.0:$PORT` with one worker. `HEALTHCHECK` **MUST** target `/healthz`. Logs **MUST** go unbuffered to stdout | Dockerfile | *mechanism proposed*: reviewer checklist against design §12 | [G] | unbuilt | PARTIAL | design §4, §12. AD-3. arch §3 |
+| INV-26 | The container **MUST** be multi-stage, run as a non-root user, and leave Poetry out of the runtime layer. Gunicorn **MUST** bind `0.0.0.0:$PORT` with one worker. `HEALTHCHECK` **MUST** target `/healthz`. Logs **MUST** go unbuffered to stdout | Dockerfile | *mechanism proposed*: reviewer checklist against design §12 | [G] | unbuilt | PARTIAL | design §4, §12. AD-3. arch §3. What `/healthz` checks, and under which `Host`: G-10 |
 
 **Subtraction note.** INV-11 and CO-16 hold partly by absence. There is no media URL route and no `package.json`. A path that does not exist cannot regress. Keep it that way.
 
@@ -146,7 +148,7 @@ What the system does when something breaks. Per-service failure behavior lives i
 | F-8 | Evidence rejected (extension or size) | Upload | Form validation | fail-closed for the file | Form error. The section keeps its answers | Choose another file | CONFIRMED | design §8 |
 | F-9 | `csf_lookup.csv` missing or invalid at boot | Boot | Test suite only, before build | UNSPECIFIED | | | UNSPECIFIED | arch TB-7. G-18 |
 | F-10 | Container restarts during an export | Restart | none | degrade | The temporary export file is lost | Request the export again | CONFIRMED | design §11 |
-| F-11 | Results requested with fewer than 25 answers | Results view | Scoring guard catches blanks. Missing rows: not stated | fail-closed | No Result is written. Message not stated | | PARTIAL | schema M-3. design §14. G-19 |
+| F-11 | Results requested with fewer than 25 answers | Results view | Scoring guard catches blanks. It does not catch missing rows (design §14) | fail-closed for blanks. UNSPECIFIED for missing rows | Not stated | | PARTIAL | schema M-3. design §14. G-19 |
 | F-12 | Wrong password on `/login` | Login submit | | UNSPECIFIED | | | UNSPECIFIED | OI-3, OI-5 |
 
 **Behavior vocabulary** — `fail-closed` / `fail-open` / `degrade` / `retry` / `queue` / `UNSPECIFIED`.
@@ -164,7 +166,7 @@ No security-relevant path is declared fail-open. The local profile has no login 
 | Secrets or tokens in logs | **Proposed (not derived).** Logs **MUST NOT** contain the value of any secret listed in INV-18 | *mechanism proposed*: reviewer check | UNSPECIFIED | Reason: arch §6 lists five secrets, and no rule keeps them out of stdout. G-20 |
 | PII in logs | **Proposed (not derived).** Logs **MUST NOT** contain response values, notes, assessment labels, organization names or original filenames | *mechanism proposed*: reviewer check | UNSPECIFIED | Reason: arch §6 rates all of these confidential. G-20 |
 | Tenant id in log context | n/a. Tenancy is a later phase | none | n/a | Scope |
-| Log destination | Logs **MUST** go unbuffered to stdout. No log files, no rotation | INV-26 | CONFIRMED | design §4, §12. ADR-0006 |
+| Log destination | Logs **MUST** go unbuffered to stdout. No log files, no rotation | INV-26, which has a proposed mechanism only | PARTIAL | design §4, §12. ADR-0006 |
 | Log retention | Not stated. It depends on the operator's platform | none | UNSPECIFIED | G-20 |
 
 ---
@@ -203,14 +205,14 @@ The hosted proof of concept is publicly reachable, and its data class is not sta
 
 | Measure | Count |
 |---|---|
-| Code conventions declared | 17 (CO-2 has no rule) |
-| With a named mechanism | 10 from the sources or the repo. 7 more with a mechanism proposed only |
-| Invariants declared | 26 (24 derived, 2 Proposed) |
-| With a named mechanism | 16 from the sources or the repo. 10 more with a mechanism proposed only |
-| With a locus assigned | 26 |
-| Install status: installed | 13, most only in part (CO-1, CO-6, CO-11, CO-12, CO-15, INV-1, INV-2, INV-5, INV-7, INV-9, INV-10, INV-18, INV-24) |
+| Code conventions declared | 18 (17 derived, 1 Proposed: CO-8). CO-2 has no rule |
+| With a named mechanism | 10 from the sources or the repo. 8 more with a mechanism proposed only |
+| Invariants declared | 27 (25 derived, 2 Proposed). INV-17 and INV-18 also carry one Proposed clause each |
+| With a named mechanism | 17 from the sources or the repo. 10 more with a mechanism proposed only |
+| With a locus assigned | 27 |
+| Install status: installed | 12, most only in part (CO-11, CO-12, CO-15, INV-1, INV-2, INV-5, INV-7, INV-9, INV-10, INV-18, INV-24, INV-27) |
 | Install status: proven | 0 |
-| Failure modes with defined behavior | 6 of 12 (F-5 to F-8, F-10, F-11). F-1 is n/a. 5 UNSPECIFIED |
+| Failure modes with defined behavior | 5 of 12 (F-5 to F-8, F-10). F-11 in part. F-1 is n/a. 5 UNSPECIFIED |
 | Security-relevant paths failing open | 0 declared. F-12 (login) is UNSPECIFIED |
 
 Counts only. Coverage and sequencing stay on separate axes.

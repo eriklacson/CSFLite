@@ -16,7 +16,7 @@ weight of 1.0.
 
 Scoring them would conflict with three existing rules:
 - Crosswalks are reference documents, not consumed by the scoring engine (spec brief §10).
-- Readiness assessments belong to client engagements, not to CSFLite (spec brief §11).
+- Readiness assessments belong to organisation engagements, not to CSFLite (spec brief §11).
 - Weights come from reference data (spec brief §8). The flat 1.0 was invented at render time.
 
 ## Decision

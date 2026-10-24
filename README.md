@@ -39,11 +39,11 @@ See the [Assessment Philosophy](docs/assessment_philosophy.md) for the full desi
 - **Remediation guidance** — Step-by-step actions for each governance gap
 - **SOC 2 crosswalk** — Full mapping of Trust Services Criteria (CC1–CC9, A1, C1) to NIST CSF 2.0 subcategories with coverage ratings
 - **SOC 2 supplement questionnaire** — 28-question CSV covering five gap domains not addressed by the CSFLite 25 (change management, physical access, security awareness, business continuity, data disposal)
-- **SOC 2 gap analysis template** — Client-facing markdown template organized by SOC 2 category, pre-populated from the crosswalk
-- **SOC 2 executive summary template** — One-page client-facing summary with coverage score, criteria breakdown, and top remediation items
+- **SOC 2 gap analysis template** — Organisation-facing markdown template organized by SOC 2 category, pre-populated from the crosswalk
+- **SOC 2 executive summary template** — One-page organisation-facing summary with coverage score, criteria breakdown, and top remediation items
 - **HIPAA crosswalk** — Full mapping of HIPAA Security Rule (§164.308, §164.310, §164.312) and Breach Notification Rule to NIST CSF 2.0 subcategories with Required/Addressable designations and coverage ratings
 - **HIPAA supplement questionnaire** — 9-question CSV covering gap domains not addressed by the CSFLite 25 (physical safeguards, device disposal, security training, BAA existence, breach notification, contingency planning, workforce security, minimum necessary)
-- **HIPAA gap analysis template** — Client-facing markdown template organized by HIPAA safeguard category, scoped for Business Associates
+- **HIPAA gap analysis template** — Organisation-facing markdown template organized by HIPAA safeguard category, scoped for Business Associates
 - **HIPAA executive summary template** — One-page BA-framed readiness summary
 
 ---
@@ -54,7 +54,7 @@ This toolkit is for SMEs, startups, freelance consultants, and security-oriented
 
 **Who this is for:**
 - Startups preparing for SOC 2, HIPAA, or customer security questionnaires
-- Solo security practitioners or consultants serving multiple small clients
+- Solo security practitioners or consultants serving multiple small organisations
 - DevOps teams implementing security controls without dedicated security staff
 - Organizations that need evidence-based security assessments, not compliance theater
 
@@ -137,15 +137,15 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 ### SOC 2 Readiness
 
 - [CSFLite-to-SOC 2 Crosswalk](docs/soc2/csflite-soc2-crosswalk.md) — Full TSC mapping with coverage ratings (full / partial / gap)
-- [SOC 2 Gap Analysis Template](docs/soc2/soc2-gap-analysis-template.md) — Client-facing findings template organized by Security, Availability, Confidentiality
-- [SOC 2 Executive Summary Template](docs/soc2/soc2-executive-summary-template.md) — One-page client-facing readiness summary
+- [SOC 2 Gap Analysis Template](docs/soc2/soc2-gap-analysis-template.md) — Organisation-facing findings template organized by Security, Availability, Confidentiality
+- [SOC 2 Executive Summary Template](docs/soc2/soc2-executive-summary-template.md) — One-page organisation-facing readiness summary
 - [SOC 2 Supplement Questionnaire](templates/soc2-supplement-questionnaire.csv) — Standalone CSV covering gap domains outside the CSFLite 25
 - [ADR-0001: Full CSF Crosswalk Decision](docs/specs/adr/ADR-0001-full-csf-crosswalk.md) — Architectural decision record
 
 ### HIPAA Readiness
 
 - [CSFLite-to-HIPAA Crosswalk](docs/hipaa/csflite-hipaa-crosswalk.md) — Full Security Rule and Breach Notification Rule mapping with Required/Addressable designations and coverage ratings (full / partial / gap)
-- [HIPAA Gap Analysis Template](docs/hipaa/hipaa-gap-analysis-template.md) — Client-facing findings template organized by Administrative, Physical, Technical Safeguards, and Breach Notification; scoped for Business Associates
+- [HIPAA Gap Analysis Template](docs/hipaa/hipaa-gap-analysis-template.md) — Organisation-facing findings template organized by Administrative, Physical, Technical Safeguards, and Breach Notification; scoped for Business Associates
 - [HIPAA Executive Summary Template](docs/hipaa/hipaa-executive-summary-template.md) — One-page BA-framed readiness summary
 - [HIPAA Supplement Questionnaire](templates/hipaa-supplement-questionnaire.csv) — 9-question standalone CSV covering gap domains outside the CSFLite 25
 

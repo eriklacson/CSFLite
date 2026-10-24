@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-CSFLite processes client assessment data. That data should not leave an environment the operator
+CSFLite processes organisation assessment data. That data should not leave an environment the operator
 controls. The CLI met this by running only on the operator's machine.
 
 A web app needs a delivery model that keeps that property.
@@ -32,7 +32,7 @@ no load.
 ## Consequences
 
 **Positive:**
-- Client data stays in the operator's environment. This resolves the local-first constraint.
+- Organisation data stays in the operator's environment. This resolves the local-first constraint.
 - Running locally exercises the same container, entrypoint, configuration model, and startup
   guards as a hosted deployment.
 
@@ -59,7 +59,7 @@ Phase 4 design with no comparison on record.
 
 ## Alternatives Considered
 
-**Hosted SaaS.** Rejected. CSFLite would hold client data.
+**Hosted SaaS.** Rejected. CSFLite would hold organisation data.
 
 **Serverless or scale-to-zero.** Rejected. Cold starts pay the pandas import on every request.
 Recorded so a later change does not "fix" the app into a serverless deployment.

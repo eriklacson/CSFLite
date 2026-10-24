@@ -229,7 +229,7 @@ CSFLite/
 - `data/` files are reference data, not generated output — they are version-controlled and change only through deliberate maintainer action
 - `config/path_config.json` is the single source of truth for file paths — no tool constructs paths independently
 - `docs/assessment_philosophy.md` is the authoritative methodology document — conflicts between it and any other documentation are resolved in its favor
-- `templates/` contains user-facing input templates that define the assessment interface — changes here affect the client-facing assessment experience
+- `templates/` contains user-facing input templates that define the assessment interface — changes here affect the organisation-facing assessment experience
 
 ---
 
@@ -259,9 +259,9 @@ CSFLite runs as a local CLI tool on the operator's machine. There is no hosting 
 |------|---------|-------|
 | Runtime | Local Python 3.12+ via Poetry | `poetry install && poetry shell` |
 
-Local-first because the tool is operated by the consultant on their own machine, processing client data that should not leave the local environment without explicit agreement.
+Local-first because the tool is operated by the consultant on their own machine, processing organisation data that should not leave the local environment without explicit agreement.
 
-Phase 4 replaces this profile with a container image the operator runs themselves, locally or in their own cloud account. Because the operator owns the infrastructure, client data still never leaves an environment they control. See `docs/specs/design/phase-4-web-interface.md`.
+Phase 4 replaces this profile with a container image the operator runs themselves, locally or in their own cloud account. Because the operator owns the infrastructure, organisation data still never leaves an environment they control. See `docs/specs/design/phase-4-web-interface.md`.
 
 ---
 
@@ -282,7 +282,7 @@ The scoring engine does not hardcode control IDs, weights, or scoring rules. All
 
 ## 9. Proof-of-Concept — Build Status
 
-CSFLite is its own proof-of-concept. There is no external client for the framework itself — client engagements are separate projects that consume CSFLite.
+CSFLite is its own proof-of-concept. There is no external organisation for the framework itself — organisation engagements are separate projects that consume CSFLite.
 
 ### CSFLite Framework — Milestones
 
@@ -323,10 +323,10 @@ Each row links to its ADR in `adr/`. Decisions made after this table was written
 | Scope limited to 25 subcategories | Fixed at 25, additions require a removal | Keeps framework lean and assessable by resource-constrained teams. Broader coverage available through later-stage maturity assessments. | [ADR-0002](adr/ADR-0002-fixed-25-subcategory-scope.md) |
 | Coverage-only scoring | Yes/Partial/No (1.0/0.5/0.0) — no maturity levels | Small teams cannot defend nuanced maturity scores. Binary or near-binary answers are defensible and actionable. | [ADR-0003](adr/ADR-0003-coverage-only-scoring.md) |
 | Evidence required for "Yes" | Assertions without proof score Partial or No | Prevents attestation theater. Most critical quality control mechanism. | [ADR-0003](adr/ADR-0003-coverage-only-scoring.md) |
-| Compliance crosswalks as reference docs | Stored in `docs/reference/`, `docs/soc2/`, and `docs/hipaa/`, not as executable mappings | Crosswalks inform client delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. | [ADR-0001](adr/ADR-0001-full-csf-crosswalk.md), [ADR-0008](adr/ADR-0008-supplements-collected-not-scored.md) |
+| Compliance crosswalks as reference docs | Stored in `docs/reference/`, `docs/soc2/`, and `docs/hipaa/`, not as executable mappings | Crosswalks inform organisation delivery projects but are not consumed by the scoring engine. CSFLite does not claim compliance. Crosswalks now cover SOC 2, HIPAA, and SP 800-53 Rev 5. | [ADR-0001](adr/ADR-0001-full-csf-crosswalk.md), [ADR-0008](adr/ADR-0008-supplements-collected-not-scored.md) |
 | Assessment philosophy as authoritative | `assessment_philosophy.md` overrides all other docs on conflicts | Single source of truth for methodology prevents drift across documentation. | — (document precedence rule) |
 | Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. | [ADR-0005](adr/ADR-0005-web-application-replaces-cli.md) |
-| Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds client data, which resolves the §7 local-first conflict rather than deferring it. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
+| Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds organisation data, which resolves the §7 local-first conflict rather than deferring it. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
 | Cloud-native scope | Portable and operable, not elastic | pandas import cost rules out scale-to-zero, and a single operator generates no load. Recorded so the application is not later "fixed" into a serverless deployment. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
 | Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same container, entrypoint, and configuration model as the hosted deployment. Storage differs: local writes evidence to the filesystem, hosted to object storage. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
 | Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. | — (tooling) |
@@ -334,8 +334,8 @@ Each row links to its ADR in `adr/`. Decisions made after this table was written
 
 ## 11. What This Project Does Not Own
 
-- **Client-specific assessment data** — CSFLite provides the framework; client projects provide the questionnaire responses and deliverables.
-- **SOC 2 / HIPAA / ISO 27001 readiness assessments** — these are client delivery engagements that consume CSFLite. Compliance crosswalk reference documents and blank readiness templates live in CSFLite; completed gap analyses, client workflows, and remediation roadmaps live in client projects.
+- **Organisation-specific assessment data** — CSFLite provides the framework; organisation projects provide the questionnaire responses and deliverables.
+- **SOC 2 / HIPAA / ISO 27001 readiness assessments** — these are organisation delivery engagements that consume CSFLite. Compliance crosswalk reference documents and blank readiness templates live in CSFLite; completed gap analyses, organisation workflows, and remediation roadmaps live in organisation projects.
 - **Tool integrations (OWASP ZAP, Graylog, TheHive, DefectDojo)** — planned integrations per the development roadmap are future scope. When built, they may live in CSFLite if they are framework-generic, or in separate projects if they are deployment-specific.
 - **Unified governance dashboard** — longer-horizon milestone that would require a service model. Would need its own seed document.
 - **Maturity assessment, risk quantification, continuous monitoring** — explicitly out of scope by design. CSFLite is Stage 1 (coverage). Later stages are separate projects.

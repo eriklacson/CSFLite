@@ -44,7 +44,7 @@ works, not a code path. Any container process that binds `127.0.0.1` is unreacha
 its own network namespace; `docker compose up` with the design's stated default
 (`CSFLITE_BIND=127.0.0.1:8000`) would not serve the local profile at all.
 
-**Why it matters.** The guard exists to stop organisation assessment data from being exposed
+**Why it matters.** The guard exists to stop organization assessment data from being exposed
 unauthenticated. A guard that cannot distinguish local from hosted either fails open (never
 trips, so a forgotten password on a public host goes unnoticed) or fails the one profile it
 wasn't meant to restrict (local). Either failure mode defeats the control silently — no one
@@ -88,7 +88,7 @@ the container.
 
 **Why it matters.** This was recorded as an accepted residual risk, not a real guard. An edit to
 one line of a compose file, with no corresponding change anywhere the application could check,
-was enough to make a deployment holding organisation assessment data reachable from the operator's
+was enough to make a deployment holding organization assessment data reachable from the operator's
 network with no password.
 
 **Resolution.** `CSFLITE_ALLOWED_HOSTS` was already specified (default `localhost`) but its role

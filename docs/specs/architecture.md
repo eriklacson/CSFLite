@@ -18,13 +18,13 @@ source: docs/specs/design/phase-4-web-interface.md
 
 ## 1. Purpose
 
-CSFLite is a self-hosted web application that records whether each of 25 NIST CSF v2.0 controls exists in an organisation, for the single operator who does the assessment. It measures coverage, not maturity. Evidence: ADR-0002, ADR-0003, ADR-0005.
+CSFLite is a self-hosted web application that records whether each of 25 NIST CSF v2.0 controls exists in an organization, for the single operator who does the assessment. It measures coverage, not maturity. Evidence: ADR-0002, ADR-0003, ADR-0005.
 
 ---
 
 ## 2. System context
 
-**Actors.** One operator. There are no organisation logins, no roles and no tenants (design §3, ADR-0007).
+**Actors.** One operator. There are no organization logins, no roles and no tenants (design §3, ADR-0007).
 
 **Talks to.**
 
@@ -34,10 +34,10 @@ CSFLite is a self-hosted web application that records whether each of 25 NIST CS
 
 **Not responsible for.**
 
-- Compliance claims. CSFLite does not claim an organisation is compliant.
+- Compliance claims. CSFLite does not claim an organization is compliant.
 - Maturity scoring. It scores existence only (ADR-0003).
 - Scoring SOC 2 and HIPAA supplements. They are collected, not scored (ADR-0008).
-- Hosting organisation data. The operator runs the container in their own account (ADR-0006).
+- Hosting organization data. The operator runs the container in their own account (ADR-0006).
 
 ---
 
@@ -101,11 +101,11 @@ Evidence files are the most sensitive data and the least protected. The applicat
 
 | Data class | Location | Sensitivity | At-rest handling | Status | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| Organisation responses (Yes, Partial, No) | `Response` model, database | Confidential. Shows an organisation's control gaps | Database default. Hosted encryption depends on the provider | PARTIAL | design §8, §18 |
+| Organization responses (Yes, Partial, No) | `Response` model, database | Confidential. Shows an organization's control gaps | Database default. Hosted encryption depends on the provider | PARTIAL | design §8, §18 |
 | Assessor notes | `Response.notes`, database | Confidential. Free text, so it can hold anything | Same as responses | PARTIAL | design §8 |
-| Evidence files | Object storage hosted, filesystem under `CSFLITE_MEDIA_ROOT` locally | Highest. Organisation documents and screenshots | Not encrypted by the application, not malware scanned | ABSENT | design §8, §18 |
-| Original evidence filenames | `Evidence` row, database | Confidential. Can name the organisation | Database default | PARTIAL | design §8 |
-| Engagement label | `Assessment.label`, database | Confidential. Identifies the organisation | Database default | PARTIAL | design §8 |
+| Evidence files | Object storage hosted, filesystem under `CSFLITE_MEDIA_ROOT` locally | Highest. Organization documents and screenshots | Not encrypted by the application, not malware scanned | ABSENT | design §8, §18 |
+| Original evidence filenames | `Evidence` row, database | Confidential. Can name the organization | Database default | PARTIAL | design §8 |
+| Engagement label | `Assessment.label`, database | Confidential. Identifies the organization | Database default | PARTIAL | design §8 |
 | Result snapshots | `Result` model: assessment, heatmap, `lookup_digest` | Confidential. Immutable once written | Database default | CONFIRMED | design §8 |
 | Reference data | `csf_lookup.csv` in the image | Not sensitive. Version-controlled | Version control | CONFIRMED | ADR-0004 |
 | Operator password | `CSFLITE_PASSWORD`, environment | Secret | Environment only. How it is compared is UNSPECIFIED | UNSPECIFIED | design §9, §10 |
@@ -122,7 +122,7 @@ In design mode this section is the contract. A coding agent reads it before chan
 | ID | Decision | Rationale | Status | Evidence |
 | --- | --- | --- | --- | --- |
 | AD-1 | A web application replaces the CLI | One front end to maintain. The scoring core has no I/O, so the rewrite stays in intake and output | CONFIRMED | ADR-0005 |
-| AD-2 | Ship a container image the operator runs. Never a hosted service | Organisation data stays in an environment the operator controls | CONFIRMED | ADR-0006 |
+| AD-2 | Ship a container image the operator runs. Never a hosted service | Organization data stays in an environment the operator controls | CONFIRMED | ADR-0006 |
 | AD-3 | Portable, not elastic: always on, one worker | pandas adds about a second of import time to a cold start, and one operator creates no load | CONFIRMED | ADR-0006, design §4 |
 | AD-4 | DigitalOcean App Platform is the first hosted profile, as a proof of concept. AWS, Azure and GCP follow in Phase 7 | Spaces speaks the S3 API, so the storage seam is tested early. Railway had no object storage and needed a volume | CONFIRMED | ADR-0006 amendment |
 | AD-5 | The operator declares public mode. A password is required only then | The bind address says nothing inside a container | CONFIRMED | ADR-0007 |
@@ -150,7 +150,7 @@ Thirteen open gaps, carried forward from sections 3 to 6. OI-1 is resolved by th
 | OI-6 | Upload checks beyond the file extension | The allowlist is by extension only, so a renamed file passes | Architect | TB-6 |
 | OI-7 | Evidence is not encrypted at rest by the application and not scanned for malware | Accepted in design §18 as an operator responsibility. Hosted encryption depends on the provider | Architect | none |
 | OI-8 | No audit trail of who changed a response, or when | Not in the design | Architect | none |
-| OI-9 | No backup or restore procedure for the database or the evidence store | Not in the design | Architect | Hosted use with real organisation data |
+| OI-9 | No backup or restore procedure for the database or the evidence store | Not in the design | Architect | Hosted use with real organization data |
 | OI-10 | Encryption in transit to PostgreSQL and Spaces is not stated | Design §9 gives connection settings but not transport requirements | Architect | TB-4 |
 | OI-11 | `django-storages` 1.14.6 lists Django support only up to 5.1, and its last release was April 2025. Nobody has declared it tested on Django 5.2 | It installs, because it only requires Django 3.2 or later, but that is not a support claim. Needs a smoke test of upload, download and delete against Django 5.2.18 | Architect | Hosted profile |
 | OI-12 | No library is chosen to read `DATABASE_URL`. Django does not parse that setting itself | Design §7 says storage and database are chosen by environment settings with no code difference, but names no parser | Architect | Phase 4 build |

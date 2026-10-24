@@ -116,7 +116,7 @@ The severity column does not.
 **Options.**
 
 *Accept as a response label.* Document that `severity` restates `response` and that ranking comes
-from the `gap_score` sort. Cheapest. Leaves a redundant column in a client-facing output.
+from the `gap_score` sort. Cheapest. Leaves a redundant column in an organisation-facing output.
 
 *Drop the column.* Removes the redundancy. Breaking change to the §3 heatmap contract, and any
 consumer rendering colour bands by severity has to switch to `gap_score`.
@@ -188,7 +188,7 @@ exact two-decimal scores at every response value.
 It becomes reachable the moment anyone adds a weight like 1.25, and `docs/assessment_philosophy.md`
 line 444 already uses 1.25 in its worked example. Spec §10 states that reweighting a subcategory
 "requires only changing this file", so a maintainer would hit this with no warning and no test
-failure. Two client-facing deliverables would then disagree on the same number.
+failure. Two organisation-facing deliverables would then disagree on the same number.
 
 The underlying mistake is architectural: formatting is presentation, and the heatmap does arithmetic
 on a presentation value.
@@ -212,7 +212,7 @@ parses the rounded `assessment_score` string. Its required-columns set changed f
 Kept through the finding 2 revert — it is correct regardless of how severity is derived.
 
 **Related notes.** Rounding is half-to-even, Python's f-string default: `0.625` formats as `"0.62"`,
-not `"0.63"`. Consistent, but worth knowing for a client-facing number.
+not `"0.63"`. Consistent, but worth knowing for an organisation-facing number.
 
 A weight of `0` would classify a "Yes" as `high`, since `assessment_score` would be 0. Not reachable
 — all weights are ≥ 1.0 — and the finding 1 guards do not catch it, because 0 is not NaN.

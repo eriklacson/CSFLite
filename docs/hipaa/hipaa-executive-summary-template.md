@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Organization** | [Client Name] |
+| **Organization** | [Organization Name] |
 | **Assessment Date** | [Date] |
 | **Prepared by** | [Assessor Name / Firm] |
-| **Client Type** | Business Associate (BA) serving US healthcare Covered Entities |
+| **Organization Type** | Business Associate (BA) serving US healthcare Covered Entities |
 | **HIPAA Scope Assessed** | Security Rule (§164.308, §164.310, §164.312), Breach Notification Rule (§164.400–414) |
 
 > **Readiness Assessment Notice**

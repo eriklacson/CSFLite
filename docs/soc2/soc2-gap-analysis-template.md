@@ -1,6 +1,6 @@
 # SOC 2 Readiness Gap Analysis
 
-**Organization:** [Client Name]
+**Organization:** [Organization Name]
 **Assessment Date:** [Date]
 **Assessor:** [Name / Firm]
 **CSFLite Version:** 0.1.0

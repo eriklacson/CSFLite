@@ -5,7 +5,7 @@
 **Architectural basis:** [ADR-0001](../specs/adr/ADR-0001-full-csf-crosswalk.md)
 **Scope:** Administrative Safeguards (§164.308), Physical Safeguards (§164.310), Technical Safeguards (§164.312), Organizational Requirements — BA subcontractor provisions (§164.314(a)(2)(i)), Breach Notification Rule — BA obligations (§164.400–414)
 **Excluded:** Privacy Rule (§164.500 series); Documentation Requirements (§164.316) and Periodic Evaluation (§164.308(a)(8)) are advisory notes, not assessed gaps; Clearinghouse isolation (§164.308(a)(4)(i)) is noted as inapplicable to most BAs
-**Client context:** Business Associate obligations for Philippine SMBs (20–200 employees) serving US healthcare Covered Entities
+**Organization context:** Business Associate obligations for Philippine SMBs (20–200 employees) serving US healthcare Covered Entities
 
 **Coverage ratings:**
 - `full` — CSF subcategory is in the CSFLite 25 and directly evidences the HIPAA standard or implementation specification
@@ -70,10 +70,10 @@
 
 | HIPAA Section | Standard / Implementation Specification | Req/Addr | NIST CSF 2.0 Subcategory ID | Subcategory Name | In CSFLite 25? | Coverage Rating | Notes |
 |---|---|---|---|---|---|---|---|
-| §164.308(a)(6) | Response and Reporting | R | RS.MA-01 | The incident response plan is executed in coordination with relevant third parties | Yes | full | Tested IR plan with third-party coordination directly evidences the incident response requirement, including coordination with Covered Entity clients for ePHI-involving incidents. |
+| §164.308(a)(6) | Response and Reporting | R | RS.MA-01 | The incident response plan is executed in coordination with relevant third parties | Yes | full | Tested IR plan with third-party coordination directly evidences the incident response requirement, including coordination with Covered Entity organizations for ePHI-involving incidents. |
 | §164.308(a)(6) | Response and Reporting | R | RS.MI-01 | Incidents are contained | Yes | full | Containment playbooks with isolation capability directly address incident containment procedures. |
 | §164.308(a)(6) | Response and Reporting | R | RS.MI-02 | Incidents are eradicated | Yes | full | Eradication procedures and post-incident validation complete the response-to-recovery lifecycle. |
-| §164.308(a)(6) | Response and Reporting | R | RS.CO-02 | Internal and external stakeholders are notified of incidents | Yes | full | Notification procedures and communication templates address incident reporting obligations, including escalation to Covered Entity clients for ePHI-involving incidents per §164.410. |
+| §164.308(a)(6) | Response and Reporting | R | RS.CO-02 | Internal and external stakeholders are notified of incidents | Yes | full | Notification procedures and communication templates address incident reporting obligations, including escalation to Covered Entity organizations for ePHI-involving incidents per §164.410. |
 | §164.308(a)(6) | Response and Reporting | R | DE.AE-08 | Incidents are declared when adverse events meet defined incident criteria | Yes | full | Incident declaration criteria formalize the threshold for invoking HIPAA-required incident response procedures. |
 
 ### §164.308(a)(7) Contingency Plan
@@ -91,13 +91,13 @@
 
 | HIPAA Section | Standard / Implementation Specification | Req/Addr | NIST CSF 2.0 Subcategory ID | Subcategory Name | In CSFLite 25? | Coverage Rating | Notes |
 |---|---|---|---|---|---|---|---|
-| §164.308(a)(8) | Periodic Evaluation | R | GV.RM-01 | Risk management objectives are established and agreed to by organizational stakeholders | Yes | advisory | This engagement satisfies the §164.308(a)(8) periodic evaluation requirement. Advisory: the client should establish a recurring evaluation schedule — annually is recommended. Not assessed as a separate gap. |
+| §164.308(a)(8) | Periodic Evaluation | R | GV.RM-01 | Risk management objectives are established and agreed to by organizational stakeholders | Yes | advisory | This engagement satisfies the §164.308(a)(8) periodic evaluation requirement. Advisory: the organization should establish a recurring evaluation schedule — annually is recommended. Not assessed as a separate gap. |
 
 ### §164.308(b)(1) Business Associate Contracts
 
 | HIPAA Section | Standard / Implementation Specification | Req/Addr | NIST CSF 2.0 Subcategory ID | Subcategory Name | In CSFLite 25? | Coverage Rating | Notes |
 |---|---|---|---|---|---|---|---|
-| §164.308(b)(1) | Business Associate Contracts and Other Arrangements | R | GV.SC-01 | A cybersecurity supply chain risk management program is established | Yes | partial | Supply chain risk management including vendor security requirements partially addresses BA obligations; BAA existence with Covered Entity clients and subcontractors is verified via Supplement Q5. Legal sufficiency review of BAA content is out of scope. |
+| §164.308(b)(1) | Business Associate Contracts and Other Arrangements | R | GV.SC-01 | A cybersecurity supply chain risk management program is established | Yes | partial | Supply chain risk management including vendor security requirements partially addresses BA obligations; BAA existence with Covered Entity organizations and subcontractors is verified via Supplement Q5. Legal sufficiency review of BAA content is out of scope. |
 
 ---
 
@@ -226,7 +226,7 @@
 
 ### §164.308(a)(8) — Periodic Evaluation
 
-This engagement satisfies the §164.308(a)(8) periodic evaluation requirement. The client should establish a recurring evaluation schedule — **annually is recommended** per industry practice. Document this engagement as the baseline evaluation and schedule the next assessment.
+This engagement satisfies the §164.308(a)(8) periodic evaluation requirement. The organization should establish a recurring evaluation schedule — **annually is recommended** per industry practice. Document this engagement as the baseline evaluation and schedule the next assessment.
 
 ### §164.316(b)(2) — Documentation Retention
 

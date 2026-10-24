@@ -1,10 +1,10 @@
 # HIPAA Readiness Gap Analysis
 
-**Organization:** [Client Name]
+**Organization:** [Organization Name]
 **Assessment Date:** [Date]
 **Assessor:** [Name / Firm]
 **CSFLite Version:** 0.1.0
-**Client Type:** Business Associate (BA)
+**Organization Type:** Business Associate (BA)
 **HIPAA Scope:** Security Rule (45 CFR §164.308, §164.310, §164.312), Organizational Requirements — BAA provisions (§164.314(a)(2)(i)), Breach Notification Rule — BA obligations (§164.400–414)
 
 > **Readiness Assessment Notice**
@@ -13,7 +13,7 @@
 > (ePHI) for US healthcare Covered Entities. It does not constitute HIPAA compliance, a HIPAA audit,
 > or certification of any kind. Coverage determinations reflect whether controls exist at the time of
 > assessment, not whether they have been operating effectively over a sustained period. This engagement
-> identifies the client as a **Business Associate** and frames all findings in the context of BA
+> identifies the organization as a **Business Associate** and frames all findings in the context of BA
 > obligations under 45 CFR Part 164. It does not constitute a legal opinion on BAA sufficiency or
 > any other legal matter.
 
@@ -28,7 +28,7 @@
    **Evidence Assessed** (documents, configurations, or records reviewed).
 4. Coverage status is pre-populated from the crosswalk (`docs/hipaa/csflite-hipaa-crosswalk.md`).
    Update if evidence reviewed changes the initial crosswalk rating.
-5. Remediation recommendations are pre-populated as starting points. Adjust for the client's
+5. Remediation recommendations are pre-populated as starting points. Adjust for the organization's
    specific context, workforce model (on-site, remote, or hybrid), and risk tolerance.
 
 **Coverage status definitions:**
@@ -84,7 +84,7 @@
 
 | HIPAA Section | Standard / Impl. Spec. | Req/Addr | Mapped CSF Subcategory | CSFLite Coverage | Current State | Evidence Assessed | Remediation Recommendation |
 |---|---|---|---|---|---|---|---|
-| §164.308(a)(6) | Response and Reporting | R | RS.MA-01, RS.MI-01, RS.MI-02, RS.CO-02, DE.AE-08 | coverage exists | | | Confirm IR plan explicitly covers ePHI-involving incidents and includes escalation to Covered Entity clients per §164.410. |
+| §164.308(a)(6) | Response and Reporting | R | RS.MA-01, RS.MI-01, RS.MI-02, RS.CO-02, DE.AE-08 | coverage exists | | | Confirm IR plan explicitly covers ePHI-involving incidents and includes escalation to Covered Entity organizations per §164.410. |
 
 ### §164.308(a)(7) Contingency Plan
 
@@ -106,7 +106,7 @@
 
 | HIPAA Section | Standard / Impl. Spec. | Req/Addr | Mapped CSF Subcategory | CSFLite Coverage | Current State | Evidence Assessed | Remediation Recommendation |
 |---|---|---|---|---|---|---|---|
-| §164.308(b)(1) | Business Associate Contracts | R | GV.SC-01 | coverage partial | | | Verify executed BAAs exist with all CE clients and with subcontractors who access ePHI. Complete Supplement Q5. BAA content sufficiency review is out of scope. |
+| §164.308(b)(1) | Business Associate Contracts | R | GV.SC-01 | coverage partial | | | Verify executed BAAs exist with all CE organizations and with subcontractors who access ePHI. Complete Supplement Q5. BAA content sufficiency review is out of scope. |
 
 ---
 
@@ -228,7 +228,7 @@ Rank by HIPAA impact: Required specifications with `coverage missing` status fir
 
 ## Advisory Notes
 
-**§164.308(a)(8) — Periodic Evaluation:** This engagement satisfies the §164.308(a)(8) periodic evaluation requirement. The client should establish a recurring evaluation schedule — annually is recommended. Record the evaluation date and schedule the next assessment.
+**§164.308(a)(8) — Periodic Evaluation:** This engagement satisfies the §164.308(a)(8) periodic evaluation requirement. The organization should establish a recurring evaluation schedule — annually is recommended. Record the evaluation date and schedule the next assessment.
 
 **§164.316(b)(2) — Documentation Retention:** All policies, procedures, and records produced or reviewed during this engagement must be retained for a minimum of 6 years from creation or last effective date (45 CFR §164.316(b)(2)(i)). This is an administrative constraint, not an assessed gap.
 

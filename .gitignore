@@ -1,4 +1,7 @@
-#client directory
+#organisation directories (assessment data stays out of the repo)
+input/organisations/
+output/organisations/
+#previous name, kept so existing local folders stay ignored
 input/clients/
 output/clients/
 

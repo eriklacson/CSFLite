@@ -57,12 +57,12 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-10 | SILENT | `/healthz`. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks. Also, the hosted template sets `CSFLITE_ALLOWED_HOSTS` to the App Platform domain only. A health check that probes `localhost` would then get Django's 400 | design §10, §12, §13. AD-12 | INV-17 exempts only `/login` (a Proposed clause) | Architect | INV-15, INV-16, INV-17, INV-26 |
+| G-10 | SILENT | `/healthz`. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks. Also, the hosted template sets `CSFLITE_ALLOWED_HOSTS` to the App Platform domain only. A health check that probes `localhost` would then get Django's 400 | design §10, §12, §13. AD-12 | INV-17 exempts only `/login` (approved 2026-10-24). Whether `/healthz` is also exempt is still open | Architect | INV-15, INV-16, INV-17, INV-26 |
 | G-11 | SILENT | Transactions. A rejected import must leave no row. Removing evidence deletes a file and a row. No source says where transactions are used, or what happens when the file delete fails | design §8, §14, §17 | INV-2 and INV-13 state the outcome only | Architect | INV-2, INV-13 |
 | G-12 | SILENT | Assessment lifecycle. `status` is `draft`, `in_progress` or `completed`. No rule says when it changes, whether a completed assessment can be edited, or when a new Result is generated | schema M-2, M-5 | No rule | Architect | INV-8 |
-| G-13 | SILENT | CSRF. Design picks Django partly for CSRF. No source requires CSRF protection | design §7 | INV-19 is Proposed (not derived) | Architect | INV-19 |
-| G-14 | SILENT | Debug mode on a public deployment. `CSFLITE_DEBUG` defaults off. No guard stops it being on with `CSFLITE_PUBLIC=true` | design §9, §10 | INV-20 is Proposed (not derived) | Architect | INV-20, §4 |
-| G-15 | SILENT | Secrets in git history. Ruff `S105` to `S107` check source only. Bandit runs at HIGH, which skips its hardcoded-password checks (they are LOW). No history scan exists. Adding one means a tool outside the stated stack | arch §6. `pyproject.toml`. CI workflow | INV-18 is PARTIAL | Architect | INV-18 |
+| G-13 | SILENT | CSRF. Design picks Django partly for CSRF. No source requires CSRF protection | design §7 | RESOLVED 2026-10-24. Architect approved INV-19 | Architect | INV-19 |
+| G-14 | SILENT | Debug mode on a public deployment. `CSFLITE_DEBUG` defaults off. No guard stops it being on with `CSFLITE_PUBLIC=true` | design §9, §10 | RESOLVED 2026-10-24. Architect approved INV-20 | Architect | INV-20, §4 |
+| G-15 | SILENT | Secrets in git history. Ruff `S105` to `S107` check source only. Bandit runs at HIGH, which skips its hardcoded-password checks (they are LOW). No history scan exists. Adding one means a tool outside the stated stack | arch §6. `pyproject.toml`. CI workflow | Rule approved 2026-10-24 (INV-18 history clause). Still open: which scanner, since none is in the stated stack | Architect | INV-18 |
 | G-16 | UNVERIFIED | Required merge check. CI runs on every pull request. Whether a branch rule makes it required is a GitHub setting, not visible in the repo | CI workflow | INV-24 is UNVERIFIED | Architect | INV-24 |
 
 ### Failure semantics
@@ -77,7 +77,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-20 | SILENT | Log content and retention. Nothing on secrets or organization data in logs, or how long logs are kept | arch §6 | Two Proposed rules. Retention UNSPECIFIED | Architect | §4 |
+| G-20 | SILENT | Log content and retention. Nothing on secrets or organization data in logs, or how long logs are kept | arch §6 | Log content: RESOLVED 2026-10-24, architect approved both §4 rules. Retention still UNSPECIFIED | Architect | §4 |
 | G-21 | SILENT | Environments. The hosted proof of concept is public, but its data class is not stated. arch OI-9 implies real data later. No deploy trigger is stated. No preview or staging environment is defined | design §11. arch OI-9 | §5 rows UNSPECIFIED | Architect | §5 |
 | G-22 | SILENT | Limits. No rule for files per response, import CSV size, Django upload memory settings, request timeout, or pagination of `/` | design §8, §13 | §6 rows UNSPECIFIED or PARTIAL | Architect | §6 |
 
@@ -125,4 +125,5 @@ These are recorded in the sources already. They are listed here only for the sta
 | Silent | 14 (G-8 to G-15, G-17 to G-22) |
 | Unverified | 2 (G-6, G-16) |
 | Source open items referenced | 14 |
-| Proposed rules in `standards.md` that rest on a gap | 5 (CO-8, INV-19, INV-20, two in §4). Plus Proposed clauses in INV-17 and INV-18 |
+| Proposed rules in `standards.md` that rest on a gap | 0. All 5 rules and 2 clauses were approved 2026-10-24 (CO-8, INV-19, INV-20, two in §4, clauses in INV-17 and INV-18) |
+| Gaps resolved by that approval | 2 (G-13, G-14). G-20 in part |

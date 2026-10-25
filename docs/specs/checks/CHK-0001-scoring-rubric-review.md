@@ -259,7 +259,7 @@ user-visible. If notes appear in the delivered report, take the first option and
 Whichever way it goes, the code and §3 need to agree.
 
 **Resolution (2026-10-18).** Won't fix in the CLI. The CLI is deleted once the web app reaches golden
-parity ([ADR-0005](../../docs/specs/adr/ADR-0005-web-application-replaces-cli.md)). The web app
+parity ([ADR-0005](../adr/ADR-0005-web-application-replaces-cli.md)). The web app
 persists notes per response (`Response.notes`, Phase 4 design §8). The CSV exports stay without a
 notes column so byte-identical parity holds. Spec §3 now describes `notes` as kept with the
 assessment record, not carried into the CSV output, so the code and the contract agree.

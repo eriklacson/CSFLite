@@ -25,7 +25,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-1 | CONFLICT | Tenancy timing. The architect directed that tenancy is a later phase. Design §3 and scope agree: organizations and tenancy are out of Phase 4. ADR-0009 and schema still put `organization_id`, composite foreign keys, a seeded Organization row and `current_organization(request)` into the Phase 4 tables. ADR-0009, `CLAUDE.md` and arch TB-2 agree there are no tenants in Phase 4. The disagreement is only about the tenant-ready columns and the Organization row | ADR-0009. schema §1 to §4, §6. scope "Out of scope". design §3 | Writes no tenancy rules. Data model rules cover Assessment, Response, Evidence and Result only. ADR-0009 and schema need amending, or the direction needs revisiting | Architect | Scope, §2 Data model, INV-12 |
+| G-1 | CONFLICT | Tenancy timing. The architect directed that tenancy is a later phase. Design §3 and scope agree: organizations and tenancy are out of Phase 4. ADR-0009 and schema still put `organization_id`, composite foreign keys, a seeded Organization row and `current_organization(request)` into the Phase 4 tables. ADR-0009, `AGENTS.md` and arch TB-2 agree there are no tenants in Phase 4. The disagreement is only about the tenant-ready columns and the Organization row | ADR-0009. schema §1 to §4, §6. scope "Out of scope". design §3 | Writes no tenancy rules. Data model rules cover Assessment, Response, Evidence and Result only. ADR-0009 and schema need amending, or the direction needs revisiting | Architect | Scope, §2 Data model, INV-12 |
 | G-2 | CONFLICT | Evidence storage path. Design: `<assessment id>/<random name>.<ext>`. Schema: `org/<organization_id>/<random>`, with no extension shown. The `org/` prefix is a tenancy feature (G-1) | design §8. schema M-4. ADR-0009 | INV-12 requires only a random name and no original filename. The path prefix and the extension are not decided | Architect | INV-12 |
 | G-3 | CONFLICT | Results per assessment. Scope says "an immutable result snapshot per assessment", which reads as one. Schema and ADR-0009 say an assessment can have many, and the latest is current. Design §8 says only "Immutable snapshot", with no count | scope "In scope". schema M-5. ADR-0009. design §8 | Follows schema | Architect | INV-8 |
 | G-4 | CONFLICT | Base image tag. Design: `python:3.12-slim`. AD-11 and arch §3: `python:3.12.15-slim`, pinned to a patch | design §12. arch §3, AD-11 | Follows AD-11 | Architect | CO-12 |
@@ -111,7 +111,7 @@ These are recorded in the sources already. They are listed here only for the sta
 | Source | Why it matters |
 |---|---|
 | `docs/assessment_philosophy.md` | Claims precedence over all docs (G-6) |
-| `.claude/checks/CHK-0001` to `CHK-0004` | Cited by ADR-0003, ADR-0007 and design §16. Their findings were taken as summarized there |
+| `docs/specs/checks/CHK-0001` to `CHK-0004` | Cited by ADR-0003, ADR-0007 and design §16. Their findings were taken as summarized there |
 | `docs/specs/design/ux/` | Prototype and wireframes. No engineering rules |
 
 ---

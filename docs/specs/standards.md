@@ -124,7 +124,7 @@ The template's tenant rows (tenant identity from the session, tenant scoping in 
 
 | ID | Invariant | Scope | Enforcement mechanism | Locus | Install status | Status | Evidence |
 |---|---|---|---|---|---|---|---|
-| INV-24 | A change **MUST** pass Black, Ruff, Bandit and pytest in CI before merge | pipeline | `.github/workflows/python-lint.yaml` runs on every PR. Whether a branch rule requires it is not visible in the repo | [P] | installed | UNVERIFIED | arch §3 CI row. `CLAUDE.md`. G-16 |
+| INV-24 | A change **MUST** pass Black, Ruff, Bandit and pytest in CI before merge | pipeline | `.github/workflows/python-lint.yaml` runs on every PR. Whether a branch rule requires it is not visible in the repo | [P] | installed | UNVERIFIED | arch §3 CI row. `AGENTS.md`. G-16 |
 | INV-25 | Migrations **MUST** run as an explicit release command. They **MUST NOT** run on app boot | container, release | *mechanism proposed*: reviewer check that the entrypoint and `AppConfig.ready()` never call `migrate` | [G] | unbuilt | PARTIAL | design §4, §12. schema §4 |
 | INV-26 | The container **MUST** be multi-stage, run as a non-root user, and leave Poetry out of the runtime layer. Gunicorn **MUST** bind `0.0.0.0:$PORT` with one worker. `HEALTHCHECK` **MUST** target `/healthz`. Logs **MUST** go unbuffered to stdout | Dockerfile | *mechanism proposed*: reviewer checklist against design §12 | [G] | unbuilt | PARTIAL | design §4, §12. AD-3. arch §3. What `/healthz` checks, and under which `Host`: G-10 |
 
@@ -179,7 +179,7 @@ No security-relevant path is declared fail-open. The local profile has no login 
 | preview | Not defined | UNSPECIFIED | UNSPECIFIED | UNSPECIFIED | UNSPECIFIED | UNSPECIFIED | No source. G-21 |
 | staging | Not defined | UNSPECIFIED | UNSPECIFIED | UNSPECIFIED | UNSPECIFIED | UNSPECIFIED | No source. G-21 |
 | production (DigitalOcean proof of concept) | Prove the same container runs off the laptop | UNSPECIFIED | One password and a session. `CSFLITE_PUBLIC=true` | Yes. App Platform assigns a public domain | UNSPECIFIED. Migrations run as a release command | PARTIAL | design §11, §12. ADR-0006. G-21 |
-| ci | Lint and tests | synthetic (golden fixtures, inline test data) | n/a | n/a | Every pull request and every push to `master` | CONFIRMED | `.github/workflows/python-lint.yaml`. `CLAUDE.md` |
+| ci | Lint and tests | synthetic (golden fixtures, inline test data) | n/a | n/a | Every pull request and every push to `master` | CONFIRMED | `.github/workflows/python-lint.yaml`. `AGENTS.md` |
 
 **Data vocabulary** — `synthetic` / `anonymized` / `production-copy` / `production` / `UNSPECIFIED`.
 

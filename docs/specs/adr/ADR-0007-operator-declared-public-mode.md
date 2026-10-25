@@ -6,7 +6,7 @@ Accepted
 
 ## Date
 
-2026-10-16 ([CHK-0004](../../../.claude/checks/CHK-0004-phase4-container-auth-guard.md))
+2026-10-16 ([CHK-0004](../checks/CHK-0004-phase4-container-auth-guard.md))
 
 ## Context
 

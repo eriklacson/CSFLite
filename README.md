@@ -99,7 +99,7 @@ Contributions are welcome. Please read **[CONTRIBUTING.md](docs/CONTRIBUTING.md)
 - Integration test coverage for governance assessment
 - Documentation improvements and compliance crosswalks
 
-This project uses Claude Code for spec-driven development. See CLAUDE.md for context and conventions, and `docs/specs/` for the spec brief, ADRs, Phase 4 design, and doc templates.
+This project uses agent-assisted, spec-driven development. See `AGENTS.md` for context and conventions (any coding agent; `CLAUDE.md` imports it), and `docs/specs/` for the spec brief, ADRs, Phase 4 design, and doc templates.
 
 **Requires discussion first:**
 - Subcategory changes

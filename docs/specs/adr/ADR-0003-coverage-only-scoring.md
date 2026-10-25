@@ -7,8 +7,8 @@ Accepted
 ## Date
 
 Coverage-only scoring decided in Phase 1. Severity rule decided 2026-08-29
-([CHK-0001](../../../.claude/checks/CHK-0001-scoring-rubric-review.md) #2,
-[CHK-0002](../../../.claude/checks/CHK-0002-adversarial-review-severity-rework.md)). Recorded 2026-10-18.
+([CHK-0001](../checks/CHK-0001-scoring-rubric-review.md) #2,
+[CHK-0002](../checks/CHK-0002-adversarial-review-severity-rework.md)). Recorded 2026-10-18.
 
 ## Context
 

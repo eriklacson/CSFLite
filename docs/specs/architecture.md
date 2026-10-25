@@ -60,7 +60,7 @@ In design mode, CONFIRMED means decided in the design or an ADR, with an exact v
 | Auth | Django session cookie, one operator password from `CSFLITE_PASSWORD`, hosted profile only | 5.2.18, built into Django | CONFIRMED | design §10, ADR-0007 |
 | Container | `python:3.12.15-slim`, multi-stage, non-root; Docker Compose locally | 3.12.15 | UNVERIFIED | design §11, §12. Confirm the image tag exists when the image is first built |
 | Hosting / deploy target | DigitalOcean App Platform, a proof of concept; AWS, Azure and GCP in Phase 7 | Managed by the provider | CONFIRMED | ADR-0006 amendment 2026-10-22 |
-| CI | GitHub Actions on Python 3.12: `actions/checkout` v4, `actions/setup-python` v5, Poetry, Black, Ruff, Bandit, pytest | Black 26.3.1, Ruff 0.12.8, Bandit 1.8.6, pytest 9.0.3. Poetry is not pinned | PARTIAL | `CLAUDE.md`, `.github/workflows/python-lint.yaml`, `poetry.lock`. See OI-13 |
+| CI | GitHub Actions on Python 3.12: `actions/checkout` v4, `actions/setup-python` v5, Poetry, Black, Ruff, Bandit, pytest | Black 26.3.1, Ruff 0.12.8, Bandit 1.8.6, pytest 9.0.3. Poetry is not pinned | PARTIAL | `AGENTS.md`, `.github/workflows/python-lint.yaml`, `poetry.lock`. See OI-13 |
 
 ---
 

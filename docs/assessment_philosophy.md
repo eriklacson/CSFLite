@@ -211,7 +211,7 @@ The procedural basis for governance evaluations is drawn from SP 800-53A Rev 5 (
 - **Interview** — Discussion with personnel to confirm that practices are understood and applied
 - **Test** — Observation or verification that a capability is operational and repeatable
 
-CSFLite governance questions are scoped to the Examine and Interview methods. Test-based evidence (e.g., backup restoration logs, DR exercise records) is accepted as supporting documentation when cited by a respondent. It is never required for a "Yes". The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
+CSFLite governance questions are scoped to the Examine and Interview methods. Test-based evidence (e.g., backup restoration logs, DR exercise records) is accepted as supporting documentation when cited by a respondent. It is not required for a "Yes", with one exception: backups (see the Evidence Rule). The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
 
 The questionnaire implements the coverage-first philosophy by asking existence-focused questions:
 
@@ -253,7 +253,9 @@ Remediation guidance is:
 
 This is the most critical quality control mechanism in CSFLite assessments. Without evidence requirements, assessments devolve into attestation theater.
 
-"Yes" does not mean the control works well or has been tested. That would be a maturity question, and CSFLite does not ask it.
+"Yes" does not mean the control works well. That would be a maturity question, and CSFLite does not ask it. In general, a test is not required.
+
+**Exception: backups.** An untested backup is treated as no backup, because a backup that cannot be restored provides no recovery. A "Yes" for backups requires evidence of a successful restoration test within the past 12 months. This exception applies only to backups.
 
 The rule applies the same way whether the organization assesses itself or an outside person assesses it. A self-assessor must hold their own answers to the same standard. CSFLite does not verify evidence. It records the answer and the notes. A second reviewer is recommended for self-assessments.
 
@@ -267,7 +269,8 @@ The rule applies the same way whether the organization assesses itself or an out
 
 | Organization Statement | Evidence Provided | Score | Rationale |
 |-----------------|-------------------|-------|-----------|
-| "We do backups" | Backup schedule plus recent backup job logs covering in-scope systems | **Yes** | Practice exists, is running, and is shown |
+| "We do backups" | Backup schedule, job logs, and a successful restoration test from the last 12 months | **Yes** | Backups exist and are shown to restore |
+| "We do backups" | Backup schedule and job logs, no restoration test | **Partial** | Backups run but are not shown to restore |
 | "We do backups" | Backup schedule documentation only | **Partial** | Practice is documented but not shown running |
 | "We do backups" | No documentation | **No** | No evidence of intentional, repeatable practice |
 | "We have an IR plan" | Approved plan with owner, version and date | **Yes** | Plan exists, is owned, and is current |
@@ -339,12 +342,12 @@ Acceptable evidence must meet three criteria:
 **Acceptable evidence:**
 - Encryption configuration screenshots (S3, RDS, disk)
 - TLS/SSL certificate details and cipher suites
-- Backup job logs or restoration test results with dates
+- Backup job logs plus a dated restoration test result (within 12 months)
 - Data classification scheme with handling requirements
 
 **Insufficient evidence:**
 - Statement that "encryption is enabled"
-- Backup schedules without job logs or other proof they run
+- Backup schedules or job logs with no restoration test
 
 #### Detection & Monitoring (DE.*)
 

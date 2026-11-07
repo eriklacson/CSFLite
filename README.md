@@ -50,7 +50,7 @@ See the [Assessment Philosophy](docs/assessment_philosophy.md) for the full desi
 
 ## Use Case
 
-This toolkit is for SMEs, startups, freelance consultants, and security-oriented DevOps teams who want structured risk insight without enterprise overhead.
+This toolkit is for SMEs, startups, freelance consultants, and security-oriented DevOps teams who want a clear view of which security controls exist and which are missing, without enterprise overhead.
 
 **Who this is for:**
 - Startups preparing for SOC 2, HIPAA, or customer security questionnaires
@@ -189,7 +189,7 @@ This is not a maturity assessment framework. We measure **existence**, not **exc
 CSFLite is successful if it helps organizations:
 
 1. **Identify security gaps** with minimal effort
-2. **Prioritize remediation** based on weighted risk
+2. **Prioritize remediation** based on weighted coverage gaps
 3. **Generate evidence** for compliance needs without compliance-driven work
 4. **Scale security practices** as the organization grows
 

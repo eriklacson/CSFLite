@@ -26,11 +26,11 @@ The manual governance check exists to answer a simple, fundamental question:
 
 > **Do the core cybersecurity outcomes exist at all?**
 
-This is a binary or near-binary assessment. It does not attempt to measure how well something works—only whether it exists in any intentional, repeatable form.
+This is a simple assessment with three answers: Yes, Partial or No. It does not attempt to measure how well something works—only whether it exists in any intentional, repeatable form.
 
 ### What It Assesses
 
-The manual governance phase prioritizes **control coverage**, not exposure, likelihood, or business impact.
+The manual governance check prioritizes **control coverage**, not exposure, likelihood, or business impact.
 
 It intentionally assesses:
 
@@ -41,7 +41,7 @@ It intentionally assesses:
 
 ### What It Intentionally Does Not Assess
 
-The manual governance phase does not attempt to measure:
+The manual governance check does not attempt to measure:
 
 - **Control effectiveness or maturity**: How well does this control perform?
 - **Threat likelihood**: How probable is exploitation?
@@ -79,13 +79,13 @@ This is the equivalent of asking calculus questions before arithmetic is solid.
 
 CSFLite prioritizes establishing **what exists** before attempting to measure **how well it works** or **what happens if it fails**.
 
-| Phase | Question | Output |
+| Stage | Question | Output |
 |-------|----------|--------|
 | Coverage Assessment | Does this control exist? | Gap list |
 | Maturity Assessment | How well does this control perform? | Maturity score |
 | Risk Quantification | What is the likelihood and impact of failure? | Risk score |
 
-CSFLite operates in Phase 1. It does not attempt Phase 2 or Phase 3.
+CSFLite operates in Stage 1. It does not attempt Stage 2 or Stage 3.
 
 ### Why This Works for SMEs and Lean Teams
 
@@ -139,7 +139,7 @@ CSFLite does not attempt to assess all 106 CSF subcategories. Instead, it focuse
 
 - **Foundational importance**: Controls that other controls depend on
 - **Broad applicability**: Relevant to virtually all organizations regardless of sector
-- **Assessability**: Can be meaningfully evaluated through scanning or questionnaire
+- **Assessability**: Can be meaningfully evaluated through a questionnaire and evidence review
 - **Actionability**: Gaps can be addressed with clear, concrete steps
 
 ### Selection Criteria
@@ -180,7 +180,7 @@ Every assessment output should point to a concrete next step. Vague recommendati
 
 ### 3. Defensible Over Precise
 
-A clear "yes/no" answer is more valuable than a nuanced score that cannot be explained or defended.
+A clear Yes, Partial or No answer is more valuable than a nuanced score that cannot be explained or defended.
 
 ### 4. Governance as Infrastructure
 
@@ -212,7 +212,7 @@ The procedural basis for governance evaluations is drawn from SP 800-53A Rev 5 (
 - **Interview** — Discussion with personnel to confirm that practices are understood and applied
 - **Test** — Observation or verification that a capability is operational and repeatable
 
-CSFLite governance questions are scoped to the Examine and Interview methods. Test-based evidence (e.g., backup restoration logs, DR exercise records) is accepted as supporting documentation when cited by a respondent. The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
+CSFLite governance questions rely mainly on the Examine and Interview methods. Test-based evidence (e.g., DR exercise records) is accepted as supporting documentation when cited by a respondent. It is not required for a "Yes", with one exception: backups, recovery procedures and the incident response plan, where a test is required (see the Evidence Rule). The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
 
 The questionnaire implements the coverage-first philosophy by asking existence-focused questions:
 
@@ -250,19 +250,33 @@ Remediation guidance is:
 
 ### The Evidence Rule
 
-**A "Yes" score requires supporting evidence. Assertions without proof are scored "Partial" or "No".**
+**A "Yes" score means the outcome exists and evidence shows it. Assertions without evidence are scored "Partial" or "No".**
 
-This is the most critical quality control mechanism in CSFLite assessments. Without evidence requirements, assessments devolve into attestation theater where organizations self-report compliance without verification.
+This is the most critical quality control mechanism in CSFLite assessments. Without evidence requirements, assessments devolve into attestation theater.
+
+"Yes" does not mean the control works well. That would be a maturity question, and CSFLite does not ask it. In general, a test is not required.
+
+**Exception: backups, recovery and incident response.** An untested backup is treated as no backup, because a backup that cannot be restored provides no recovery. The same holds for recovery procedures (RC.RP-01): a procedure that has never been run does not exist in any useful form. A "Yes" for backups (PR.DS-11) or recovery (RC.RP-01) requires evidence of a successful restoration or recovery test within the past 12 months. The same holds for the incident response plan (RS.MA-01): a plan that has never been exercised does not exist in any useful form. A "Yes" for the IR plan requires a tabletop exercise or drill report from the past 12 months. This exception applies only to these three. It is an existence check, not an effectiveness check.
+
+The rule applies the same way whether the organization assesses itself or an outside person assesses it. A self-assessor must hold their own answers to the same standard. CSFLite does not verify evidence. Verification is the reviewer's job. The tool records the answer and the notes. A second reviewer is recommended for self-assessments.
+
+**What the scores mean:**
+
+- **Yes**: The outcome exists, has an owner, covers the stated scope, and evidence is provided.
+- **Partial**: Something exists, but evidence is missing, or it covers only part of the scope, or it is documented but not applied.
+- **No**: Nothing intentional and repeatable exists, or nothing can be shown.
 
 ### Scoring Decision Framework
 
 | Organization Statement | Evidence Provided | Score | Rationale |
 |-----------------|-------------------|-------|-----------|
-| "We do backups" | Last 3 restoration test reports | **Yes** | Control exists, enforced, and tested |
-| "We do backups" | Backup schedule documentation only | **Partial** | Control exists but not validated |
+| "We do backups" | Backup schedule, job logs, and a successful restoration test from the last 12 months | **Yes** | Backups exist and are shown to restore |
+| "We do backups" | Backup schedule and job logs, no restoration test | **Partial** | Backups run but are not shown to restore |
+| "We do backups" | Backup schedule documentation only | **Partial** | Practice is documented but not shown running |
 | "We do backups" | No documentation | **No** | No evidence of intentional, repeatable practice |
-| "We have an IR plan" | Plan document + tabletop exercise report from last 6 months | **Yes** | Control exists and has been tested |
-| "We have an IR plan" | Plan document, untested | **Partial** | Control documented but not validated |
+| "We have an IR plan" | Approved plan with owner, version and date, plus a tabletop or drill report from the last 12 months | **Yes** | Plan exists, is owned, and has been exercised |
+| "We have an IR plan" | Approved plan with owner, version and date, no exercise | **Partial** | Plan is adopted but not shown to work |
+| "We have an IR plan" | Draft or unapproved plan | **Partial** | Plan is written but not adopted |
 | "We enforce MFA" | Screenshot showing MFA required for all accounts | **Yes** | Technical enforcement visible |
 | "We enforce MFA" | Policy document requiring MFA | **Partial** | Policy exists, no proof of enforcement |
 
@@ -271,14 +285,13 @@ This is the most critical quality control mechanism in CSFLite assessments. With
 Acceptable evidence must meet three criteria:
 
 #### 1. Current
-- **Tested controls:** Evidence within past 12 months (backups, DR, IR plans)
+- **Dated records** (job logs, review minutes, exercise reports): within the past 12 months
 - **Configuration controls:** Current screenshots or exports (not outdated)
 - **Policy controls:** Latest approved version with effective date
 
 #### 2. Specific
-- Shows the control in operation, not just existence
+- Shows the control is in place, not only described
 - Demonstrates scope (all systems, all users, all locations)
-- Includes validation or testing results where applicable
 
 #### 3. Verifiable
 - Can be independently confirmed if needed
@@ -309,7 +322,7 @@ Acceptable evidence must meet three criteria:
 - Software inventory with version tracking
 
 **Insufficient evidence:**
-- Outdated inventory (>6 months old)
+- Outdated inventory (older than 12 months)
 - Incomplete inventory missing significant systems
 - No ownership or classification metadata
 
@@ -331,13 +344,12 @@ Acceptable evidence must meet three criteria:
 **Acceptable evidence:**
 - Encryption configuration screenshots (S3, RDS, disk)
 - TLS/SSL certificate details and cipher suites
-- Backup restoration test results with dates
+- Backup job logs plus a dated restoration test result (within 12 months)
 - Data classification scheme with handling requirements
 
 **Insufficient evidence:**
 - Statement that "encryption is enabled"
-- Backup schedules without test results
-- No evidence of immutable or offline backups
+- Backup schedules or job logs with no restoration test
 
 #### Detection & Monitoring (DE.*)
 
@@ -356,12 +368,13 @@ Acceptable evidence must meet three criteria:
 
 **Acceptable evidence:**
 - IR plan document with version control
-- Tabletop exercise reports (last 12 months)
+- Tabletop exercise or drill report (within 12 months)
 - Incident communication templates
 - Post-incident review documentation
 
 **Insufficient evidence:**
-- IR plan that has never been tested
+- Draft or unapproved IR plan
+- Approved IR plan with no exercise or drill report
 - Generic IR templates without customization
 - No evidence of organizational awareness
 
@@ -375,8 +388,8 @@ If an organization cannot provide evidence:
 - **Rationale:** Intent exists but not operationalized
 
 **Scenario 2: Control exists informally but not documented**
-- **Score:** Partial (at best) or No
-- **Example:** "We do backups but don't document or test them"
+- **Score:** No, unless some records show it runs (then Partial)
+- **Example:** "We do backups but don't document them"
 - **Rationale:** Cannot distinguish intentional practice from accident
 
 **Scenario 3: Control cannot be demonstrated**
@@ -389,24 +402,26 @@ If an organization cannot provide evidence:
 - **Example:** "We're implementing MFA next month"
 - **Rationale:** Coverage assessment reflects current state, not future intent
 
-### Assessor Guidance
+### Reviewer Guidance
+
+A reviewer is the outside assessor, or the person on the team who checks the answers.
 
 **When an organization claims a control exists:**
 
 1. **Request specific evidence:** "Can you show me [artifact]?"
-2. **Verify currency:** "When was this last updated/tested?"
+2. **Verify currency:** "When was this last updated or reviewed?"
 3. **Check scope:** "Does this cover all [systems/users/locations]?"
 4. **Confirm enforcement:** "How do you verify this is being followed?"
 
 **If the organization hesitates or cannot provide evidence:**
 
-- Explain that "Yes" requires proof, not trust
+- Explain that "Yes" requires evidence, not trust
 - Offer to score as "Partial" if documentation exists
 - Note the gap in assessment findings
 - Recommend evidence collection as remediation step
 
 **Never:**
-- Accept verbal assertions as evidence
+- Accept verbal assertions alone as evidence. Interview answers give context. They can support a score but cannot earn a "Yes" without an artifact
 - Assume controls exist based on industry norms
 - Score aspirational or planned controls as current
 - Compromise evidence requirements to avoid difficult conversations
@@ -416,323 +431,10 @@ If an organization cannot provide evidence:
 Before finalizing any assessment, verify:
 
 - [ ] Every "Yes" score has documented evidence in assessment notes
-- [ ] Evidence meets currency standards (tested controls within 12 months)
+- [ ] Evidence meets currency standards (dated records within 12 months)
 - [ ] Evidence is specific (not generic templates)
 - [ ] Partial/No scores have clear gap explanations
 - [ ] No scores are based solely on organization assertions
-
----
-
-## Contextual Prioritization
-
-### Beyond Framework Weights
-
-CSFLite framework weights (stored in `data/csf_lookup.csv`) reflect general importance across organizations. However, **gap priority must be adjusted for each organization's specific risk profile.**
-
-Framework weights answer: "Which controls matter most in general?"
-
-Context multipliers answer: "Which gaps matter most for THIS organization?"
-
-### The Problem with Generic Prioritization
-
-**Without context adjustment:**
-
-A cloud-only SaaS company and an on-premise healthcare provider would receive identical gap prioritization:
-
-| Gap | Framework Weight | Generic Priority |
-|-----|-----------------|-----------------|
-| Hardware inventory | 1.20 | Medium |
-| Vulnerability management | 1.50 | High |
-| Incident response plan | 1.50 | High |
-
-**But their actual priorities differ significantly:**
-
-| Gap | SaaS Company | Healthcare Provider |
-|-----|--------------|-------------------|
-| Hardware inventory | **Low** (few owned devices) | **High** (server rooms, medical devices) |
-| Vulnerability management | **Critical** (public attack surface) | **Medium** (limited external exposure) |
-| Incident response plan | **High** (customer trust) | **Critical** (HIPAA requirements) |
-
-Context-adjusted prioritization ensures assessments drive action on gaps that actually matter.
-
-### Gathering Threat Context
-
-Before calculating final gap priorities, assessors must gather:
-
-#### 1. Data Sensitivity
-
-**Question:** What types of data does the organization handle?
-
-**Options:**
-- Customer PII (names, emails, addresses, phone numbers)
-- Payment information (credit cards, bank accounts)
-- Health records or medical information
-- Government-issued IDs or sensitive credentials
-- Proprietary business data (trade secrets, source code, financials)
-- Employee data (HR records, compensation)
-- Third-party data processed on behalf of customers
-- Minimal sensitive data
-
-**Use:** Determines data protection control priority
-
----
-
-#### 2. Infrastructure Model
-
-**Question:** Where does the organization's infrastructure run?
-
-**Options:**
-- Cloud-only (AWS, GCP, Azure, managed SaaS)
-- Hybrid (cloud + on-premise)
-- On-premise only
-- Primarily third-party SaaS tools
-
-**Use:** Determines physical security, network segmentation, cloud control priorities
-
----
-
-#### 3. Compliance Pressure
-
-**Question:** What compliance requirements apply?
-
-**Options:**
-- Customer contractual requirements (SOC 2, ISO 27001 questionnaires)
-- Data protection regulations (GDPR, CCPA, Philippine DPA)
-- Industry-specific (PCI-DSS, HIPAA, financial regulations)
-- None currently
-- Upcoming in next 6-12 months
-
-**Follow-up:** Timeline pressure? (e.g., "Customer requires SOC 2 by Q3")
-
-**Use:** Determines governance control priority, may increase urgency of specific gaps
-
----
-
-#### 4. Threat Profile
-
-**Question:** Who would want to target this organization?
-
-**Options:**
-- Opportunistic bots / automated attacks (credential stuffing, vulnerability scanning)
-- Financially motivated attackers (ransomware, fraud, data theft for resale)
-- Competitors seeking proprietary information
-- Disgruntled or negligent insiders
-- Nation-state actors or advanced persistent threats
-- Ideologically motivated groups
-- Unknown / haven't considered
-
-**Use:** Determines detection, monitoring, access control priorities
-
----
-
-#### 5. Business Model & Exposure
-
-**Question:** How does the organization operate?
-
-**Options:**
-- B2B SaaS (software service to businesses)
-- B2C marketplace or platform
-- Enterprise software (on-premise or private cloud)
-- Professional services / consulting
-- E-commerce or retail
-
-**Follow-up:** Public-facing services? Customer-facing applications?
-
-**Use:** Determines attack surface, vulnerability management priority
-
----
-
-### Context Multiplier Application
-
-After calculating base gap scores using `governance_check.py`, apply context multipliers:
-
-```
-adjusted_gap_score = base_gap_score × context_multiplier
-```
-
-**Context Multiplier Range:** 0.5x to 2.0x
-
-#### Increase Priority (1.5x - 2.0x)
-
-Apply higher multipliers when:
-
-| Scenario | Multiplier | Example |
-|----------|-----------|---------|
-| Control protects high-sensitivity data the organization handles | 1.5x | B2B SaaS handling customer PII + IAM gap |
-| Gap directly blocks stated compliance requirement | 1.8x - 2.0x | SOC 2 deadline + governance gap |
-| Organization has public-facing services (attack surface) | 1.5x | SaaS product + vulnerability management gap |
-| Organization operates in regulated industry | 1.5x | Healthcare + data protection gap |
-| Organization has experienced related incidents | 1.8x | Past breach + monitoring gap |
-
-#### Normal Priority (1.0x)
-
-Apply standard multiplier when:
-- Standard applicability
-- No specific heightened risk factors
-- General importance but not organization-specific urgency
-
-#### Decrease Priority (0.5x - 0.75x)
-
-Apply lower multipliers when:
-
-| Scenario | Multiplier | Example |
-|----------|-----------|---------|
-| Control addresses threat the organization doesn't face | 0.5x | Cloud-only + hardware inventory gap |
-| Industry-specific control, organization in different industry | 0.6x | Healthcare-specific + fintech organization |
-| Organization has strong compensating controls | 0.7x | Limited vendors + supply chain risk |
-| Legacy concern, not current threat vector | 0.6x | Floppy disk encryption for cloud startup |
-
-### Practical Examples
-
-#### Example 1: B2B SaaS Company
-
-**Organization Profile:**
-- B2B SaaS platform (project management software)
-- Handles customer PII and business data
-- Cloud-only (AWS infrastructure)
-- No compliance requirements yet, customers starting to ask
-- 50 employees, no security team
-
-**Context Adjustments:**
-
-| Gap | Base Score | Reasoning | Multiplier | Adjusted Score |
-|-----|------------|-----------|------------|----------------|
-| **ID.RA-01** Vulnerability management | 1.50 | Public SaaS = high attack surface | **1.5x** | **2.25** |
-| **PR.AA-01** IAM | 1.50 | Customer data access = critical | **1.5x** | **2.25** |
-| **DE.CM-01** Network monitoring | 1.20 | SaaS uptime = revenue | **1.5x** | **1.80** |
-| **GV.RM-01** Risk management | 1.50 | Standard importance | **1.0x** | **1.50** |
-| **RS.MA-01** Incident response | 1.50 | Customer trust dependency | **1.3x** | **1.95** |
-| **ID.AM-01** Hardware inventory | 1.20 | Cloud-only, no data centers | **0.5x** | **0.60** |
-
-**Top 3 Adjusted Gaps:**
-1. ID.RA-01 (2.25) - Vuln mgmt critical for public services
-2. PR.AA-01 (2.25) - IAM prevents unauthorized data access
-3. RS.MA-01 (1.95) - IR plan protects customer relationships
-
----
-
-#### Example 2: Healthcare Clinic
-
-**Organization Profile:**
-- Medical clinic with electronic health records (EHR)
-- Handles protected health information (PHI)
-- Hybrid infrastructure (on-premise servers + cloud EHR)
-- HIPAA compliance required
-- 80 employees including clinical and admin staff
-
-**Context Adjustments:**
-
-| Gap | Base Score | Reasoning | Multiplier | Adjusted Score |
-|-----|------------|-----------|------------|----------------|
-| **PR.DS-01** Data-at-rest encryption | 1.00 | PHI = mandatory encryption | **2.0x** | **2.00** |
-| **GV.PO-01** Security policy | 1.50 | HIPAA compliance requirement | **1.8x** | **2.70** |
-| **ID.AM-01** Hardware inventory | 1.20 | On-prem servers, medical devices | **1.5x** | **1.80** |
-| **RS.MA-01** Incident response | 1.50 | HIPAA breach notification rules | **1.8x** | **2.70** |
-| **ID.RA-01** Vulnerability management | 1.50 | Limited external exposure | **1.0x** | **1.50** |
-| **DE.CM-01** Network monitoring | 1.20 | Internal network primary concern | **1.2x** | **1.44** |
-
-**Top 3 Adjusted Gaps:**
-1. RS.MA-01 (2.70) - IR plan required for HIPAA breach response
-2. GV.PO-01 (2.70) - Security policy is HIPAA prerequisite
-3. PR.DS-01 (2.00) - PHI encryption is regulatory mandate
-
----
-
-#### Example 3: E-Commerce Startup
-
-**Organization Profile:**
-- Online retail marketplace
-- Processes payments (uses Stripe, no card data stored)
-- Cloud-native (AWS, Shopify)
-- PCI-DSS relevant but offloaded to payment processor
-- 25 employees, rapid growth phase
-
-**Context Adjustments:**
-
-| Gap | Base Score | Reasoning | Multiplier | Adjusted Score |
-|-----|------------|-----------|------------|----------------|
-| **ID.RA-01** Vulnerability management | 1.50 | Public e-commerce site = target | **1.5x** | **2.25** |
-| **PR.DS-02** Data-in-transit encryption | 1.20 | Customer payment flow protection | **1.5x** | **1.80** |
-| **DE.CM-01** Network monitoring | 1.20 | Fraud detection needs | **1.4x** | **1.68** |
-| **GV.SC-01** Supply chain risk | 1.00 | Heavy reliance on SaaS vendors | **1.3x** | **1.30** |
-| **ID.AM-01** Hardware inventory | 1.20 | Cloud-only, no physical assets | **0.5x** | **0.60** |
-| **ID.AM-05** Asset criticality | 1.50 | Standard importance | **1.0x** | **1.50** |
-
-**Top 3 Adjusted Gaps:**
-1. ID.RA-01 (2.25) - Public site vulnerability = revenue impact
-2. PR.DS-02 (1.80) - Customer payment data in transit
-3. DE.CM-01 (1.68) - Fraud and abuse detection
-
----
-
-### Documenting Context Decisions
-
-For each adjusted gap in the Top 10, document the context rationale:
-
-**Template:**
-
-> **Gap:** [Control ID] [Control Name]  
-> **Base Score:** [Framework weight × gap severity]  
-> **Context:** [Brief organization situation]  
-> **Multiplier:** [1.5x] ([reason])  
-> **Adjusted Score:** [Final priority]  
-> **Risk if Unaddressed:** [Organization-specific consequence]
-
-**Example:**
-
-> **Gap:** ID.RA-01 Vulnerabilities are identified and recorded  
-> **Base Score:** 1.50  
-> **Context:** B2B SaaS with public-facing application  
-> **Multiplier:** 1.5x (High attack surface)  
-> **Adjusted Score:** 2.25  
-> **Risk if Unaddressed:** Exploitable known vulnerabilities in customer-facing platform = data breach affecting multiple organizations, loss of trust, contract cancellations
-
----
-
-### Top 10 Selection Process
-
-After context adjustment:
-
-1. **Calculate adjusted scores for all gaps** (Partial and No responses)
-2. **Sort by adjusted_gap_score** (descending)
-3. **Select Top 10** (or Top 15 if multiple ties at position 10)
-4. **Document context rationale** for each
-5. **Validate with assessor judgment**: Do these make sense for this organization?
-
-**Critical Rule:** Never show base framework scores to organizations. Always present context-adjusted scores.
-
-### Quality Control for Context Adjustment
-
-Before finalizing prioritization:
-
-- [ ] Threat context gathered (5 questions answered)
-- [ ] Context multipliers applied to all gaps
-- [ ] Top 10 gaps have different adjusted scores (not all identical)
-- [ ] Risk rationale is organization-specific (mentions their data, industry, or threat)
-- [ ] Physical/irrelevant controls de-prioritized appropriately
-- [ ] Compliance-blocking gaps elevated if timeline pressure exists
-
-### Integration with Assessment Reports
-
-**In Executive Summary:**
-
-> **Scoring Methodology:**
-> 
-> Gap priorities were adjusted based on [Organization]'s specific risk profile:
-> - Data sensitivity: [PII / Payment / Health / etc.]
-> - Infrastructure: [Cloud-only / Hybrid / On-premise]
-> - Compliance: [SOC 2 / HIPAA / None]
-> - Threat profile: [SaaS attack surface / etc.]
-> 
-> Priorities reflect [Organization]'s actual risk, not generic framework weights.
-
-**In Top 10 Table:**
-
-Include "Context" column showing multiplier and brief reason:
-
-| Rank | Control | Base | Context | Adjusted | Risk Rationale |
-|------|---------|------|---------|----------|----------------|
-| 1 | ID.RA-01 | 1.50 | 1.5x (SaaS) | 2.25 | Public services = breach risk |
 
 ---
 
@@ -744,13 +446,14 @@ CSFLite uses a weighted scoring model that:
 
 - Assigns each subcategory a weight based on its relative importance
 - Produces a weighted score and gap score for each subcategory
+- Orders gaps by gap score. Weight sets the order. There is no per-organization adjustment.
 - Severity reflects coverage only (Yes = none, Partial = medium, No = high); weight sets priority through the gap score
 
 ### What Scores Represent
 
 CSFLite scores represent **coverage**, not maturity or risk.
 
-A score of 80% means: "80% of the assessed outcomes exist in some intentional form."
+A coverage score of 80% means: "the responses earn 80% of the total weight." Weight is how much each outcome counts.
 
 It does not mean: "The organization has achieved 80% of possible cybersecurity maturity" or "80% of cybersecurity risks are mitigated."
 
@@ -786,7 +489,7 @@ CSFLite does not assess control maturity. It does not distinguish between "initi
 
 ### Not a Replacement for Professional Assessment
 
-CSFLite is a self-assessment tool designed for organizations that cannot afford or do not yet need professional security consulting. It does not replace penetration testing, security architecture review, or expert risk assessment.
+CSFLite is a self-assessment tool, which an outside reviewer can also use. It is designed for organizations that cannot afford or do not yet need professional security consulting. It does not replace penetration testing, security architecture review, or expert risk assessment.
 
 ---
 
@@ -873,8 +576,8 @@ CSFLite works because it respects the constraints of small and mid-sized teams w
 
 | Field | Value |
 |-------|-------|
-| Version | 1.0 |
-| Last Updated | 2026-10-18 |
+| Version | 1.1 |
+| Last Updated | 2026-11-07 |
 | Status | Active |
 | Authoritative | Yes |
 

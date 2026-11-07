@@ -1,10 +1,10 @@
 # CSFLite: Top 25 NIST CSF v2.0 Subcategories
 
-These are the 25 most impactful and practical subcategories from NIST CSF v2.0, selected for the CSFLite framework. They span all six CSF Functions and are prioritized for SME/startup environments where lean security and rapid risk reduction matter most.
+These are the 25 most impactful and practical subcategories from NIST CSF v2.0, selected for the CSFLite framework. They span all six CSF Functions and are prioritized for SME/startup environments where lean security and rapid gap closure matter most.
 
 ## Selection Criteria
 
-1. **High impact-to-effort ratio** — maximum risk reduction with minimal overhead
+1. **High impact-to-effort ratio** — closes the most important gaps with minimal overhead
 2. **Automation potential** — can be partially or fully assessed via scanning tools
 3. **Governance clarity** — clear yes/no/partial validation through questionnaires
 4. **SME relevance** — addresses threats startups actually face (ransomware, credential theft, supply chain)
@@ -117,7 +117,7 @@ Actions taken when incidents occur. Focused on containment, communication, and e
 
 ### RS.MA-01 — The incident response plan is executed in coordination with relevant third parties once an incident is declared
 
-> **Why included:** Having and testing an IR plan is the difference between chaos and controlled response.
+> **Why included:** Having and testing an owned, approved IR plan is the difference between chaos and controlled response.
 
 ### RS.CO-02 — Internal and external stakeholders are notified of incidents
 

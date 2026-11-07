@@ -8,7 +8,7 @@ By the end of this guide, you'll have:
 - ✅ Installed all required dependencies
 - ✅ Completed a governance questionnaire for your organization
 - ✅ Generated a scored governance assessment with gap analysis
-- ✅ Produced a risk heatmap showing priority areas
+- ✅ Produced a coverage heatmap showing priority areas
 
 ---
 
@@ -93,7 +93,7 @@ mkdir -p output
 
 ## Your First Governance Assessment
 
-CSFLite's governance assessment answers a fundamental question: **do your core cybersecurity capabilities exist at all?** This is a coverage assessment, not a maturity model. A "Yes" means the capability exists in some intentional, repeatable form.
+CSFLite's governance assessment answers a fundamental question: **do your core cybersecurity capabilities exist at all?** This is a coverage assessment, not a maturity model. A "Yes" means the capability exists in an intentional, repeatable form and you can show evidence for it.
 
 ### Step 1: Prepare Your Governance Checklist
 
@@ -106,9 +106,11 @@ Open `templates/my_governance.csv` in a spreadsheet editor or text editor. For e
 
 | Response | Meaning | Score |
 |----------|---------|-------|
-| **Yes** | Capability exists and is intentional | 1.0 |
-| **Partial** | Some elements exist, gaps remain | 0.5 |
-| **No** | Capability does not exist | 0.0 |
+| **Yes** | Capability exists, is intentional, and you have evidence | 1.0 |
+| **Partial** | Some elements exist, or evidence is missing, or it covers only part of the scope | 0.5 |
+| **No** | Capability does not exist, or nothing can be shown | 0.0 |
+
+A "Yes" needs evidence. For backups, recovery procedures and the incident response plan, that evidence must include a successful test or exercise from the last 12 months. For everything else, a test is not required.
 
 The checklist covers all 25 CSFLite subcategories across six CSF Functions:
 
@@ -187,7 +189,7 @@ Each row in the assessment output carries a `recommendation`. For step-by-step g
 
 CSFLite scores represent **coverage**, not maturity or risk.
 
-- A score of 80% means: "80% of the assessed governance outcomes exist in some intentional form."
+- A score of 80% means: "the responses earn 80% of the total weight."
 - It does **not** mean: "80% of cybersecurity risks are mitigated."
 
 ### Priority Framework

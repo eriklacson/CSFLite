@@ -190,10 +190,11 @@ No application code branches on which provider it runs on (ADR-0006), so each pr
 
 These items are not blocking release but should be addressed before v1.0.0:
 
-| Item | Location | Impact | Resolution Plan |
-|------|----------|--------|-----------------|
-| `pytest` in both main and dev dependency groups | `pyproject.toml` | Should only be in dev | Move to dev-only in Phase 4 |
-| Default `governance_checklist` path points at `scans/`, which does not exist | `config/path_config.json` | CLI fails without an explicit `--governance_checklist` | Retired with `path_config.json` in Phase 4 |
+| ID | Item | Location | Impact | Resolution Plan |
+|----|------|----------|--------|-----------------|
+| TD-1 | `pytest` in both main and dev dependency groups | `pyproject.toml` | Should only be in dev | Move to dev-only in Phase 4 |
+| TD-2 | Default `governance_checklist` path points at `scans/`, which does not exist | `config/path_config.json` | CLI fails without an explicit `--governance_checklist` | Retired with `path_config.json` in Phase 4 |
+| TD-3 | No scan for secrets in git history | CI workflow, `.pre-commit-config.yaml` | `docs/specs/standards.md` INV-18 is approved but not enforced. A secret removed from source stays readable in old commits. Ruff checks current source only, and Bandit at HIGH skips its password checks | Choose a scanner and add it to pre-commit and CI. It adds a tool outside the current stack, so record it in `docs/specs/architecture.md` §3. See `docs/specs/standards-gaps.md` G-15 |
 
 ---
 

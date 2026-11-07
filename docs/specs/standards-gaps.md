@@ -1,0 +1,129 @@
+---
+doc: standards-gaps
+mode: design
+system: CSFLite
+version: 0.1
+date: 2026-10-24
+source: docs/specs/architecture.md v0.1, docs/specs/schema.md v0.1
+stack_ref: docs/specs/architecture.md §3
+---
+
+# Standards gaps — CSFLite
+
+> **Purpose.** Records where the sources are silent, disagree, or leave an item open. `standards.md` writes no rule for these. Each gap names the standards rows it affects.
+> **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` · `UNVERIFIED`
+> **Type vocabulary.** `CONFLICT` = two sources disagree. `UNRECORDED` = decided, but not in an ADR. `SILENT` = no source covers it. `UNVERIFIED` = cannot be checked from the repository. `OPEN` = a source already lists it as an open item.
+> **Owner.** A placeholder for you to assign, as in `architecture.md` §8.
+
+Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Affects" refer to `standards.md`.
+
+**Short names.** *arch* = `docs/specs/architecture.md`. *schema* = `docs/specs/schema.md`. *design* = `docs/specs/design/phase-4-web-interface.md`. *brief* = `docs/specs/csflite-spec-brief.md`. *scope* = `docs/specs/phase-4/web-interface-scope.md`.
+
+---
+
+## 1. Conflicts between sources
+
+| ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
+|---|---|---|---|---|---|---|
+| G-1 | CONFLICT | Tenancy timing. The architect directed that tenancy is a later phase. Design §3 and scope agree: organizations and tenancy are out of Phase 4. ADR-0009 and schema still put `organization_id`, composite foreign keys, a seeded Organization row and `current_organization(request)` into the Phase 4 tables. ADR-0009, `AGENTS.md` and arch TB-2 agree there are no tenants in Phase 4. The disagreement is only about the tenant-ready columns and the Organization row | ADR-0009. schema §1 to §4, §6. scope "Out of scope". design §3 | Writes no tenancy rules. Data model rules cover Assessment, Response, Evidence and Result only. ADR-0009 and schema need amending, or the direction needs revisiting | Architect | Scope, §2 Data model, INV-12 |
+| G-2 | CONFLICT | Evidence storage path. Design: `<assessment id>/<random name>.<ext>`. Schema: `org/<organization_id>/<random>`, with no extension shown. The `org/` prefix is a tenancy feature (G-1) | design §8. schema M-4. ADR-0009 | INV-12 requires only a random name and no original filename. The path prefix and the extension are not decided | Architect | INV-12 |
+| G-3 | CONFLICT | Results per assessment. Scope says "an immutable result snapshot per assessment", which reads as one. Schema and ADR-0009 say an assessment can have many, and the latest is current. Design §8 says only "Immutable snapshot", with no count | scope "In scope". schema M-5. ADR-0009. design §8 | Follows schema | Architect | INV-8 |
+| G-4 | CONFLICT | Base image tag. Design: `python:3.12-slim`. AD-11 and arch §3: `python:3.12.15-slim`, pinned to a patch | design §12. arch §3, AD-11 | Follows AD-11 | Architect | CO-12 |
+| G-5 | CONFLICT | The brief contradicts itself on path configuration. Its §3 Path Configuration contract says it is retired in Phase 4 and replaced by the design §9 environment variables. Its §3 Design Rules and §5 Boundary Rules still say paths resolve only through `path_config.json`, and §12 says those are rewritten only once Phase 4 ships. It is unclear which applies to web code built before then | brief §3, §5, §12. design §9, §15 | Follows design §9 for web code. The `path_config.json` rule stays in force for CLI code | Architect | CO-8 |
+| G-23 | CONFLICT | Changing a subcategory. Brief §8 (binding) says a change needs `csf_lookup.csv` "and the corresponding governance template row". ADR-0004 and design §8 say the template is regenerated once and then frozen | brief §8. ADR-0004. design §8 | CO-15 follows ADR-0004 | Architect | CO-15 |
+| G-24 | CONFLICT | AD-11 relies on `poetry.lock` for exact versions. `.gitignore` lists `poetry.lock`. The file is tracked, so the pin holds today. If it is deleted and regenerated, git ignores the new file | arch AD-11. `.gitignore` | CO-12 notes it | Architect | CO-12 |
+
+---
+
+## 2. Decisions without an ADR, and precedence
+
+| ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
+|---|---|---|---|---|---|---|
+| G-6 | UNVERIFIED | Document precedence. Brief §5 and §10 say `docs/assessment_philosophy.md` wins methodology conflicts. Arch and design call the brief contract-binding. These can both hold, but `assessment_philosophy.md` was not reviewed, so no rule here has been checked against it | brief §5, §10. arch header. design header | Precedence note names it | Architect | Precedence note |
+| G-7 | UNRECORDED | AD-11 (pin every dependency) and AD-12 (hosted login in middleware) are marked "Not yet in an ADR" | arch §7 | Cites arch alone for both | Architect | CO-12, INV-17 |
+
+---
+
+## 3. Silent sources
+
+### Code organization
+
+| ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
+|---|---|---|---|---|---|---|
+| G-8 | SILENT | Django project and app layout. Where settings, models, views, forms and templates live. Where web tests go once brief §5 is retired. Python naming rules beyond Black and Ruff | brief §5, §12 | CO-2 left UNSPECIFIED | Architect | CO-2, CO-10 |
+| G-9 | SILENT | "`assess_helpers.py` unchanged, verified by diff" names no baseline commit or tag | design §17. scope | CO-4 has no reference point | Architect | CO-4 |
+
+### Invariants
+
+| ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
+|---|---|---|---|---|---|---|
+| G-10 | SILENT | `/healthz`. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks. Also, the hosted template sets `CSFLITE_ALLOWED_HOSTS` to the App Platform domain only. A health check that probes `localhost` would then get Django's 400 | design §10, §12, §13. AD-12 | INV-17 exempts only `/login` (approved 2026-10-24). Whether `/healthz` is also exempt is still open | Architect | INV-15, INV-16, INV-17, INV-26 |
+| G-11 | SILENT | Transactions. A rejected import must leave no row. Removing evidence deletes a file and a row. No source says where transactions are used, or what happens when the file delete fails | design §8, §14, §17 | INV-2 and INV-13 state the outcome only | Architect | INV-2, INV-13 |
+| G-12 | SILENT | Assessment lifecycle. `status` is `draft`, `in_progress` or `completed`. No rule says when it changes, whether a completed assessment can be edited, or when a new Result is generated | schema M-2, M-5 | No rule | Architect | INV-8 |
+| G-13 | SILENT | CSRF. Design picks Django partly for CSRF. No source requires CSRF protection | design §7 | RESOLVED 2026-10-24. Architect approved INV-19 | Architect | INV-19 |
+| G-14 | SILENT | Debug mode on a public deployment. `CSFLITE_DEBUG` defaults off. No guard stops it being on with `CSFLITE_PUBLIC=true` | design §9, §10 | RESOLVED 2026-10-24. Architect approved INV-20 | Architect | INV-20, §4 |
+| G-15 | SILENT | Secrets in git history. Ruff `S105` to `S107` check source only. Bandit runs at HIGH, which skips its hardcoded-password checks (they are LOW). No history scan exists. Adding one means a tool outside the stated stack | arch §6. `pyproject.toml`. CI workflow | Rule approved 2026-10-24 (INV-18 history clause). Still open: which scanner, since none is in the stated stack. Tracked as debt: TD-3 in `docs/development_roadmap.md` | Architect | INV-18 |
+| G-16 | UNVERIFIED | Required merge check. CI runs on every pull request. Whether a branch rule makes it required is a GitHub setting, not visible in the repo | CI workflow | INV-24 is UNVERIFIED | Architect | INV-24 |
+
+### Failure semantics
+
+| ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
+|---|---|---|---|---|---|---|
+| G-17 | SILENT | No behavior is stated for an unreachable database, failing or slow object storage, or an unhandled exception. No error page rule | — | F-2, F-3, F-4 UNSPECIFIED | Architect | F-2, F-3, F-4 |
+| G-18 | SILENT | Bad reference data at boot. `csf_lookup.csv` is checked by the test suite only. No source says what the app does if the file is missing or invalid at boot | arch TB-7. design §8 | F-9 UNSPECIFIED | Architect | F-9, INV-10 |
+| G-19 | SILENT | Results with missing rows. The scoring guard catches blank responses, not missing rows. No source says what the results view does with fewer than 25 rows | design §14. schema M-3 | F-11 and INV-7 PARTIAL | Architect | INV-7, F-11 |
+
+### Logging, environments, limits
+
+| ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
+|---|---|---|---|---|---|---|
+| G-20 | SILENT | Log content and retention. Nothing on secrets or organization data in logs, or how long logs are kept | arch §6 | Log content: RESOLVED 2026-10-24, architect approved both §4 rules. Retention still UNSPECIFIED | Architect | §4 |
+| G-21 | SILENT | Environments. The hosted proof of concept is public, but its data class is not stated. arch OI-9 implies real data later. No deploy trigger is stated. No preview or staging environment is defined | design §11. arch OI-9 | §5 rows UNSPECIFIED | Architect | §5 |
+| G-22 | SILENT | Limits. No rule for files per response, import CSV size, Django upload memory settings, request timeout, or pagination of `/` | design §8, §13 | §6 rows UNSPECIFIED or PARTIAL | Architect | §6 |
+
+---
+
+## 4. Open items already in the sources
+
+These are recorded in the sources already. They are listed here only for the standards rows they hold open. Tenancy-only items (OI-S1, OI-S2, OI-S4 to OI-S9) are left out.
+
+| Source ID | Item | Affects |
+|---|---|---|
+| arch OI-3 | How the operator password is stored and compared | INV-17, F-12 |
+| arch OI-4 | Session cookie flags and lifetime | INV-17 |
+| arch OI-5 | Rate limiting on `/login` | §6, F-12 |
+| arch OI-6 | Upload checks beyond the extension | INV-3 |
+| arch OI-7 | Evidence not encrypted or scanned by the app. Accepted in design §18 | none |
+| arch OI-8 | No audit trail. Schema says M-10 AuditLog closes it, but M-10 is tenancy work and out of scope, so it is open again for Phase 4 | No row |
+| arch OI-9 | No backup or restore procedure | §5 production row |
+| arch OI-10 | Encryption in transit to PostgreSQL and Spaces not stated | No row. Needs a rule once decided |
+| arch OI-11 | `django-storages` not confirmed on Django 5.2 | CO-12, INV-11 |
+| arch OI-12 | No library chosen to read `DATABASE_URL` | CO-12 |
+| arch OI-13 | Poetry unpinned in CI. Actions pinned by tag, not commit | CO-12 |
+| arch OI-14 | Django 5.2 and Python 3.12 support end dates | CO-12 |
+| arch OI-15 | pandas held at 2.3.1 | CO-4, INV-9 |
+| schema OI-S3 | Weights and recommendations shared, not per organization | none in Phase 4 |
+
+---
+
+## 5. Sources not reviewed
+
+| Source | Why it matters |
+|---|---|
+| `docs/assessment_philosophy.md` | Claims precedence over all docs (G-6) |
+| `docs/specs/checks/CHK-0001` to `CHK-0004` | Cited by ADR-0003, ADR-0007 and design §16. Their findings were taken as summarized there |
+| `docs/specs/design/ux/` | Prototype and wireframes. No engineering rules |
+
+---
+
+## 6. Coverage
+
+| Measure | Count |
+|---|---|
+| Conflicts | 7 (G-1 to G-5, G-23, G-24) |
+| Decisions without an ADR | 1 (G-7) |
+| Silent | 14 (G-8 to G-15, G-17 to G-22) |
+| Unverified | 2 (G-6, G-16) |
+| Source open items referenced | 14 |
+| Proposed rules in `standards.md` that rest on a gap | 0. All 5 rules and 2 clauses were approved 2026-10-24 (CO-8, INV-19, INV-20, two in §4, clauses in INV-17 and INV-18) |
+| Gaps resolved by that approval | 2 (G-13, G-14). G-20 in part |

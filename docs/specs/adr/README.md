@@ -2,7 +2,7 @@
 
 One decision per file: `ADR-NNNN-subject-slug.md`. Numbers are assigned in order and never reused.
 
-An ADR records a decision and why it was made. A check in `.claude/checks/` records what a review
+An ADR records a decision and why it was made. A check in `docs/specs/checks/` records what a review
 found. A finding settled by a decision links to the ADR.
 
 | ADR | Decision |

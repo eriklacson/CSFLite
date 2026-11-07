@@ -148,7 +148,7 @@ The Top 25 were selected based on:
 
 1. **Dependency analysis**: Which outcomes enable other outcomes?
 2. **SME relevance**: Which outcomes matter most for small and mid-sized organizations?
-3. **Automation potential**: Which outcomes can be partially assessed through scanning?
+3. **Automation potential**: Which outcomes can be partially assessed through evidence produce from security tools?
 4. **Governance criticality**: Which outcomes represent foundational governance capabilities?
 
 ### Distribution Across Functions
@@ -194,7 +194,7 @@ Good security practices produce compliance as a byproduct. Chasing compliance ch
 
 Minimize overhead. Every artifact, process, and assessment activity should justify its existence.
 
-### 7. Startup-First Design
+### 7. Leightweight-First Design
 
 Design for resource-constrained organizations. If it doesn't work for a 10-person team, it doesn't belong in CSFLite.
 

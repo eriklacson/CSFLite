@@ -211,7 +211,7 @@ The procedural basis for governance evaluations is drawn from SP 800-53A Rev 5 (
 - **Interview** — Discussion with personnel to confirm that practices are understood and applied
 - **Test** — Observation or verification that a capability is operational and repeatable
 
-CSFLite governance questions rely mainly on the Examine and Interview methods. Test-based evidence (e.g., DR exercise records) is accepted as supporting documentation when cited by a respondent. It is not required for a "Yes", with one exception: backups and recovery procedures, where a restoration test is required (see the Evidence Rule). The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
+CSFLite governance questions rely mainly on the Examine and Interview methods. Test-based evidence (e.g., DR exercise records) is accepted as supporting documentation when cited by a respondent. It is not required for a "Yes", with one exception: backups, recovery procedures and the incident response plan, where a test is required (see the Evidence Rule). The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
 
 The questionnaire implements the coverage-first philosophy by asking existence-focused questions:
 
@@ -255,7 +255,7 @@ This is the most critical quality control mechanism in CSFLite assessments. With
 
 "Yes" does not mean the control works well. That would be a maturity question, and CSFLite does not ask it. In general, a test is not required.
 
-**Exception: backups and recovery.** An untested backup is treated as no backup, because a backup that cannot be restored provides no recovery. The same holds for recovery procedures (RC.RP-01): a procedure that has never been run does not exist in any useful form. A "Yes" for backups (PR.DS-11) or recovery (RC.RP-01) requires evidence of a successful restoration or recovery test within the past 12 months. This exception applies only to these two. It is an existence check, not an effectiveness check.
+**Exception: backups, recovery and incident response.** An untested backup is treated as no backup, because a backup that cannot be restored provides no recovery. The same holds for recovery procedures (RC.RP-01): a procedure that has never been run does not exist in any useful form. A "Yes" for backups (PR.DS-11) or recovery (RC.RP-01) requires evidence of a successful restoration or recovery test within the past 12 months. The same holds for the incident response plan (RS.MA-01): a plan that has never been exercised does not exist in any useful form. A "Yes" for the IR plan requires a tabletop exercise or drill report from the past 12 months. This exception applies only to these three. It is an existence check, not an effectiveness check.
 
 The rule applies the same way whether the organization assesses itself or an outside person assesses it. A self-assessor must hold their own answers to the same standard. CSFLite does not verify evidence. Verification is the reviewer's job. The tool records the answer and the notes. A second reviewer is recommended for self-assessments.
 
@@ -273,7 +273,8 @@ The rule applies the same way whether the organization assesses itself or an out
 | "We do backups" | Backup schedule and job logs, no restoration test | **Partial** | Backups run but are not shown to restore |
 | "We do backups" | Backup schedule documentation only | **Partial** | Practice is documented but not shown running |
 | "We do backups" | No documentation | **No** | No evidence of intentional, repeatable practice |
-| "We have an IR plan" | Approved plan with owner, version and date | **Yes** | Plan exists, is owned, and is current |
+| "We have an IR plan" | Approved plan with owner, version and date, plus a tabletop or drill report from the last 12 months | **Yes** | Plan exists, is owned, and has been exercised |
+| "We have an IR plan" | Approved plan with owner, version and date, no exercise | **Partial** | Plan is adopted but not shown to work |
 | "We have an IR plan" | Draft or unapproved plan | **Partial** | Plan is written but not adopted |
 | "We enforce MFA" | Screenshot showing MFA required for all accounts | **Yes** | Technical enforcement visible |
 | "We enforce MFA" | Policy document requiring MFA | **Partial** | Policy exists, no proof of enforcement |
@@ -366,12 +367,13 @@ Acceptable evidence must meet three criteria:
 
 **Acceptable evidence:**
 - IR plan document with version control
-- Tabletop exercise reports (optional supporting evidence)
+- Tabletop exercise or drill report (within 12 months)
 - Incident communication templates
 - Post-incident review documentation
 
 **Insufficient evidence:**
 - Draft or unapproved IR plan
+- Approved IR plan with no exercise or drill report
 - Generic IR templates without customization
 - No evidence of organizational awareness
 

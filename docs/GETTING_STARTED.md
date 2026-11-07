@@ -110,7 +110,7 @@ Open `templates/my_governance.csv` in a spreadsheet editor or text editor. For e
 | **Partial** | Some elements exist, or evidence is missing, or it covers only part of the scope | 0.5 |
 | **No** | Capability does not exist, or nothing can be shown | 0.0 |
 
-A "Yes" needs evidence. For backups and recovery procedures, that evidence must include a successful restoration or recovery test from the last 12 months. For everything else, a test is not required.
+A "Yes" needs evidence. For backups, recovery procedures and the incident response plan, that evidence must include a successful test or exercise from the last 12 months. For everything else, a test is not required.
 
 The checklist covers all 25 CSFLite subcategories across six CSF Functions:
 

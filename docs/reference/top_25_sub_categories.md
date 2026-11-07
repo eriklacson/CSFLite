@@ -117,7 +117,7 @@ Actions taken when incidents occur. Focused on containment, communication, and e
 
 ### RS.MA-01 — The incident response plan is executed in coordination with relevant third parties once an incident is declared
 
-> **Why included:** Having an owned, approved IR plan is the difference between chaos and controlled response.
+> **Why included:** Having and testing an owned, approved IR plan is the difference between chaos and controlled response.
 
 ### RS.CO-02 — Internal and external stakeholders are notified of incidents
 

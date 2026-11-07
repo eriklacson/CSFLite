@@ -139,7 +139,7 @@ Restoring operations after an incident. Lean selection — recovery is where tes
 
 ### RC.RP-01 — The recovery portion of the incident response plan is executed once initiated from the incident response process
 
-> **Why included:** Recovery procedures must be documented, not improvised.
+> **Why included:** Recovery procedures must be documented and tested, not improvised.
 
 ### RC.CO-03 — Recovery activities and progress in restoring operational capabilities are communicated to designated internal and external stakeholders
 

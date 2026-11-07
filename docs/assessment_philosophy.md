@@ -211,7 +211,7 @@ The procedural basis for governance evaluations is drawn from SP 800-53A Rev 5 (
 - **Interview** — Discussion with personnel to confirm that practices are understood and applied
 - **Test** — Observation or verification that a capability is operational and repeatable
 
-CSFLite governance questions rely mainly on the Examine and Interview methods. Test-based evidence (e.g., DR exercise records) is accepted as supporting documentation when cited by a respondent. It is not required for a "Yes", with one exception: backups, where a restoration test is required (see the Evidence Rule). The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
+CSFLite governance questions rely mainly on the Examine and Interview methods. Test-based evidence (e.g., DR exercise records) is accepted as supporting documentation when cited by a respondent. It is not required for a "Yes", with one exception: backups and recovery procedures, where a restoration test is required (see the Evidence Rule). The full mapping of CSFLite subcategories to SP 800-53 Rev 5 controls and their applicable assessment methods is documented in [`docs/reference/csflite-800-53-crosswalk.md`](reference/csflite-800-53-crosswalk.md).
 
 The questionnaire implements the coverage-first philosophy by asking existence-focused questions:
 
@@ -255,7 +255,7 @@ This is the most critical quality control mechanism in CSFLite assessments. With
 
 "Yes" does not mean the control works well. That would be a maturity question, and CSFLite does not ask it. In general, a test is not required.
 
-**Exception: backups.** An untested backup is treated as no backup, because a backup that cannot be restored provides no recovery. A "Yes" for backups requires evidence of a successful restoration test within the past 12 months. This exception applies only to backups. It is an existence check, not an effectiveness check: a backup you cannot restore does not exist in any useful form.
+**Exception: backups and recovery.** An untested backup is treated as no backup, because a backup that cannot be restored provides no recovery. The same holds for recovery procedures (RC.RP-01): a procedure that has never been run does not exist in any useful form. A "Yes" for backups (PR.DS-11) or recovery (RC.RP-01) requires evidence of a successful restoration or recovery test within the past 12 months. This exception applies only to these two. It is an existence check, not an effectiveness check.
 
 The rule applies the same way whether the organization assesses itself or an outside person assesses it. A self-assessor must hold their own answers to the same standard. CSFLite does not verify evidence. Verification is the reviewer's job. The tool records the answer and the notes. A second reviewer is recommended for self-assessments.
 

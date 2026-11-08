@@ -3,7 +3,7 @@
     "allow": [
       "Read",
       "Write(docs/**)",
-      "Write(harness/drafts/**)",
+      "Write(/harness/drafts/**)",
       "Edit",
       "Bash(poetry *)",
       "Bash(npm *)",
@@ -24,8 +24,8 @@
       "Write(*.key)",
       "Write(*.pem)",
       "Write(*.secret)",
-      "Edit(harness/plans/**)",
-      "Write(harness/plans/**)"
+      "Edit(/harness/plans/**)",
+      "Write(/harness/plans/**)"
     ]
   }
 }

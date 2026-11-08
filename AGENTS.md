@@ -86,7 +86,7 @@ Tracked in the Known Technical Debt table in `docs/development_roadmap.md` (TD-1
 
 ## Execution Loop (jig)
 
-CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. jig's enforcement scripts are not built yet, so treat these rules as guidance until they are.
+CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. jig's enforcement scripts are not built yet, so treat these rules as guidance until they are. The tool settings in `.claude/settings.json` block the Edit and Write tools on `harness/plans/`, but nothing blocks a shell command from writing there, and the approval hash that would catch it is not built. No setting enforces the rest of the list below.
 
 Every piece of work goes through six stages, no exceptions.
 
@@ -136,7 +136,7 @@ Never skip PLAN. Never start IMPLEMENT before the architect approves the plan.
 | scopes | `docs/scopes/` (Phase 4 summary today: `docs/specs/phase-4/web-interface-scope.md`) |
 | plans, checks, logs | `harness/drafts/`, then `harness/plans/` |
 
-Existing files keep their names. ADRs stay `ADR-NNNN-*.md`, not jig's `NNNN-*.decision.md`.
+Existing files keep their names. ADRs stay `ADR-NNNN-*.md`, not jig's `NNNN-*.decision.md`. Process rule P-10 (file names) applies only to new process files: scopes, plans, checks, gates and logs. Existing files under `docs/specs/` are exempt.
 
 ### Never
 

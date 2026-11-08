@@ -62,6 +62,7 @@ How the codebase is arranged. `architecture.md` §3 records what the stack is. T
 | CO-17 | Application code **MUST NOT** call a cloud provider API or branch on the provider. Cloud SDKs are reached only through `django-storages` | application code | *mechanism proposed*: Ruff `TID251` banning `boto3` imports in application code | [P] | unbuilt | PARTIAL | design §4, §11. ADR-0006 |
 | CO-18 | There **MUST NOT** be background jobs, task queues, Redis or Celery | dependencies | *mechanism proposed*: reviewer check of `poetry.lock` | [G] | unbuilt | PARTIAL | design §3 |
 | CO-19 | Until the CLI is deleted (design §15 step 3), `tools/` modules **MUST NOT** import from `tools/governance_check.py` | `tools/` | *mechanism proposed*: Ruff `TID251` banning that module | [P] | unbuilt | PARTIAL | brief §5 Boundary Rules |
+| CO-20 | **Proposed (not derived).** Every environment variable the code reads **MUST** be listed in `.env.example` | settings, repo | *mechanism proposed*: a script compares the variables read in code with `.env.example`. There is no `.env.example` yet | [P] | unbuilt | PARTIAL | Reason: design §9 lists the variables, but no file or check keeps the code and the list in step. From jig `lean-security` LS-14 |
 
 ---
 
@@ -108,7 +109,7 @@ The template's tenant rows (tenant identity from the session, tenant scoping in 
 | INV-15 | The local compose file **MUST** publish the port on `127.0.0.1` only. The local profile **MUST** answer on `localhost` and `127.0.0.1`, with `PORT` unset and set. A request whose `Host` is not in `CSFLITE_ALLOWED_HOSTS` **MUST** get Django's 400 | local profile | Compose, host and port acceptance tests | [P] | unbuilt | CONFIRMED | design §10, §11, §17. ADR-0007. arch TB-1 |
 | INV-16 | The DigitalOcean environment template **MUST** set `CSFLITE_PUBLIC=true` and `CSFLITE_ALLOWED_HOSTS` to the App Platform domain | hosted profile | Template acceptance test | [P] | unbuilt | CONFIRMED | design §10, §11, §17. ADR-0007 |
 | INV-17 | With `CSFLITE_PUBLIC=true`, every page **MUST** require a signed-in session. Middleware checks it. **Approved (not derived, architect 2026-10-24):** `/login` is the only route exempt | hosted profile | *mechanism proposed*: a test that each design §13 route refuses a request with no session | [P] | unbuilt | PARTIAL | AD-12. design §8 ("the same access control as every other page"), §10. ADR-0007. Reason for the exemption: the login page cannot require a login, and no source lists exemptions. `/healthz` is open: G-10. Password check: OI-3. Cookie flags: OI-4. G-7 |
-| INV-18 | Secret values **MUST** come only from the environment: `CSFLITE_SECRET_KEY`, `CSFLITE_PASSWORD`, `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY`, `DATABASE_URL`. **Approved (not derived, architect 2026-10-24):** they **MUST NOT** appear in git history | repo | Ruff `S105` to `S107`, through the `S` rule set. Source only. No history scan | [P] | installed (in part) | PARTIAL | arch §6 ("Environment only"). design §9. Reason for the history clause: a secret removed from source stays readable in history. G-15. Tracked as debt: TD-3 in `docs/development_roadmap.md` |
+| INV-18 | Secret values **MUST** come only from the environment: `CSFLITE_SECRET_KEY`, `CSFLITE_PASSWORD`, `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY`, `DATABASE_URL`. **Approved (not derived, architect 2026-10-24):** they **MUST NOT** appear in git history | repo | Ruff `S105` to `S107`, through the `S` rule set. Source only. No history scan. *Mechanism proposed:* `gitleaks` scans the full git history in CI | [P] | installed (in part) | PARTIAL | arch §6 ("Environment only"). design §9. Reason for the history clause: a secret removed from source stays readable in history. G-15. Tracked as debt: TD-3 in `docs/development_roadmap.md`. **Proposed (not derived):** the `gitleaks` mechanism comes from jig `lean-security` LS-13 |
 | INV-19 | **Approved (not derived, architect 2026-10-24).** `CsrfViewMiddleware` **MUST** stay enabled for every POST route | all POST routes | *mechanism proposed*: settings test | [P] | unbuilt | PARTIAL | Reason: design §7 picks Django partly for CSRF, but no source requires it, and the hosted profile is public with a session cookie. G-13 |
 | INV-20 | **Approved (not derived, architect 2026-10-24).** The app **MUST** refuse to start when `CSFLITE_DEBUG` is on and `CSFLITE_PUBLIC=true` | startup | *mechanism proposed*: startup test | [P] | unbuilt | PARTIAL | Reason: debug pages show settings and stack traces on a public domain, and no source forbids the pairing. G-14 |
 
@@ -127,6 +128,8 @@ The template's tenant rows (tenant identity from the session, tenant scoping in 
 | INV-24 | A change **MUST** pass Black, Ruff, Bandit and pytest in CI before merge | pipeline | `.github/workflows/python-lint.yaml` runs on every PR. Whether a branch rule requires it is not visible in the repo | [P] | installed | UNVERIFIED | arch §3 CI row. `AGENTS.md`. G-16 |
 | INV-25 | Migrations **MUST** run as an explicit release command. They **MUST NOT** run on app boot | container, release | *mechanism proposed*: reviewer check that the entrypoint and `AppConfig.ready()` never call `migrate` | [G] | unbuilt | PARTIAL | design §4, §12. schema §4 |
 | INV-26 | The container **MUST** be multi-stage, run as a non-root user, and leave Poetry out of the runtime layer. Gunicorn **MUST** bind `0.0.0.0:$PORT` with one worker. `HEALTHCHECK` **MUST** target `/healthz`. Logs **MUST** go unbuffered to stdout | Dockerfile | *mechanism proposed*: reviewer checklist against design §12 | [G] | unbuilt | PARTIAL | design §4, §12. AD-3. arch §3. What `/healthz` checks, and under which `Host`: G-10 |
+| INV-28 | **Proposed (not derived).** A change **MUST NOT** merge with a dependency that has a known critical vulnerability | pipeline | *mechanism proposed*: `osv-scanner` runs in CI and fails on critical findings | [P] | unbuilt | PARTIAL | Reason: CO-12 pins versions, and Bandit scans source only. Nothing scans dependencies. From jig `lean-security` LS-18 |
+| INV-29 | **Proposed (not derived).** A report, export or document **MUST NOT** claim that an organization is compliant or certified. CSFLite measures coverage only | reports, docs, exports | *mechanism proposed*: a scan of generated reports and `docs/` for compliance and certification claims | [P] | unbuilt | PARTIAL | Reason: the philosophy doc and ADR-0001 say coverage is not compliance, but no rule or check states it here. From jig `lean-security` LS-3 |
 
 **Subtraction note.** INV-11 and CO-16 hold partly by absence. There is no media URL route and no `package.json`. A path that does not exist cannot regress. Keep it that way.
 
@@ -141,7 +144,7 @@ What the system does when something breaks. Per-service failure behavior lives i
 | F-1 | Auth provider unreachable | n/a. Phase 4 has no external auth provider. The password comes from the environment | n/a | n/a | n/a | n/a | CONFIRMED | design §10 |
 | F-2 | Database unreachable | | | UNSPECIFIED | | | UNSPECIFIED | No source. G-17 |
 | F-3 | Object storage unreachable or slow (hosted) | | | UNSPECIFIED | | | UNSPECIFIED | No source. G-17 |
-| F-4 | Unhandled exception in a view | | | UNSPECIFIED | Error page content not stated | | UNSPECIFIED | `CSFLITE_DEBUG` defaults off (design §9). G-17 |
+| F-4 | Unhandled exception in a view | | | UNSPECIFIED | Error page content not stated | | UNSPECIFIED | `CSFLITE_DEBUG` defaults off (design §9). G-17. **Proposed (not derived):** a test forces a failure in a view and checks that the response body holds no stack trace (jig `lean-security` LS-15) |
 | F-5 | Required setting missing, or settings contradict each other | Startup | Startup guard | fail-closed | Container does not start | Fix the environment and restart | CONFIRMED | design §9, §10. INV-14 |
 | F-6 | Unanswered or invalid response | Form submit | Form validation | fail-closed | The form blocks progress. Nothing is defaulted | Answer the question | CONFIRMED | design §16, §17 |
 | F-7 | Import fails validation | Import submit | Form rules, then scoring guards | fail-closed | Error names the offending subcategories. No assessment is created | Fix the CSV and import again | CONFIRMED | design §14 |
@@ -162,9 +165,9 @@ No security-relevant path is declared fail-open. The local profile has no login 
 | Concern | Rule | Enforcement | Status | Evidence |
 |---|---|---|---|---|
 | Error detail returned to client | A rejected import **MUST** name the offending subcategories. Other error detail is not stated | Import acceptance test | PARTIAL | design §14 |
-| Stack traces in responses | `CSFLITE_DEBUG` **MUST** default to off | Settings default | PARTIAL | design §9. Debug on a public deployment: INV-20, G-14 |
+| Stack traces in responses | `CSFLITE_DEBUG` **MUST** default to off | Settings default. *Mechanism proposed:* a test forces a view failure and checks the response body for a stack trace | PARTIAL | design §9. Debug on a public deployment: INV-20, G-14. **Proposed (not derived):** the test comes from jig `lean-security` LS-15 |
 | Secrets or tokens in logs | **Approved (not derived, architect 2026-10-24).** Logs **MUST NOT** contain the value of any secret listed in INV-18 | *mechanism proposed*: reviewer check | PARTIAL | Reason: arch §6 lists five secrets, and no rule keeps them out of stdout. G-20 |
-| PII in logs | **Approved (not derived, architect 2026-10-24).** Logs **MUST NOT** contain response values, notes, assessment labels, organization names or original filenames | *mechanism proposed*: reviewer check | PARTIAL | Reason: arch §6 rates all of these confidential. G-20 |
+| PII in logs | **Approved (not derived, architect 2026-10-24).** Logs **MUST NOT** contain response values, notes, assessment labels, organization names or original filenames | *mechanism proposed*: tests use marker values such as `canary-...@test` in responses and notes, and fail if a marker appears in captured logs | PARTIAL | Reason: arch §6 rates all of these confidential. G-20. **Proposed (not derived):** the canary-marker test replaces the reviewer check, from jig `lean-security` LS-17 |
 | Tenant id in log context | n/a. Tenancy is a later phase | none | n/a | Scope |
 | Log destination | Logs **MUST** go unbuffered to stdout. No log files, no rotation | INV-26, which has a proposed mechanism only | PARTIAL | design §4, §12. ADR-0006 |
 | Log retention | Not stated. It depends on the operator's platform | none | UNSPECIFIED | G-20 |
@@ -205,11 +208,11 @@ The hosted proof of concept is publicly reachable, and its data class is not sta
 
 | Measure | Count |
 |---|---|
-| Code conventions declared | 18 (17 derived, 1 approved but not derived: CO-8). CO-2 has no rule |
-| With a named mechanism | 10 from the sources or the repo. 8 more with a mechanism proposed only |
-| Invariants declared | 27 (25 derived, 2 approved but not derived: INV-19, INV-20). INV-17 and INV-18 also carry one approved clause each. 2 logging rules in §4 are approved too. Nothing is left Proposed |
-| With a named mechanism | 17 from the sources or the repo. 10 more with a mechanism proposed only |
-| With a locus assigned | 27 |
+| Code conventions declared | 19 (17 derived, 1 approved but not derived: CO-8, 1 proposed: CO-20). CO-2 has no rule |
+| With a named mechanism | 10 from the sources or the repo. 9 more with a mechanism proposed only |
+| Invariants declared | 29 (25 derived, 2 approved but not derived: INV-19, INV-20). INV-17 and INV-18 also carry one approved clause each. 2 logging rules in §4 are approved too. 2 are Proposed, awaiting the architect: INV-28, INV-29. Mechanisms proposed (not new rules) on INV-18, F-4 and 2 rows in §4 |
+| With a named mechanism | 17 from the sources or the repo. 12 more with a mechanism proposed only |
+| With a locus assigned | 29 |
 | Install status: installed | 12, most only in part (CO-11, CO-12, CO-15, INV-1, INV-2, INV-5, INV-7, INV-9, INV-10, INV-18, INV-24, INV-27) |
 | Install status: proven | 0 |
 | Failure modes with defined behavior | 5 of 12 (F-5 to F-8, F-10). F-11 in part. F-1 is n/a. 5 UNSPECIFIED |

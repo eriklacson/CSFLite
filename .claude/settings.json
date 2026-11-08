@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write(docs/**)",
+      "Write(harness/drafts/**)",
+      "Edit",
+      "Bash(poetry *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pytest *)",
+      "Bash(python *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Write(.env*)",
+      "Write(*.key)",
+      "Write(*.pem)",
+      "Write(*.secret)",
+      "Edit(harness/plans/**)",
+      "Write(harness/plans/**)"
+    ]
+  }
+}

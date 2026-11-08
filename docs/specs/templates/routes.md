@@ -1,17 +1,17 @@
 ---
 doc: routes
-mode: audit            # audit | design
+mode: audit            # audit | build
 system: UNSPECIFIED
 version: 0.1
 date: YYYY-MM-DD
-source: UNSPECIFIED    # audit: <repo>@<commit>  |  design: <design-ref>
+source: UNSPECIFIED    # audit: <repo>@<commit>  |  build: <build-ref>
 ---
 
 # Routes — {{SYSTEM}}
 
-> **Mode.** `audit` = routes observed in source. `design` = routes to be built.
+> **Mode.** `audit` = routes observed in source. `build` = routes to be built.
 > **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` · `UNVERIFIED`
-> **Evidence column.** audit = `file:line`. design = requirement ID.
+> **Evidence column.** audit = `file:line`. build = requirement ID.
 > **Record, do not judge.** In audit mode this is an inventory. Candidate findings are parked, not expanded here.
 
 ---
@@ -42,7 +42,7 @@ Every route from §1 where **Auth required** is `no` or `UNSPECIFIED`. Restate t
 | ID | Method | Path | Intentional? | Evidence |
 |---|---|---|---|---|
 
-**Intentional?** — audit: `UNSPECIFIED` unless a decision record says otherwise. design: `yes` with an AD- reference, or the route does not ship.
+**Intentional?** — audit: `UNSPECIFIED` unless a decision record says otherwise. build: `yes` with an AD- reference, or the route does not ship.
 
 ---
 

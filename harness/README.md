@@ -61,5 +61,5 @@ The tests themselves live in the project's own `tests/` folder, because they are
 | `rules.md` | The process rules every project follows. Not yet tied to checks. |
 | `drafts/` | Empty |
 | `plans/template.plan.md` | In place |
-| `plans/00-restructure.*` and `plans/CURRENT` | The plan that set up this layout in the jig repo itself. Removed at its release approval, so new projects never inherit it. |
+| `plans/00-restructure.*` and `plans/CURRENT` | The jig repo only. The plan that set up this layout. Removed at its release approval. A project that copies jig in does not copy these. |
 | `loop/*.sh` | Not written yet. See `loop/README.md`. |

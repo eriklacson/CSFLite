@@ -1,6 +1,6 @@
 ---
 doc: standards
-mode: design
+mode: build
 system: CSFLite
 version: 0.1
 date: 2026-10-24
@@ -10,7 +10,7 @@ stack_ref: docs/specs/architecture.md §3
 
 # Standards — CSFLite
 
-> **Mode.** `design` = rules to enforce. The Phase 4 web application is not built yet.
+> **Mode.** `build` = rules to enforce. The Phase 4 web application is not built yet.
 > **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` · `UNVERIFIED`
 > **Status in this file.** `CONFIRMED` = the sources state the rule and how it is checked. `PARTIAL` = the sources state the rule, but not how it is checked, or part of it is open. `UNSPECIFIED` = the sources say nothing. `UNVERIFIED` = stated, but it cannot be checked from the repository.
 > **Install status.** `unbuilt` → `installed` → `proven` (fired on a real regression and held). Only `proven` validates the control.

@@ -34,7 +34,7 @@ Every success criterion in the scope maps to at least one task.
 
 ## Rules from the ruleset
 
-The process rules in `harness/rules.md` apply to every plan automatically. List here only the ruleset rules that apply to the tasks in this plan.
+The process rules in `harness/rules.md` apply to every plan automatically. List here only the ruleset rules that apply to the tasks in this plan. A project with no ruleset lists the rows of its standards record instead.
 
 | Rule | How it is checked |
 |---|---|

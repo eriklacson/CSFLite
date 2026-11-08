@@ -1,6 +1,6 @@
 ---
 doc: architecture
-mode: design
+mode: build
 system: CSFLite
 version: 0.1
 date: 2026-10-24
@@ -9,7 +9,7 @@ source: docs/specs/design/phase-4-web-interface.md
 
 # Architecture — CSFLite
 
-> **Mode.** `design` = this describes what is to be built: the Phase 4 web application, which is not built yet.
+> **Mode.** `build` = this describes what is to be built: the Phase 4 web application, which is not built yet.
 > **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` (not yet decided) · `UNVERIFIED` (claimed, not confirmed)
 > **Evidence column.** A design section or an ADR.
 > **Binding.** No. The spec brief (`docs/specs/csflite-spec-brief.md`) remains the contract-binding document. This records the architecture of work not yet done and cites the design and ADRs it draws from.
@@ -43,7 +43,7 @@ CSFLite is a self-hosted web application that records whether each of 25 NIST CS
 
 ## 3. Stack
 
-In design mode, CONFIRMED means decided in the design or an ADR, with an exact version. Exact versions are held in `poetry.lock` once the application skeleton exists (AD-11). Package versions were checked on 2026-10-24 against PyPI and npm. Python 3.12.15 and PostgreSQL 18 come from search results for python.org and DigitalOcean documentation and were not checked at the source. Two rows are UNVERIFIED and one is PARTIAL; see section 8.
+In build mode, CONFIRMED means decided in the design or an ADR, with an exact version. Exact versions are held in `poetry.lock` once the application skeleton exists (AD-11). Package versions were checked on 2026-10-24 against PyPI and npm. Python 3.12.15 and PostgreSQL 18 come from search results for python.org and DigitalOcean documentation and were not checked at the source. Two rows are UNVERIFIED and one is PARTIAL; see section 8.
 
 | Layer | Component | Version | Status | Evidence |
 | --- | --- | --- | --- | --- |
@@ -117,7 +117,7 @@ Evidence files are the most sensitive data and the least protected. The applicat
 
 ## 7. Decisions and rationale
 
-In design mode this section is the contract. A coding agent reads it before changing anything above. Each row points at the ADR that records the full reasoning.
+In build mode this section is the contract. A coding agent reads it before changing anything above. Each row points at the ADR that records the full reasoning.
 
 | ID | Decision | Rationale | Status | Evidence |
 | --- | --- | --- | --- | --- |

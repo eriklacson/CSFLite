@@ -2,7 +2,7 @@
 
 These rules govern the jig process itself: how specs, scopes, plans and tasks are written and closed. They apply to every project, whatever its ruleset.
 
-Rules about the software being built live in the project's ruleset, in `rulesets/<name>/rules.md`. A ruleset never repeats these rules. This split is why each project needs only one ruleset.
+Rules about the software being built live in the project's ruleset, in `rulesets/<name>/rules.md`. A project with no ruleset keeps them in its own standards record. Either way, they are never repeated here. This split is why each project needs only one ruleset.
 
 None of these rules is tied to a working check yet, so all are `unbuilt`.
 

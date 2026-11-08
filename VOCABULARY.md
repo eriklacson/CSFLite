@@ -23,7 +23,7 @@ Each part of jig has one name. Use these names in every file. The last column li
 | **STUCK / BUDGET** | Why a loop stopped early: an unanswered question, or the round limit was reached. | Recorded in the log | — |
 | **gate** | Checks that cover the whole system and run every round. | `harness/plans/<stub>.gate.yaml` | part of `verify.sh` |
 | **plan approval**, **release approval** | The two points where a person must say yes. | The six-stage process | judgment gate, authorization gate, approval gate |
-| **ruleset** | Rules about the software being built, each tied to a check the agent cannot change. A project picks exactly one. No ruleset builds on another. | `rulesets/<name>/` | context (as a layer), regime |
+| **ruleset** | Rules about the software being built, each tied to a check the agent cannot change. A project picks exactly one, or keeps these rules in its own standards record. No ruleset builds on another. | `rulesets/<name>/` | context (as a layer), regime |
 | **process rule** | A rule about the jig process itself: how tasks, scopes and plans are written and closed. Applies to every project, whatever its ruleset. | `harness/rules.md` | — |
 | **context** | Everything the agent is given to read for a piece of work. This is the field's meaning (as in "context engineering"). | — | — |
 | **project** | One codebase using jig. | A repo created from jig | engagement |

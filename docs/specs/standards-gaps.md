@@ -1,6 +1,6 @@
 ---
 doc: standards-gaps
-mode: design
+mode: build
 system: CSFLite
 version: 0.1
 date: 2026-10-24

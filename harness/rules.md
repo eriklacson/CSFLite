@@ -17,7 +17,7 @@ None of these rules is tied to a working check yet, so all are `unbuilt`.
 | P-7 | Every constraint is specific enough to enforce. | A person judges it at plan approval. No command can check this. | Plan approval | unbuilt | lean-security LS-7 |
 | P-8 | Every outcome in the spec is covered by at least one scope, or listed as deferred. | A check over the spec and `docs/scopes/` fails on any uncovered outcome. | Plan approval | unbuilt | neutral N-7 |
 | P-9 | Every scope change has an accepted decision record. | Release approval is blocked if the scope differs from the plan with no record. | Release approval | unbuilt | neutral N-4 |
-| P-10 | Every file the process produces is named `<stub>.<type>.<extension>`, with lowercase stubs. The project name is the spec's stub. | A name check over `docs/`, `harness/drafts/` and `harness/plans/`. | Every round | unbuilt | neutral N-6 |
+| P-10 | Every file the process produces is named `<stub>.<type>.<extension>`, with lowercase stubs. The project name is the spec's stub. In a repo that already had documents, this applies only to new process files. Existing files keep their names, and `AGENTS.md` maps them. | A name check over `docs/`, `harness/drafts/` and `harness/plans/`. | Every round | unbuilt | neutral N-6 |
 
 ## Why these live in the harness
 

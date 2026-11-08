@@ -49,6 +49,7 @@ Every file the process produces is named `<stub>.<type>.<extension>`. The stub s
 Rules:
 
 - Stubs use lowercase letters, digits and hyphens.
+- In a repo that already had documents, these names apply only to new process files. Existing files keep their names, and `AGENTS.md` maps them.
 - A plan and every file beside it share the stub of the scope they deliver. `01-login.scope.md` → `01-login.plan.md` → `01-login.log.jsonl`.
 - Templates use the stub `template`: `template.spec.md`, `template.scope.md`, `template.plan.md`, `template.routes.md`.
 - Files that explain a folder keep the name `README.md`. `harness/plans/CURRENT` keeps its name.

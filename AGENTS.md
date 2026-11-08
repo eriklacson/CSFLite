@@ -84,11 +84,61 @@ Before changing Phase 4 code, read `docs/specs/standards.md` (the rules) and `do
 
 Tracked in the Known Technical Debt table in `docs/development_roadmap.md` (TD-1, TD-2, TD-3). Add new debt there, not here.
 
-## Execution Loop
-All tasks follow this loop — no exceptions:
-1. READ — understand the request, read the spec brief (`docs/specs/csflite-spec-brief.md`), check relevant files in `docs/specs/`, check for existing ADRs in `docs/specs/adr/`
-2. PLAN — propose what to build, present to architect for review
-3. APPROVE — architect reviews, adjusts, records significant decisions as ADRs
-4. IMPLEMENT — build it
-5. VERIFY — validate control IDs against data/csf_lookup.csv, check acceptance criteria, run tests, validate alignment with seed document, have the implementation checked independently (by a second agent or a person)
-6. REPORT — present output + verification results, flag unresolved items honestly
+## Execution Loop (jig)
+
+CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. jig's enforcement scripts are not built yet, so treat these rules as guidance until they are. The tool settings in `.claude/settings.json` block the Edit and Write tools on `harness/plans/`, but nothing blocks a shell command from writing there, and the approval hash that would catch it is not built. No setting enforces the rest of the list below.
+
+Every piece of work goes through six stages, no exceptions.
+
+| Stage | What happens | Who decides it is done |
+|---|---|---|
+| READ | Read the spec brief (`docs/specs/csflite-spec-brief.md`), the files in `docs/specs/` that apply, and existing ADRs in `docs/specs/adr/`. | You |
+| PLAN | Draft the plan in `harness/drafts/<stub>.plan.md`, with `<stub>.check.sh` and `<stub>.gate.yaml` beside it. Use Plan Mode if your tool has it. | You draft it |
+| APPROVE | The architect approves the plan, moves the files into `harness/plans/`, and records significant decisions as ADRs. | The architect |
+| IMPLEMENT | Work through the tasks in order. | The checks |
+| VERIFY | Run each task's check and report its real output. Also validate control IDs against `data/csf_lookup.csv`, check acceptance criteria, run tests, and have the work checked independently (a second agent or a person). | The checks, then a second reviewer |
+| REPORT | Present the output and the verification results. Flag unresolved items honestly. | The architect |
+
+Never skip PLAN. Never start IMPLEMENT before the architect approves the plan.
+
+### Tasks
+
+- A task is done only when its check passes. Your own judgment does not count.
+- Write the task's tests first and run them. They must fail. They are then locked.
+- If a question is not answered by the files, stop and write `STUCK` and the question. Do not guess.
+- If a task reaches its round limit, stop and report how far you got.
+- Report the check's real output, not a summary of it.
+
+### What you must never change
+
+- Anything in `harness/plans/`. Only `mark-done.sh` changes a plan's status column. You edit drafts only.
+- Any check or check result.
+- A test after its hash is taken.
+- The log, except through the harness scripts.
+- `VOCABULARY.md`.
+- Files in `docs/` unless the approved plan lists them. Most CSFLite work is docs, so the plan is what grants this.
+
+### Where the rules come from
+
+- Process rules: `harness/rules.md`.
+- Software rules: `docs/specs/standards.md`. CSFLite uses no jig ruleset. Anything a ruleset would add is added to `standards.md`, with the architect's approval. Where jig files mention a ruleset, read it as `standards.md`.
+- Do not invent a rule for an open gap in `docs/specs/standards-gaps.md`. Raise it with the architect.
+
+### How jig terms map to CSFLite files
+
+| jig term | CSFLite file |
+|---|---|
+| spec | `docs/specs/csflite-spec-brief.md` |
+| build records | `docs/specs/architecture.md`, `schema.md`, `standards.md` (`routes.md` and `integrations.md` are not written yet) |
+| record templates | `docs/specs/templates/` |
+| decision records | `docs/specs/adr/` |
+| audit records | `docs/specs/checks/` |
+| scopes | `docs/scopes/` (Phase 4 summary today: `docs/specs/phase-4/web-interface-scope.md`) |
+| plans, checks, logs | `harness/drafts/`, then `harness/plans/` |
+
+Existing files keep their names. ADRs stay `ADR-NNNN-*.md`, not jig's `NNNN-*.decision.md`. Process rule P-10 (file names) applies only to new process files: scopes, plans, checks, gates and logs. Existing files under `docs/specs/` are exempt.
+
+### Never
+
+- Never write a secret value into any file.
+- Never build anything the scope does not ask for.

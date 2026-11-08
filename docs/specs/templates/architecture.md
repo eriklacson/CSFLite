@@ -1,17 +1,17 @@
 ---
 doc: architecture
-mode: audit            # audit | design
+mode: audit            # audit | build
 system: UNSPECIFIED
 version: 0.1
 date: YYYY-MM-DD
-source: UNSPECIFIED    # audit: <repo>@<commit>  |  design: <design-ref>
+source: UNSPECIFIED    # audit: <repo>@<commit>  |  build: <build-ref>
 ---
 
 # Architecture — {{SYSTEM}}
 
-> **Mode.** `audit` = this describes what was observed in source. `design` = this describes what is to be built.
-> **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` (audit: not determinable from source / design: not yet decided) · `UNVERIFIED` (claimed, not confirmed)
-> **Evidence column.** audit = `file:line`. design = decision or requirement ID.
+> **Mode.** `audit` = this describes what was observed in source. `build` = this describes what is to be built.
+> **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` (audit: not determinable from source / build: not yet decided) · `UNVERIFIED` (claimed, not confirmed)
+> **Evidence column.** audit = `file:line`. build = decision or requirement ID.
 > **Named components only.** Every component carries its specific product name. Never a generic label, never a guess.
 
 ---
@@ -84,7 +84,7 @@ What sensitive data exists and where it lives. No values, ever.
 | AD-1 | | | | |
 
 **audit mode:** usually empty or `ABSENT`. That absence is the provenance finding — record it, do not manufacture rationale.
-**design mode:** this section is the contract. A coding agent reads it before changing anything above.
+**build mode:** this section is the contract. A coding agent reads it before changing anything above.
 
 ---
 

@@ -1,15 +1,15 @@
 ---
 doc: integrations
-mode: audit            # audit | design
+mode: audit            # audit | build
 system: UNSPECIFIED
 version: 0.1
 date: YYYY-MM-DD
-source: UNSPECIFIED    # audit: <repo>@<commit>  |  design: <design-ref>
+source: UNSPECIFIED    # audit: <repo>@<commit>  |  build: <build-ref>
 ---
 
 # Integrations — {{SYSTEM}}
 
-> **Mode.** `audit` = integrations observed in source. `design` = integrations to be built.
+> **Mode.** `audit` = integrations observed in source. `build` = integrations to be built.
 > **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` · `UNVERIFIED`
 > **Credential rule — absolute.** Environment variable **names** only. Never a value, never a fragment of one, in either mode.
 > **Named services only.** Specific product names. `UNSPECIFIED` where the repo does not identify it.

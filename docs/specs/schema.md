@@ -1,6 +1,6 @@
 ---
 doc: schema
-mode: design
+mode: build
 system: CSFLite
 tenant_field: organization_id
 version: 0.1
@@ -10,7 +10,7 @@ source: docs/specs/design/phase-4-web-interface.md §8, docs/specs/adr/ADR-0009-
 
 # Data model — CSFLite
 
-> **Mode.** `design` = models to be built. Nothing here is implemented yet.
+> **Mode.** `build` = models to be built. Nothing here is implemented yet.
 > **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` · `UNVERIFIED`
 > **Tenant field.** `organization_id`. A tenant is one assessed organization.
 > **Phases.** `MVP` models ship with the single-tenant Phase 4 web app. `MT` models ship with the hosted multi-tenant release. The MVP seeds exactly one Organization row. No MVP table changes shape when the `MT` models arrive.
@@ -251,7 +251,7 @@ The seam: one function, `current_organization(request)`. The MVP returns the see
 
 ## 4. Migrations and drift
 
-Intended discipline (design mode).
+Intended discipline (build mode).
 
 | Item | Intent | Status | Evidence |
 |---|---|---|---|

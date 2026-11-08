@@ -1,16 +1,16 @@
 ---
 doc: standards
-mode: audit            # audit | design
+mode: audit            # audit | build
 system: UNSPECIFIED
 version: 0.1
 date: YYYY-MM-DD
-source: UNSPECIFIED    # audit: <repo>@<commit>  |  design: <design-ref>
+source: UNSPECIFIED    # audit: <repo>@<commit>  |  build: <build-ref>
 stack_ref: UNSPECIFIED # architecture.md — the stack these rules are written against
 ---
 
 # Standards — {{SYSTEM}}
 
-> **Mode.** `audit` = rules observed to be enforced. `design` = rules to enforce.
+> **Mode.** `audit` = rules observed to be enforced. `build` = rules to enforce.
 > **Status vocabulary.** `CONFIRMED` · `PARTIAL` · `ABSENT` · `UNSPECIFIED` · `UNVERIFIED`
 > **Install status.** `unbuilt` → `installed` → `proven` (fired on a real regression and held). Only `proven` validates the control.
 > **Locus.** `[G]` generator governance · `[P]` pipeline gate · `[R]` assisted remediation. A rule with no locus does not survive regeneration.
@@ -35,7 +35,7 @@ How the codebase is arranged. `architecture.md` §3 records what the stack is. T
 | CO-n | | | | | | | |
 
 **audit mode:** record the layout as found, including where it is inconsistent.
-**design mode:** this is what the generator follows. A convention with no mechanism will drift on the next regeneration.
+**build mode:** this is what the generator follows. A convention with no mechanism will drift on the next regeneration.
 
 ---
 
@@ -53,7 +53,7 @@ Rules the system must not violate. Each needs a mechanism and a locus, or it is 
 | INV-n | | | | | | | |
 
 **audit mode:** `Install status` is read from what exists. Most rows will be `unbuilt`. That is the finding.
-**design mode:** every invariant ships with a named mechanism and locus before the first feature.
+**build mode:** every invariant ships with a named mechanism and locus before the first feature.
 
 **Subtraction note.** Where an invariant is enforced by removing a path rather than guarding it, record the removal as the mechanism. A deleted client-trust path cannot regress.
 

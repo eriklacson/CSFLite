@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (architect, 2026-11-08)
 
 ## Date
 
@@ -25,8 +25,8 @@ CSFLite Phase 4 has no tenants. `docs/specs/standards.md` already holds CSFLite'
 1. Adopt jig's process files: `harness/`, `VOCABULARY.md`, `.claude/`, and the scope template.
 2. Use no jig ruleset. `docs/specs/standards.md` stays the only source of software rules.
 3. Map jig terms to existing CSFLite files. Do not move or rename them (see `AGENTS.md`).
-4. Rules from `lean-security` that CSFLite lacks are added to `standards.md` as Proposed rows. They count only
-   after the architect approves them.
+4. Rules from `lean-security` that CSFLite lacks were added to `standards.md` and approved on 2026-11-08:
+   CO-20, INV-28, INV-29, and mechanisms on INV-18, F-4 and two logging rows.
 5. Open gap G-22 (page size) is not filled from the ruleset. It stays with the architect.
 
 ## Consequences
@@ -39,7 +39,7 @@ CSFLite Phase 4 has no tenants. `docs/specs/standards.md` already holds CSFLite'
 **Negative / trade-offs:**
 - Until jig's scripts are built, the jig rules are guidance only.
 - jig files that mention a ruleset read oddly in CSFLite. `AGENTS.md` says to read it as `standards.md`.
-- jig's spec template has no "no ruleset" option. A jig change is needed before CSFLite can write a jig spec.
+- jig is adaptable and not enforced, so CSFLite can use it without a ruleset. No jig change is needed for that.
 
 ## Alternatives Considered
 

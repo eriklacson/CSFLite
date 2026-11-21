@@ -1,0 +1,12 @@
+# System-wide checks for plan spec-brief-components. Run every round.
+# Docs-only change, so code checks are expected to be unaffected.
+gate:
+  - id: G-1
+    what: Only the spec brief changed under docs/
+    command: "bash harness/plans/spec-brief-components.check.sh T-4"
+  - id: G-2
+    what: Test suite still passes
+    command: "poetry run pytest"
+  - id: G-3
+    what: Golden pipeline unchanged
+    command: "poetry run pytest tests/test_golden_pipeline.py"

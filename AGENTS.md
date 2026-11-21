@@ -31,6 +31,17 @@ poetry run pre-commit install
 
 CI runs Black → Ruff → Bandit → pytest in sequence on Python 3.12. pytest runs with `--maxfail=1` (stops at first failure). Ruff selects rules `E, F, B, I, S, PT` (S = security lints, PT = pytest style); `E501` is ignored. Bandit skips `B101` (assert statements).
 
+## Branch naming
+
+Name every branch `<type>/<stub>`. The stub is lowercase with hyphens, and matches the plan or scope stub where one exists.
+
+| Prefix | Use for |
+|---|---|
+| `feat/<stub>` | Features |
+| `doc/<stub>` | Documentation |
+| `fix/<stub>` | Fixes for bugs, security issues and similar |
+| `harness/<stub>` | Agent harness changes: plans, drafts, loop scripts, hooks |
+
 ## Architecture
 
 CSFLite is a lean NIST CSF v2.0 security assessment and governance framework for startups and SMEs. It measures control **coverage** (existence), not maturity. It operates on a curated set of **25 CSF subcategories** (`data/csf_lookup.csv`).

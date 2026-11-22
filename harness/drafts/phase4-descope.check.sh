@@ -10,7 +10,8 @@ import glob, re, subprocess, sys
 task = sys.argv[1]
 
 CUT = re.compile(r"DigitalOcean|App Platform|\bSpaces\b|Managed Postgres|CSFLITE_S3_|"
-                 r"CSFLITE_STORAGE_BACKEND|django-storages|boto3|psycopg")
+                 r"CSFLITE_STORAGE_BACKEND|django-storages|boto3|psycopg|DATABASE_URL")
+COMMERCIAL = re.compile(r"Lean ?Security")  # the commercial product; jig's `lean-security` ruleset does not match
 OK = re.compile(r"Phase 7|ADR-0011")
 
 ADR11_GLOB = "docs/specs/adr/ADR-0011-*.md"
@@ -91,7 +92,8 @@ if task == "T-1":
     for h in ("## Context", "## Decision", "## Consequences", "## Alternatives Considered"):
         need(t, "^" + re.escape(h), f"ADR-0011 missing {h}")
     need(section(t, r"## Decision"), r"Phase 7", "ADR-0011 decision does not name Phase 7")
-    need(section(t, r"## Decision"), r"Phase 7 starts when", "ADR-0011 has no Phase 7 start condition")
+    if re.search(r"(?i)starts when", t):
+        fail("ADR-0011 records a Phase 7 start condition; it must not")
     need(section(t, r"## Decision"), r"CSFLITE_PUBLIC", "ADR-0011 does not keep public mode")
     need(read("docs/specs/adr/README.md"), r"\[0011\]\(ADR-0011-", "ADR index does not list ADR-0011")
     print("PASS T-1")
@@ -126,6 +128,7 @@ elif task == "T-4":
     t = read(p)
     need(t, r"^### Network run", "§11 has no Network run subsection")
     need(t, r"^### Hosted profiles .*Phase 7", "§11 has no 'Hosted profiles ... Phase 7' subsection")
+    need(section(t, r"## 9\."), r"/data/csflite\.db", "§9 does not state the fixed SQLite path")
     if "Storage startup guard" in t:
         fail("storage startup guard still in the design")
     need(t, r"^\| `/login` \|.*CSFLITE_PUBLIC", "/login row does not say public mode")
@@ -149,14 +152,15 @@ elif task == "T-6":
     p = "docs/development_roadmap.md"
     cut_rule(p)
     t = read(p)
-    need(t, r"^\| 7 \| Hosted Deployment Profiles \|", "status table not renamed")
+    need(t, r"^\| 7 \| Multi-Cloud Deployment Profiles \|", "Phase 7 renamed in status table; it keeps its name")
     need(t, r"^## ⬚ Phase 5: Release Hardening", "Phase 5 heading changed")
     need(t, r"^## ⬚ Phase 6: Community & Iteration", "Phase 6 heading changed")
-    s7 = section(t, r"## ⬚ Phase 7: Hosted Deployment Profiles")
+    s7 = section(t, r"## ⬚ Phase 7: Multi-Cloud Deployment Profiles")
     if not s7:
-        fail("Phase 7 heading not renamed")
+        fail("Phase 7 heading changed; it keeps its name")
     need(s7, r"DigitalOcean", "Phase 7 does not hold the DigitalOcean proof of concept")
-    need(s7, r"(?i)starts when", "Phase 7 has no start condition")
+    if re.search(r"(?i)starts when|start condition|trigger", s7):
+        fail("Phase 7 records a start condition; it must not")
     need(s7, r"ADR-0011", "Phase 7 does not cite ADR-0011")
     s4 = section(t, r"## ⬚ Phase 4:")
     need(s4, r"(?i)network", "Phase 4 does not mention network runs")
@@ -168,6 +172,7 @@ elif task == "T-7":
     t = read(p)
     need(t, r"^\| AD-4 \|.*(Phase 7|ADR-0011)", "AD-4 not moved to Phase 7")
     need(t, r"^\| OI-11 \|.*(Phase 7|ADR-0011)", "OI-11 not moved to Phase 7")
+    need(t, r"^\| OI-12 \|.*(Phase 7|ADR-0011)", "OI-12 not moved to Phase 7")
     print("PASS T-7")
 
 elif task == "T-8":
@@ -191,6 +196,12 @@ elif task == "T-9":
     extra = sorted(changed - ALLOWED - new_adr)
     if extra:
         fail("files changed outside the plan: " + ", ".join(extra))
+    for p in sorted(changed | new_adr):
+        try:
+            if COMMERCIAL.search(open(p, encoding="utf-8").read()):
+                fail(f"{p} names the commercial product")
+        except FileNotFoundError:
+            pass
     for p in sorted(glob.glob("docs/**/*.md", recursive=True)):
         if p.startswith(("docs/specs/adr/", "docs/specs/checks/")):
             continue

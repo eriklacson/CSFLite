@@ -18,8 +18,7 @@ The proof of concept has real costs. DigitalOcean has no free tier for this shap
 Django 5.2 (architecture OI-11). It adds a storage startup guard, an environment template, and
 open items on transport encryption and object storage failures.
 
-Its value was to test the object storage path early (ADR-0006, 2026-10-22 amendment). That
-value depends on someone needing a hosted profile.
+Its value was to test the object storage path early (ADR-0006, 2026-10-22 amendment).
 
 ## Decision
 
@@ -57,7 +56,6 @@ does not call a provider API or branch on the provider.
 - Phase 4 is smaller. No `boto3`, `django-storages` or `psycopg`. No `DATABASE_URL` parser. No
   storage guard. No template.
 - The `django-storages` support risk leaves Phase 4.
-- No cloud cost before there is a user.
 
 **Negative / trade-offs:**
 - The object storage path is not tested until Phase 7.

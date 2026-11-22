@@ -176,7 +176,6 @@ No application code branches on which provider it runs on (ADR-0006), so each pr
 - [ ] Document the cost of each profile
 
 **Acceptance criteria:**
-- No provider-specific application code. A profile may add a storage backend dependency to the image
 - Every hosted profile stores evidence in object storage, with no mounted volume. The local profile keeps its filesystem storage
 - The authentication guards and HTTPS rules in design §10 hold on every profile
 - The application refuses to start with the `s3` storage backend declared and its bucket or credentials unset

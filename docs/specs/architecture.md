@@ -74,7 +74,7 @@ There is one application runtime. No edge runtime, no second language, no client
 | Operator's browser | Server-rendered HTML, htmx if adopted | Untrusted. No scoring and no build step run here | CONFIRMED | design §3, §16 |
 | Database | SQLite file at `/data/csflite.db`, on the host mount or the operator's persistent volume | State lives outside the process | CONFIRMED | design §4, §7, §9 |
 | Evidence store | Filesystem under `CSFLITE_MEDIA_ROOT`, on the same mount as the database | Reached only through the application, never by a public URL | CONFIRMED | design §8 |
-| Release command | Database migrations, run explicitly and never on app boot | Runs before traffic, with the same credentials as the app | CONFIRMED | design §12 |
+| Release command | Database migrations, run explicitly and never on app boot | Runs before traffic, against the same SQLite file under `/data` as the app | CONFIRMED | design §12 |
 
 ---
 

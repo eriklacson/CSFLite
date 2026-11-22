@@ -1,4 +1,4 @@
-# ADR-0011: Phase 4 Ships the Container Only; Hosted Profiles Wait for Usage
+# ADR-0011: Phase 4 Ships the Container Only; Hosted Profiles Move to Phase 7
 
 ## Status
 

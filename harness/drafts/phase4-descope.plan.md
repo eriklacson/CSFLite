@@ -21,6 +21,7 @@ The Phase 4 records describe one container image, run locally or on a network th
 - One container image. The local `docker compose` profile, published on `127.0.0.1`.
 - Public mode (ADR-0007): `CSFLITE_PUBLIC`, `CSFLITE_PASSWORD`, `/login`, both startup guards.
 - Network runs. An operator may run the container on a network or in their own cloud account. CSFLite supports this but ships no template or provisioning for it.
+- HTTPS in public mode. The operator's proxy or load balancer provides TLS. The app requires HTTPS: it redirects HTTP, sends cookies only over HTTPS, and sends HSTS. The local profile is unchanged and runs over plain HTTP.
 - SQLite and evidence files on disk, under `/data`. A network run needs `/data` on a persistent volume. Later releases add provisions for hosts without one.
 - The SQLite file sits at a fixed path, `/data/csflite.db`. No setting is needed for it.
 - Environment variables are added only where an operator needs to change a value.
@@ -68,7 +69,7 @@ The "cut rule" in the checks: a line that names a moved item (DigitalOcean, App 
 | T-5 | Spec brief: §7 Phase 4 paragraph, the §10 "Container is the only artifact" row, §12 delivery paragraph. Cite ADR-0011. | T-1 | `bash harness/plans/phase4-descope.check.sh T-5` | 3 | todo |
 | T-6 | Roadmap: Phase 4 deliverables and acceptance criteria lose the DigitalOcean and storage items and gain network runs. Phase 7 keeps its name and gains the DigitalOcean proof of concept, object storage and Postgres. No start condition is written. | T-1 | `bash harness/plans/phase4-descope.check.sh T-6` | 3 | todo |
 | T-7 | `architecture.md`, per Appendix D. | T-1 | `bash harness/plans/phase4-descope.check.sh T-7` | 3 | todo |
-| T-8 | `standards.md` and `standards-gaps.md`, per Appendix E. Add gap G-25 (TLS for network runs). | T-1 | `bash harness/plans/phase4-descope.check.sh T-8` | 3 | todo |
+| T-8 | `standards.md` and `standards-gaps.md`, per Appendix E. Add rule INV-30 (HTTPS in public mode). Add G-25 as resolved by it. | T-1 | `bash harness/plans/phase4-descope.check.sh T-8` | 3 | todo |
 | T-9 | Confirm only the files listed above changed in `docs/`, and the cut rule holds across `docs/` outside ADRs and checks. | T-2 to T-8 | `bash harness/plans/phase4-descope.check.sh T-9` | 3 | todo |
 
 ## How the tasks cover the scope
@@ -80,6 +81,7 @@ No scope doc exists in `docs/scopes/` for this change. It changes the Phase 4 sc
 | The scope change has an accepted decision record (P-9) | T-1, T-2 |
 | Phase 4 records name no hosted profile, object storage or Postgres, except as Phase 7 | T-3 to T-8 |
 | Public mode and network runs stay in Phase 4 | T-3, T-4, T-8 |
+| Public mode requires HTTPS; local mode does not | T-1, T-4, T-8 |
 | Phase 7 holds every hosted profile | T-6 |
 | Nothing outside the listed files changed | T-9 |
 
@@ -106,12 +108,14 @@ No scope doc exists in `docs/scopes/` for this change. It changes the Phase 4 sc
 1. **Phase 7 start condition.** Not recorded in this repository. Phase 7 keeps its name.
 2. **`DATABASE_URL`.** Removed from Phase 4. The SQLite path is fixed. Environment variables are added only as needed.
 3. **Persistent volume.** Accepted as a Phase 4 risk. Later releases add provisions for it.
+4. **TLS.** Option A. The operator terminates TLS in front of the container. In public mode the app requires HTTPS. No escape hatch: public mode over plain HTTP is not supported. No new setting.
 
 ## Open items for the architect
 
-1. **TLS for network runs (new gap G-25).** A network run sends the operator password over whatever the operator sets up. This plan records the gap. It does not write a rule.
-2. **Approve the ADR-0011 text** in Appendix A.
-3. **Same pattern, not changed here.** `CSFLITE_MEDIA_ROOT` and `CSFLITE_CSF_LOOKUP` are also paths that operators rarely change. This plan leaves them alone. Say if they should go the same way as `DATABASE_URL`.
+1. **Approve the ADR-0011 text** in Appendix A.
+2. **HSTS details (proposed).** One year (`max-age=31536000`). No `includeSubDomains` and no `preload`, because the operator's other subdomains are not CSFLite's to lock to HTTPS. Approve or change.
+3. **`/healthz` and the redirect (proposed).** The container health check calls `/healthz` over plain HTTP from inside the container. A redirect would make it fail. The plan exempts `/healthz` from the HTTPS redirect only. The other `/healthz` problem in G-10 (the `Host` header) stays open.
+4. **Same pattern, not changed here.** `CSFLITE_MEDIA_ROOT` and `CSFLITE_CSF_LOOKUP` are also paths that operators rarely change. This plan leaves them alone. Say if they should go the same way as `DATABASE_URL`.
 
 ---
 
@@ -151,6 +155,13 @@ or in a cloud account they control. Public mode (ADR-0007) stays in Phase 4 for 
 `CSFLITE_PUBLIC=true`, `CSFLITE_PASSWORD`, and their domain in `CSFLITE_ALLOWED_HOSTS`. CSFLite
 ships no template or provisioning for it.
 
+**Public mode requires HTTPS.** The operator terminates TLS in a proxy or load balancer in front
+of the container. With `CSFLITE_PUBLIC=true` the app redirects HTTP to HTTPS, marks the session
+and CSRF cookies `Secure`, sends HSTS, and reads the proxy's `X-Forwarded-Proto` header to know
+the request arrived over HTTPS. `/healthz` is exempt from the redirect only. No new setting:
+public mode turns this on. With `CSFLITE_PUBLIC` unset, none of it applies and the local profile
+runs over plain HTTP on `127.0.0.1`.
+
 **Storage is SQLite and the filesystem.** Both live under `/data`. The SQLite file is at the
 fixed path `/data/csflite.db`. A network run needs `/data` on a persistent volume.
 
@@ -177,7 +188,11 @@ does not call a provider API or branch on the provider.
 - A network run depends on a persistent volume. A host with only temporary disk loses data.
   Such hosts are unsupported in Phase 4. Later releases add provisions for them.
 - Moving to Postgres in Phase 7 adds a setting and a data migration path from SQLite.
-- TLS for a network run is the operator's job, and no rule says so yet (standards-gaps G-25).
+- Public mode over plain HTTP does not work. Browsers do not send `Secure` cookies over HTTP, so
+  login fails. This includes an office network with no certificate.
+- A network run needs a TLS proxy in front of the container. The app trusts that proxy's
+  `X-Forwarded-Proto` header. Exposed directly, a client could fake the header and skip the
+  redirect. Cookies still stay off plain HTTP. The documentation says a proxy is required.
 - Operators who run on a network get documentation, not a template.
 
 ## Alternatives Considered
@@ -192,6 +207,15 @@ ADR-0008, the design, the spec brief, `architecture.md` and `AGENTS.md`.
 
 **Keep `DATABASE_URL` as the SQLite path setting.** Rejected. Nobody needs to change the path in
 Phase 4, and it would need a parser (architecture OI-12).
+
+**Ship a TLS proxy (such as Caddy) in the compose file.** Rejected. It adds a shipped component
+and amounts to the network-run template this ADR leaves out.
+
+**Gunicorn serves TLS with operator certificates.** Rejected. It adds two settings and leaves
+certificate renewal to the operator by hand.
+
+**An escape hatch for public mode over plain HTTP.** Rejected. It adds a setting and sends the
+password unencrypted.
 
 ## Relationship to other ADRs
 
@@ -218,12 +242,12 @@ Phase 4, and it would need a parser (architecture OI-12).
 | §7 | Database row: SQLite at the fixed path `/data/csflite.db`. Postgres and `DATABASE_URL` in Phase 7. File storage row: `FileSystemStorage`. Object storage in Phase 7. Rationale paragraph: the seams stay, the second backend arrives in Phase 7. |
 | §8 Storage | Filesystem under `CSFLITE_MEDIA_ROOT` only. The object storage sentence moves under a Phase 7 note. The serving rule stays as written. |
 | §9 | Remove the `DATABASE_URL`, `CSFLITE_STORAGE_BACKEND` and `CSFLITE_S3_*` rows and the storage startup guard paragraph. Add one line: these return in Phase 7. State the fixed SQLite path. `CSFLITE_MEDIA_ROOT` note drops the backend condition. `PORT` note drops the DigitalOcean example. |
-| §10 | Replace the DigitalOcean bullet with a network-run bullet: the operator publishes the port, sets `CSFLITE_PUBLIC=true`, `CSFLITE_PASSWORD` and their host in `CSFLITE_ALLOWED_HOSTS`. Both guards apply. |
-| §11 | Keep "Local — Phase 4". Add "Network run — operator-deployed, Phase 4": same image, persistent volume at `/data`, public mode, TLS not yet specified (G-25), temporary-disk hosts unsupported until later releases, no template shipped. Replace the DigitalOcean and AWS/Azure/GCP subsections with one "Hosted profiles — Phase 7" subsection holding both. |
+| §10 | Replace the DigitalOcean bullet with a network-run bullet: the operator publishes the port, puts a TLS proxy in front, sets `CSFLITE_PUBLIC=true`, `CSFLITE_PASSWORD` and their host in `CSFLITE_ALLOWED_HOSTS`. Both guards apply. Add an "HTTPS in public mode" paragraph: redirect, `Secure` cookies, HSTS, `X-Forwarded-Proto`, `/healthz` redirect exemption. Local mode: none of these. |
+| §11 | Keep "Local — Phase 4". Add "Network run — operator-deployed, Phase 4": same image, persistent volume at `/data`, public mode, a TLS proxy in front (required), temporary-disk hosts unsupported until later releases, no template shipped. Replace the DigitalOcean and AWS/Azure/GCP subsections with one "Hosted profiles — Phase 7" subsection holding both. |
 | §12 | Remove the `boto3` bullet. |
 | §13 | `/login`: "Public mode only (`CSFLITE_PUBLIC=true`)". |
-| §17 | Remove the DigitalOcean template, `s3` guard and object storage criteria. Keep both public-mode guards. |
-| §18 | Remove the object storage and DigitalOcean risks. Add: network runs need a persistent volume; accepted for Phase 4, later releases add provisions. Add: TLS for network runs is not specified (G-25). |
+| §17 | Remove the DigitalOcean template, `s3` guard and object storage criteria. Keep both public-mode guards. Add: with `CSFLITE_PUBLIC=true`, an HTTP request is redirected to HTTPS, cookies are `Secure`, and responses carry HSTS. With it unset, none of these apply. `/healthz` is not redirected. |
+| §18 | Remove the object storage and DigitalOcean risks. Add: network runs need a persistent volume; accepted for Phase 4, later releases add provisions. Add: public mode over plain HTTP fails login; accepted. Add: exposing the container without a proxy lets a client fake `X-Forwarded-Proto`; the docs require a proxy. |
 
 ## Appendix D — `architecture.md` changes (T-7)
 
@@ -231,7 +255,7 @@ Phase 4, and it would need a parser (architecture OI-12).
 - §3: Database row becomes SQLite only, at a fixed path. Postgres and `DATABASE_URL` in Phase 7. Driver row (`psycopg`) and File storage row (`django-storages`, `boto3`) marked Phase 7. Auth row: "public mode only" instead of "hosted profile only". Hosting row: container on the operator's machine or host; hosted profiles in Phase 7.
 - §4 data stores, TB-1, TB-4, data and secrets rows: drop object storage, S3 keys and `DATABASE_URL` from Phase 4, or mark them Phase 7.
 - AD-4: moved to Phase 7 by ADR-0011. AD-12: "public-mode login", not "hosted login".
-- OI-1: mark `django-storages` as Phase 7. OI-10: narrowed. Postgres and Spaces are Phase 7. OI-11 and OI-12: moved to Phase 7. OI-4, OI-5, OI-9: "network run" instead of "hosted".
+- OI-1: mark `django-storages` as Phase 7. OI-10: narrowed. Postgres and Spaces are Phase 7. OI-11 and OI-12: moved to Phase 7. OI-4: `Secure` decided by INV-30; `HttpOnly`, `SameSite` and session lifetime stay open. OI-5, OI-9: "network run" instead of "hosted".
 
 ## Appendix E — `standards.md` and `standards-gaps.md` changes (T-8)
 
@@ -241,6 +265,7 @@ Phase 4, and it would need a parser (architecture OI-12).
 - INV-14: drop clause (d).
 - INV-16: keep the ID. Text becomes "Deferred to Phase 7 with the DigitalOcean template (ADR-0011)".
 - INV-17, INV-19, INV-20: scope "public mode" instead of "hosted profile". Rule text unchanged.
+- New INV-30 (approved 2026-11-22, ADR-0011): with `CSFLITE_PUBLIC=true` the app **MUST** redirect HTTP to HTTPS (except `/healthz`), mark session and CSRF cookies `Secure`, send HSTS, and treat a request as HTTPS only from `X-Forwarded-Proto: https`. With `CSFLITE_PUBLIC` unset, none of these apply. Mechanism proposed: settings tests in both modes and a redirect test.
 - INV-18: drop the two `CSFLITE_S3_*` names and `DATABASE_URL`.
 - CO-8: `PORT` is the only exception to the `CSFLITE_` prefix in Phase 4. `DATABASE_URL` returns as an exception in Phase 7.
 - F-3: "Deferred to Phase 7 (ADR-0011)".
@@ -251,4 +276,4 @@ Phase 4, and it would need a parser (architecture OI-12).
 - G-17: drop object storage. Mark it Phase 7.
 - G-21: reword for network runs.
 - arch OI-10, OI-11 and OI-12 rows: mark moved or narrowed per ADR-0011.
-- New G-25, SILENT: TLS for network runs. The password and session cookie cross the network. No source says who terminates TLS or requires HTTPS. Owner: Architect. Affects OI-4, INV-17.
+- New G-25, SILENT: TLS for network runs. The password and session cookie cross the network. RESOLVED 2026-11-22 by ADR-0011 and INV-30: the operator terminates TLS, the app requires HTTPS in public mode. Affects OI-4, INV-17, INV-30.

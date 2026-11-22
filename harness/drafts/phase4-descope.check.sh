@@ -95,6 +95,8 @@ if task == "T-1":
     if re.search(r"(?i)starts when", t):
         fail("ADR-0011 records a Phase 7 start condition; it must not")
     need(section(t, r"## Decision"), r"CSFLITE_PUBLIC", "ADR-0011 does not keep public mode")
+    need(section(t, r"## Decision"), r"HTTPS", "ADR-0011 does not require HTTPS in public mode")
+    need(section(t, r"## Decision"), r"HSTS", "ADR-0011 does not name HSTS")
     need(read("docs/specs/adr/README.md"), r"\[0011\]\(ADR-0011-", "ADR index does not list ADR-0011")
     print("PASS T-1")
 
@@ -135,7 +137,12 @@ elif task == "T-4":
     s17 = section(t, r"## 17\.")
     need(s17, r"CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD", "§17 lost the password guard")
     need(s17, r"widened beyond", "§17 lost the allowed-hosts guard")
-    need(section(t, r"## 18\."), r"TLS", "§18 does not record the TLS risk")
+    s10 = section(t, r"## 10\.")
+    for term in ("HTTPS", "HSTS", "Secure", "X-Forwarded-Proto", "/healthz"):
+        need(s10, re.escape(term), f"§10 does not cover {term}")
+    need(s17, r"(?i)redirect.*HTTPS", "§17 has no HTTPS redirect criterion")
+    need(s17, r"HSTS", "§17 has no HSTS criterion")
+    need(section(t, r"## 18\."), r"X-Forwarded-Proto", "§18 does not record the proxy header risk")
     need(section(t, r"## 18\."), r"(?i)persistent volume", "§18 does not record the volume risk")
     need(t, r"ADR-0011", "design does not cite ADR-0011")
     print("PASS T-4")
@@ -185,7 +192,8 @@ elif task == "T-8":
     need(st, r"^\| INV-17 \|", "INV-17 removed; public mode stays")
     need(st, r"^\| INV-20 \|", "INV-20 removed; public mode stays")
     need(st, r"^\| network run", "environment matrix has no network run row")
-    need(gt, r"^\| G-25 \|.*TLS", "G-25 (TLS) not added")
+    need(gt, r"^\| G-25 \|.*TLS.*RESOLVED", "G-25 (TLS) not added as resolved")
+    need(st, r"^\| INV-30 \|.*HTTPS.*HSTS", "INV-30 (HTTPS in public mode) not added")
     print("PASS T-8")
 
 elif task == "T-9":

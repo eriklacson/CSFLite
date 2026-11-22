@@ -1,0 +1,3 @@
+# Approval hash. The plan hash ignores the Status column.
+ecbbe04f8a98cc6ac7e2a941094b1c063520b80828db5938cde32d8178aaa770  phase4-descope.plan.md
+baf6681efe09cca33a34afecc3ac6c7e4b2f179e4e5e7f7bb1c0f5cb06f52e68  phase4-descope.check.sh

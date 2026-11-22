@@ -70,7 +70,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-17 | SILENT | No behavior is stated for an unreachable database, failing or slow object storage (Phase 7, ADR-0011), or an unhandled exception. No error page rule | — | F-2, F-3, F-4 UNSPECIFIED | Architect | F-2, F-3, F-4 |
+| G-17 | SILENT | No behavior is stated for an unreachable database, failing or slow object storage (Phase 7, ADR-0011), or an unhandled exception. No error page rule | — | F-2, F-4 UNSPECIFIED. F-3 n/a until Phase 7 (ADR-0011) | Architect | F-2, F-3, F-4 |
 | G-18 | SILENT | Bad reference data at boot. `csf_lookup.csv` is checked by the test suite only. No source says what the app does if the file is missing or invalid at boot | arch TB-7. design §8 | F-9 UNSPECIFIED | Architect | F-9, INV-10 |
 | G-19 | SILENT | Results with missing rows. The scoring guard catches blank responses, not missing rows. No source says what the results view does with fewer than 25 rows | design §14. schema M-3 | F-11 and INV-7 PARTIAL | Architect | INV-7, F-11 |
 
@@ -79,7 +79,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
 | G-20 | SILENT | Log content and retention. Nothing on secrets or organization data in logs, or how long logs are kept | arch §6 | Log content: RESOLVED 2026-10-24, architect approved both §4 rules. Retention still UNSPECIFIED | Architect | §4 |
-| G-21 | SILENT | Environments. An operator-deployed network run can be publicly reachable, but its data class is not stated. arch OI-9 implies real data. No deploy trigger is stated. No preview or staging environment is defined | design §11. arch OI-9 | §5 rows UNSPECIFIED | Architect | §5 |
+| G-21 | SILENT | Environments. An operator-deployed network run can be publicly reachable, but its data class is not stated. arch OI-9 implies real data. A network run's deploy trigger is the operator's own. No preview or staging environment is defined | design §11. arch OI-9 | §5 rows UNSPECIFIED | Architect | §5 |
 | G-22 | SILENT | Limits. No rule for files per response, import CSV size, Django upload memory settings, request timeout, or pagination of `/` | design §8, §13 | §6 rows UNSPECIFIED or PARTIAL | Architect | §6 |
 
 ---

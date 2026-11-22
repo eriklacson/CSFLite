@@ -299,7 +299,7 @@ No volume, and no host filesystem holding organization data. Spaces speaks the S
 
 **What Phase 4 does to keep these cheap.** No provider API is called from application code, and nothing branches on which provider it runs on. Phase 7 adds `DATABASE_URL` for Postgres, the `CSFLITE_STORAGE_BACKEND` and `CSFLITE_S3_*` settings with their startup guard, and `django-storages` with `boto3` to the image.
 
-**What each provider needs for evidence storage:**
+**What each provider needs for evidence storage, and how much carries over from the DigitalOcean settings:**
 
 | Provider | Storage | Carries over |
 |---|---|---|
@@ -308,6 +308,7 @@ No volume, and no host filesystem holding organization data. Spaces speaks the S
 | Azure | Blob | No. Blob does not accept the S3 API, so it needs the `django-storages` Azure backend and its dependency |
 
 GCP and Azure each add a dependency to the image beyond what DigitalOcean and AWS need.
+
 ---
 
 ## 12. Container

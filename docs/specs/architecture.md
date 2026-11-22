@@ -110,7 +110,7 @@ Evidence files are the most sensitive data and the least protected. The applicat
 | Reference data | `csf_lookup.csv` in the image | Not sensitive. Version-controlled | Version control | CONFIRMED | ADR-0004 |
 | Operator password | `CSFLITE_PASSWORD`, environment | Secret | Environment only. How it is compared is UNSPECIFIED | UNSPECIFIED | design §9, §10 |
 | Django secret key | `CSFLITE_SECRET_KEY`, environment | Secret | Environment only. The app refuses to start without it | CONFIRMED | design §9 |
-| Storage credentials | `CSFLITE_S3_ACCESS_KEY`, `CSFLITE_S3_SECRET_KEY`. Phase 7 (ADR-0011) | Secret | Environment only | CONFIRMED | design §11 |
+| Storage credentials | `CSFLITE_S3_*` settings. Phase 7 (ADR-0011) | Secret | Environment only | CONFIRMED | design §11. Roadmap Phase 7 |
 | Database credentials | `DATABASE_URL`. Phase 7 (ADR-0011). Phase 4 uses a local SQLite file with no credentials | Secret | Environment only | CONFIRMED | design §9 |
 
 ---

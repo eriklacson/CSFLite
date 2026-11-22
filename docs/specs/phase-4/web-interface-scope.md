@@ -54,4 +54,4 @@ Ships as one container image the operator runs themselves. The local `docker com
 - The container starts from `docker compose up` with no host Python
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application, never a public URL, and attaching one never changes a score
-- With `CSFLITE_PUBLIC=true`, the app refuses to start without `CSFLITE_PASSWORD`, and plain HTTP requests are redirected to HTTPS
+- With `CSFLITE_PUBLIC=true`, the app refuses to start without `CSFLITE_PASSWORD`, and plain HTTP requests are redirected to HTTPS (except `/healthz`)

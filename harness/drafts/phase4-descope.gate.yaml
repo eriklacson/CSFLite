@@ -1,0 +1,12 @@
+# System-wide checks for plan phase4-descope. Run every round.
+# Docs-only change, so code checks are expected to be unaffected.
+gate:
+  - id: G-1
+    what: Only the planned files changed under docs/, and the cut rule holds
+    command: "bash harness/plans/phase4-descope.check.sh T-9"
+  - id: G-2
+    what: Test suite still passes
+    command: "poetry run pytest"
+  - id: G-3
+    what: Golden pipeline unchanged
+    command: "poetry run pytest tests/test_golden_pipeline.py"

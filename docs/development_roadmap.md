@@ -82,15 +82,9 @@ Fill questionnaire → governance_check.py → Scored assessment CSV + Heatmap C
 
 **Goal:** Replace the CLI with a web application. After this phase CSFLite is not operable from a terminal.
 
-Solution design: `docs/specs/design/phase-4-web-interface.md`. Locked decisions: `docs/specs/csflite-spec-brief.md` §10 and §12.
+Solution design: `docs/specs/design/phase-4-web-interface.md`. Locked decisions: `docs/specs/csflite-spec-brief.md` §10 and §12. Scope change: ADR-0011.
 
-CSFLite ships as a container image the operator runs themselves. The deployment sequence is three steps:
-
-1. Local container — `docker compose up` (Phase 4)
-2. DigitalOcean as a proof of concept — App Platform, Managed Postgres, Spaces (Phase 4)
-3. AWS, Azure, and GCP (Phase 7)
-
-Step 2 is a proof of concept, not a supported platform. It exists to prove the container runs unchanged off the operator's laptop, on the same three building blocks the big clouds use.
+CSFLite ships as one container image the operator runs themselves. Phase 4 ships the local `docker compose` profile only. Network runs are supported, not provisioned: an operator may run the container on a network or in a cloud account they control, behind their own TLS proxy, with `/data` on a persistent volume. Hosted profiles move to Phase 7.
 
 Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5.
 
@@ -99,11 +93,11 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - [ ] Django application skeleton, server-rendered, no build step
 - [ ] Web questionnaire form with notes and an optional evidence upload per question (replaces the checklist CSV)
 - [ ] Web-rendered report and heatmap, with CSV download
-- [ ] Database persistence — assessments, responses, evidence, immutable result snapshots
+- [ ] Database persistence — assessments, responses, evidence, immutable result snapshots. SQLite at a fixed path under `/data`, evidence files on disk
 - [ ] Container image and local `docker compose` profile
-- [ ] DigitalOcean proof-of-concept profile — App Platform, Managed Postgres, Spaces for evidence, always-on, no volume
+- [ ] Network-run documentation — TLS proxy in front, persistent volume at `/data`, public mode settings. No template
 - [ ] Operator password guard — refuse to start with `CSFLITE_PUBLIC=true` and no `CSFLITE_PASSWORD`, or with `CSFLITE_ALLOWED_HOSTS` widened while `CSFLITE_PUBLIC` is not `true` (design §10)
-- [ ] Storage configuration guard — refuse to start with the `s3` backend declared and its bucket or credentials unset (design §9)
+- [ ] HTTPS in public mode — redirect HTTP to HTTPS (except `/healthz`), `Secure` cookies, HSTS (design §10)
 - [ ] CSV import for assessments already completed with the CLI
 - [ ] Retire `governance_check.py` and `config/path_config.json`
 
@@ -114,8 +108,7 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 - The container starts from `docker compose up` with no host Python
 - A past assessment's result does not change when `csf_lookup.csv` is reweighted
 - Evidence files are reachable only through the application, never by a public URL
-- The application refuses to start with the `s3` storage backend declared and its bucket or credentials unset
-- The DigitalOcean profile stores evidence in object storage, with no mounted volume
+- With `CSFLITE_PUBLIC=true`, a plain HTTP request is redirected to HTTPS, cookies are `Secure`, and responses carry HSTS. With it unset, the local profile works over plain HTTP
 - Attaching evidence changes no score
 
 ---
@@ -169,20 +162,24 @@ Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements move to Phase 5
 
 ## ⬚ Phase 7: Multi-Cloud Deployment Profiles
 
-**Goal:** Add AWS, Azure, and GCP deployment profiles. Step 3 of the deployment sequence in Phase 4.
+**Goal:** Add hosted deployment profiles: the DigitalOcean proof of concept, then AWS, Azure, and GCP. ADR-0011 moved the DigitalOcean proof of concept, object storage and Postgres here from Phase 4.
 
-No application code branches on which provider it runs on (ADR-0006), so each profile is a settings change and a deployment template. GCP and Azure each add a storage dependency to the image, so they are not a zero-change build.
+No application code branches on which provider it runs on (ADR-0006), so each profile is a settings change and a deployment template. The first hosted profile adds the object storage backend, Postgres, and their settings and startup guard. GCP and Azure each add a storage dependency to the image.
 
 **Deliverables:**
+- [ ] Object storage backend through `django-storages` and `boto3`, selected by `CSFLITE_STORAGE_BACKEND`, with the `CSFLITE_S3_*` settings and a startup guard for missing settings
+- [ ] Postgres through `DATABASE_URL`, with a migration path from the Phase 4 SQLite file
+- [ ] DigitalOcean proof-of-concept profile — App Platform, Managed Postgres, Spaces for evidence, always-on, no volume, environment template with `CSFLITE_PUBLIC=true`
 - [ ] AWS profile — container service, managed Postgres, S3 for evidence
 - [ ] Azure profile — container service, managed Postgres, Blob storage. Blob does not accept the S3 API, so this needs a different `django-storages` backend
 - [ ] GCP profile — container service, managed Postgres, Cloud Storage. Its S3 compatibility needs HMAC keys and an endpoint override, or the native `django-storages` GCS backend
-- [ ] Document the cost of each profile alongside the DigitalOcean proof of concept
+- [ ] Document the cost of each profile
 
 **Acceptance criteria:**
-- No application code changes for any profile, verified by diff against Phase 4. A profile may add a storage backend dependency to the image
+- No provider-specific application code. A profile may add a storage backend dependency to the image
 - Every hosted profile stores evidence in object storage, with no mounted volume. The local profile keeps its filesystem storage
-- The authentication guards in design §10 and the storage guard in §9 hold on every profile
+- The authentication guards and HTTPS rules in design §10 hold on every profile
+- The application refuses to start with the `s3` storage backend declared and its bucket or credentials unset
 
 ---
 

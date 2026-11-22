@@ -97,7 +97,7 @@ Tracked in the Known Technical Debt table in `docs/development_roadmap.md` (TD-1
 
 ## Execution Loop (jig)
 
-CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. jig's enforcement scripts are not built yet, so treat these rules as guidance until they are. The tool settings in `.claude/settings.json` block the Edit and Write tools on `harness/plans/`, but nothing blocks a shell command from writing there, and the approval hash that would catch it is not built. No setting enforces the rest of the list below.
+CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. Two jig scripts are built: `harness/loop/approve.sh` and `harness/loop/mark-done.sh`. The tool settings in `.claude/settings.json` block the Edit and Write tools on `harness/plans/`. A shell command can still write there, but `mark-done.sh` then refuses to run, because the plan no longer matches its approval hash. The Stop hook, the tests hash, the log and the gate runner are not built yet, so the rest of the list below is guidance until they are.
 
 Every piece of work goes through six stages, no exceptions.
 
@@ -105,7 +105,7 @@ Every piece of work goes through six stages, no exceptions.
 |---|---|---|
 | READ | Read the spec brief (`docs/specs/csflite-spec-brief.md`), the files in `docs/specs/` that apply, and existing ADRs in `docs/specs/adr/`. | You |
 | PLAN | Draft the plan in `harness/drafts/<stub>/<stub>.plan.md`, with `<stub>.check.sh` and `<stub>.gate.yaml` beside it in the same folder. Use Plan Mode if your tool has it. | You draft it |
-| APPROVE | The architect approves the plan, moves the folder `harness/drafts/<stub>/` to `harness/plans/<stub>/`, and records significant decisions as ADRs. | The architect |
+| APPROVE | The architect runs `harness/loop/approve.sh <stub>`. It moves `harness/drafts/<stub>/` to `harness/plans/<stub>/`, writes the approval hash and sets `harness/plans/CURRENT`. The architect commits that, and records significant decisions as ADRs. | The architect |
 | IMPLEMENT | Work through the tasks in order. | The checks |
 | VERIFY | Run each task's check and report its real output. Also validate control IDs against `data/csf_lookup.csv`, check acceptance criteria, run tests, and have the work checked independently (a second agent or a person). | The checks, then a second reviewer |
 | REPORT | Present the output and the verification results. Flag unresolved items honestly. | The architect |
@@ -114,7 +114,7 @@ Never skip PLAN. Never start IMPLEMENT before the architect approves the plan.
 
 ### Tasks
 
-- A task is done only when its check passes. Your own judgment does not count.
+- A task is done only when its check passes. Your own judgment does not count. Run `harness/loop/mark-done.sh <stub> <task-id>`. It runs the check and writes `done` only on exit code 0.
 - Write the task's tests first and run them. They must fail. They are then locked.
 - If a question is not answered by the files, stop and write `STUCK` and the question. Do not guess.
 - If a task reaches its round limit, stop and report how far you got.

@@ -7,8 +7,8 @@ round_limit: 5                # default round limit per task; a task row can ove
 
 # Plan 01-name — {{Scope name}}
 
+> The agent drafts this plan as `harness/drafts/<stub>/<stub>.plan.md`, with `<stub>.check.sh` and `<stub>.gate.yaml` beside it in the same folder.
 > A person approves it by running `harness/loop/approve.sh <stub>`, which moves the folder to `harness/plans/<stub>/`.
-> A person approves it and moves all three into `harness/plans/`.
 > After approval only the Status column changes, and only `mark-done.sh` changes it.
 
 ## What this plan delivers

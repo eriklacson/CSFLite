@@ -41,6 +41,7 @@ Name every branch `<type>/<stub>`. The stub is lowercase with hyphens, and match
 | `doc/<stub>` | Documentation |
 | `fix/<stub>` | Fixes for bugs, security issues and similar |
 | `harness/<stub>` | Agent harness changes: plans, drafts, loop scripts, hooks |
+| `refactor/<stub>` | Restructuring or descoping existing work, with no new features |
 
 ## Architecture
 

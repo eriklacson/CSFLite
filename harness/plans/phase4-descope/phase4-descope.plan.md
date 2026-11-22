@@ -1,13 +1,13 @@
 ---
 plan: phase4-descope
 scope_doc: docs/specs/phase-4/web-interface-scope.md
-status: draft
+status: approved
 round_limit: 3
 ---
 
 # Plan phase4-descope — Cut Phase 4 to the container; move hosted profiles to Phase 7
 
-> Draft. Not approved. Do not start IMPLEMENT until the architect approves and moves the folder `harness/drafts/phase4-descope/` to `harness/plans/phase4-descope/`.
+> Approved by the architect on 2026-11-22. Only the Status column may change from here, and only through `mark-done.sh`.
 
 ## What this plan delivers
 

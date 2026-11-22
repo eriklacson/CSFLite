@@ -3,7 +3,7 @@
 gate:
   - id: G-1
     what: Only the spec brief changed under docs/
-    command: "bash harness/plans/spec-brief-components.check.sh T-4"
+    command: "bash harness/plans/spec-brief-components/spec-brief-components.check.sh T-4"
   - id: G-2
     what: Test suite still passes
     command: "poetry run pytest"

@@ -4,6 +4,8 @@ The scripts that hold the agent's loop to the checks. None of them are written y
 
 The loop is the agent's own loop. It works through the plan's tasks in one context. These scripts make sure the agent never decides by itself that a task is done.
 
+Every `<stub>.*` file named below sits in the scope's folder, `harness/plans/<stub>/`.
+
 | Script | What it does | Install status |
 |---|---|---|
 | `mark-done.sh <stub> <task-id>` | Runs the task's check. If it passes, sets the task's status to `done` in `<stub>.plan.md`. If it fails, changes nothing. Refuses if anything other than the status column differs from `<stub>.approved.sha`. | unbuilt |

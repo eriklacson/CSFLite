@@ -104,8 +104,8 @@ Every piece of work goes through six stages, no exceptions.
 | Stage | What happens | Who decides it is done |
 |---|---|---|
 | READ | Read the spec brief (`docs/specs/csflite-spec-brief.md`), the files in `docs/specs/` that apply, and existing ADRs in `docs/specs/adr/`. | You |
-| PLAN | Draft the plan in `harness/drafts/<stub>.plan.md`, with `<stub>.check.sh` and `<stub>.gate.yaml` beside it. Use Plan Mode if your tool has it. | You draft it |
-| APPROVE | The architect approves the plan, moves the files into `harness/plans/`, and records significant decisions as ADRs. | The architect |
+| PLAN | Draft the plan in `harness/drafts/<stub>/<stub>.plan.md`, with `<stub>.check.sh` and `<stub>.gate.yaml` beside it in the same folder. Use Plan Mode if your tool has it. | You draft it |
+| APPROVE | The architect approves the plan, moves the folder `harness/drafts/<stub>/` to `harness/plans/<stub>/`, and records significant decisions as ADRs. | The architect |
 | IMPLEMENT | Work through the tasks in order. | The checks |
 | VERIFY | Run each task's check and report its real output. Also validate control IDs against `data/csf_lookup.csv`, check acceptance criteria, run tests, and have the work checked independently (a second agent or a person). | The checks, then a second reviewer |
 | REPORT | Present the output and the verification results. Flag unresolved items honestly. | The architect |
@@ -145,7 +145,7 @@ Never skip PLAN. Never start IMPLEMENT before the architect approves the plan.
 | decision records | `docs/specs/adr/` |
 | audit records | `docs/specs/checks/` |
 | scopes | `docs/scopes/` (Phase 4 summary today: `docs/specs/phase-4/web-interface-scope.md`) |
-| plans, checks, logs | `harness/drafts/`, then `harness/plans/` |
+| plans, checks, logs | `harness/drafts/<stub>/`, then `harness/plans/<stub>/`. One folder per scope |
 
 Existing files keep their names. ADRs stay `ADR-NNNN-*.md`, not jig's `NNNN-*.decision.md`. Process rule P-10 (file names) applies only to new process files: scopes, plans, checks, gates and logs. Existing files under `docs/specs/` are exempt.
 

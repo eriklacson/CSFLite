@@ -10,7 +10,7 @@ The agent works through the plan in its own loop, in one context. Left alone, th
 
 Claude Code runs a Stop hook every time the agent tries to finish. The hook will run `harness/loop/stop-check.sh`, which:
 
-1. Reads `harness/plans/CURRENT` and finds the first task in `<stub>.plan.md` whose status is not `done`.
+1. Reads `harness/plans/CURRENT` and finds the first task in `harness/plans/<stub>/<stub>.plan.md` whose status is not `done`. Every file named below sits in that same folder.
 2. On round 0, confirms the task's tests fail, then writes `<stub>.tests.sha`. On every later round, refuses to continue if the tests no longer match that hash.
 3. Runs that task's check from `<stub>.check.sh` and adds the result to `<stub>.log.jsonl`.
 4. If the check fails and the round limit is not reached, blocks the stop and sends the check's real output back to the agent.

@@ -11,15 +11,17 @@ Every scope has its own folder, named with the scope's stub. All files for that 
 | `drafts/<stub>/` | The agent, during PLAN | A plan being drafted, with its check script and gate |
 | `plans/<stub>/` | A person moves the scope's folder here at approval. After that only the harness scripts write here. | The approved plan and everything the loop produces for it |
 
-Approval is a physical move of one folder:
+Approval is a physical move of one folder. The architect runs:
 
 ```bash
-git mv harness/drafts/<stub> harness/plans/<stub>
+harness/loop/approve.sh <stub>
 ```
+
+It moves `drafts/<stub>/` to `plans/<stub>/`, sets the plan's front matter to `status: approved`, writes `<stub>.approved.sha` and sets `plans/CURRENT`. It checks everything before it moves anything, and refuses if `CURRENT` names another plan with open tasks. The architect then commits the result.
 
 The agent can write to `drafts/` but not to `plans/`, so an approved plan cannot be quietly edited. The agent's tool settings block edits to `plans/` and every folder inside it.
 
-That block covers the Edit and Write tools only. A shell command can still write a file. The approval hash (`<stub>.approved.sha`, rule P-2) is the backstop: `mark-done.sh` refuses to run if anything but the status column changed. Until that script is built, this backstop is not enforced.
+That block covers the Edit and Write tools only. A shell command can still write a file. The approval hash (`<stub>.approved.sha`, rule P-2) is the backstop: `mark-done.sh` refuses to run if anything but the status column changed. The hash covers the plan and the check script. It does not cover the gate file.
 
 ## File names
 
@@ -57,7 +59,9 @@ harness/
       01-login.tests.sha       hash of the plan's tests, taken after they first run and fail
       01-login.log.jsonl       one entry per round
   loop/
+    approve.sh                 run by the architect: moves a draft to plans/, writes the approval hash, sets CURRENT
     mark-done.sh               runs a task's check and sets its status to done if it passes
+    planlib.py                 shared logic for approve.sh and mark-done.sh
     stop-check.sh              run by the Stop hook; blocks the agent from stopping while a check fails
     gate.sh                    runs the system-wide checks
 ```
@@ -72,4 +76,5 @@ The tests themselves live in the project's own `tests/` folder, because they are
 | `drafts/` | One folder per scope being drafted |
 | `plans/template.plan.md` | In place |
 | `plans/00-restructure.*` and `plans/CURRENT` | The jig repo only. The plan that set up this layout. Removed at its release approval. A project that copies jig in does not copy these. |
-| `loop/*.sh` | Not written yet. See `loop/README.md`. |
+| `loop/approve.sh`, `loop/mark-done.sh` | Installed. See `loop/README.md`. |
+| `loop/stop-check.sh`, `loop/gate.sh` | Not written yet. |

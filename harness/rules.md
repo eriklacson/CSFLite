@@ -4,12 +4,12 @@ These rules govern the jig process itself: how specs, scopes, plans and tasks ar
 
 Rules about the software being built live in the project's ruleset, in `rulesets/<name>/rules.md`. A project with no ruleset keeps them in its own standards record. Either way, they are never repeated here. This split is why each project needs only one ruleset.
 
-None of these rules is tied to a working check yet, so all are `unbuilt`.
+P-1 and P-2 are tied to `harness/loop/mark-done.sh` and are `installed`. The rest are not tied to a working check yet, so they are `unbuilt`.
 
 | ID | Rule | How it will be checked | Enforced at | Install status | Was |
 |---|---|---|---|---|---|
-| P-1 | A task is done only when its check passes. | `mark-done.sh` reruns the check and writes `done` only on exit code 0. | Every task | unbuilt | neutral N-1 |
-| P-2 | An approved plan changes only in its status column. | `mark-done.sh` compares the plan and check script with `<stub>.approved.sha` before writing. | Every task | unbuilt | — |
+| P-1 | A task is done only when its check passes. | `mark-done.sh` reruns the check and writes `done` only on exit code 0. | Every task | installed | neutral N-1 |
+| P-2 | An approved plan changes only in its status column. | `mark-done.sh` compares the plan and check script with `<stub>.approved.sha` before writing. | Every task | installed | — |
 | P-3 | A task's tests do not change after their hash is taken. | `stop-check.sh` compares the tests with `<stub>.tests.sha` every round. | Every round | unbuilt | — |
 | P-4 | Every task links to the scope criteria it covers and to its tests. | Plan approval fails if a task has no link in the plan's coverage table. | Plan approval | unbuilt | neutral N-3 |
 | P-5 | Every scope has at least one deliverable and one success criterion. | The agent cannot draft a plan for a scope missing either. | PLAN | unbuilt | neutral N-5 |

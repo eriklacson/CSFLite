@@ -21,7 +21,7 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 
 | ID | Task | Depends on | Check | Round limit | Status |
 |---|---|---|---|---|---|
-| T-1 | | — | `bash harness/plans/01-name/01-name.check.sh` | 5 | todo |
+| T-1 | | — | `bash harness/plans/01-name/01-name.check.sh T-1` | 5 | todo |
 | T-2 | | T-1 | | 5 | todo |
 
 ## How the tasks cover the scope

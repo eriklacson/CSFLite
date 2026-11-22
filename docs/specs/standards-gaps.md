@@ -40,7 +40,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
 | G-6 | UNVERIFIED | Document precedence. Brief §5 and §10 say `docs/assessment_philosophy.md` wins methodology conflicts. Arch and design call the brief contract-binding. These can both hold, but `assessment_philosophy.md` was not reviewed, so no rule here has been checked against it | brief §5, §10. arch header. design header | Precedence note names it | Architect | Precedence note |
-| G-7 | UNRECORDED | AD-11 (pin every dependency) and AD-12 (hosted login in middleware) are marked "Not yet in an ADR" | arch §7 | Cites arch alone for both | Architect | CO-12, INV-17 |
+| G-7 | UNRECORDED | AD-11 (pin every dependency) and AD-12 (public-mode login in middleware) are marked "Not yet in an ADR" | arch §7 | Cites arch alone for both | Architect | CO-12, INV-17 |
 
 ---
 
@@ -57,19 +57,20 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-10 | SILENT | `/healthz`. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks. Also, the hosted template sets `CSFLITE_ALLOWED_HOSTS` to the App Platform domain only. A health check that probes `localhost` would then get Django's 400 | design §10, §12, §13. AD-12 | INV-17 exempts only `/login` (approved 2026-10-24). Whether `/healthz` is also exempt is still open | Architect | INV-15, INV-16, INV-17, INV-26 |
+| G-10 | SILENT | `/healthz`. The container health check targets `/healthz`. The login is checked in middleware. No source says `/healthz` skips the login, or what it checks. Also, a network run sets `CSFLITE_ALLOWED_HOSTS` to the operator's domain only. A health check that probes `localhost` would then get Django's 400. ADR-0011 settles one part: `/healthz` is exempt from the HTTPS redirect (INV-30) | design §10, §12, §13. AD-12 | INV-17 exempts only `/login` (approved 2026-10-24). Whether `/healthz` is also exempt is still open | Architect | INV-15, INV-17, INV-26, INV-30 |
 | G-11 | SILENT | Transactions. A rejected import must leave no row. Removing evidence deletes a file and a row. No source says where transactions are used, or what happens when the file delete fails | design §8, §14, §17 | INV-2 and INV-13 state the outcome only | Architect | INV-2, INV-13 |
 | G-12 | SILENT | Assessment lifecycle. `status` is `draft`, `in_progress` or `completed`. No rule says when it changes, whether a completed assessment can be edited, or when a new Result is generated | schema M-2, M-5 | No rule | Architect | INV-8 |
 | G-13 | SILENT | CSRF. Design picks Django partly for CSRF. No source requires CSRF protection | design §7 | RESOLVED 2026-10-24. Architect approved INV-19 | Architect | INV-19 |
 | G-14 | SILENT | Debug mode on a public deployment. `CSFLITE_DEBUG` defaults off. No guard stops it being on with `CSFLITE_PUBLIC=true` | design §9, §10 | RESOLVED 2026-10-24. Architect approved INV-20 | Architect | INV-20, §4 |
 | G-15 | SILENT | Secrets in git history. Ruff `S105` to `S107` check source only. Bandit runs at HIGH, which skips its hardcoded-password checks (they are LOW). No history scan exists. Adding one means a tool outside the stated stack | arch §6. `pyproject.toml`. CI workflow | Rule approved 2026-10-24 (INV-18 history clause). Scanner approved 2026-11-08: `gitleaks`, run in CI (jig `lean-security` LS-13). It is a tool outside the stated stack, so it needs adding to `architecture.md` §3 when it is installed. Tracked as debt: TD-3 in `docs/development_roadmap.md` | Architect | INV-18 |
 | G-16 | UNVERIFIED | Required merge check. CI runs on every pull request. Whether a branch rule makes it required is a GitHub setting, not visible in the repo | CI workflow | INV-24 is UNVERIFIED | Architect | INV-24 |
+| G-25 | SILENT | TLS for network runs. The password and session cookie cross the network, and no source said who terminates TLS or requires HTTPS | design §10, §11 | RESOLVED 2026-11-22. ADR-0011 and INV-30: the operator terminates TLS, and the app requires HTTPS in public mode | Architect | OI-4, INV-17, INV-30 |
 
 ### Failure semantics
 
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
-| G-17 | SILENT | No behavior is stated for an unreachable database, failing or slow object storage, or an unhandled exception. No error page rule | — | F-2, F-3, F-4 UNSPECIFIED | Architect | F-2, F-3, F-4 |
+| G-17 | SILENT | No behavior is stated for an unreachable database, failing or slow object storage (Phase 7, ADR-0011), or an unhandled exception. No error page rule | — | F-2, F-3, F-4 UNSPECIFIED | Architect | F-2, F-3, F-4 |
 | G-18 | SILENT | Bad reference data at boot. `csf_lookup.csv` is checked by the test suite only. No source says what the app does if the file is missing or invalid at boot | arch TB-7. design §8 | F-9 UNSPECIFIED | Architect | F-9, INV-10 |
 | G-19 | SILENT | Results with missing rows. The scoring guard catches blank responses, not missing rows. No source says what the results view does with fewer than 25 rows | design §14. schema M-3 | F-11 and INV-7 PARTIAL | Architect | INV-7, F-11 |
 
@@ -78,7 +79,7 @@ Same scope as `standards.md`: Phase 4, tenancy excluded. Section numbers in "Aff
 | ID | Type | Gap | Sources | What `standards.md` does now | Owner | Affects |
 |---|---|---|---|---|---|---|
 | G-20 | SILENT | Log content and retention. Nothing on secrets or organization data in logs, or how long logs are kept | arch §6 | Log content: RESOLVED 2026-10-24, architect approved both §4 rules. Retention still UNSPECIFIED | Architect | §4 |
-| G-21 | SILENT | Environments. The hosted proof of concept is public, but its data class is not stated. arch OI-9 implies real data later. No deploy trigger is stated. No preview or staging environment is defined | design §11. arch OI-9 | §5 rows UNSPECIFIED | Architect | §5 |
+| G-21 | SILENT | Environments. An operator-deployed network run can be publicly reachable, but its data class is not stated. arch OI-9 implies real data. No deploy trigger is stated. No preview or staging environment is defined | design §11. arch OI-9 | §5 rows UNSPECIFIED | Architect | §5 |
 | G-22 | SILENT | Limits. No rule for files per response, import CSV size, Django upload memory settings, request timeout, or pagination of `/` | design §8, §13 | §6 rows UNSPECIFIED or PARTIAL | Architect | §6 |
 
 ---
@@ -96,9 +97,9 @@ These are recorded in the sources already. They are listed here only for the sta
 | arch OI-7 | Evidence not encrypted or scanned by the app. Accepted in design §18 | none |
 | arch OI-8 | No audit trail. Schema says M-10 AuditLog closes it, but M-10 is tenancy work and out of scope, so it is open again for Phase 4 | No row |
 | arch OI-9 | No backup or restore procedure | §5 production row |
-| arch OI-10 | Encryption in transit to PostgreSQL and Spaces not stated | No row. Needs a rule once decided |
-| arch OI-11 | `django-storages` not confirmed on Django 5.2 | CO-12, INV-11 |
-| arch OI-12 | No library chosen to read `DATABASE_URL` | CO-12 |
+| arch OI-10 | Encryption in transit to PostgreSQL and Spaces not stated. Phase 7 (ADR-0011). Browser-to-app transit is decided by INV-30 | No row. Needs a rule once decided |
+| arch OI-11 | `django-storages` not confirmed on Django 5.2. Phase 7 (ADR-0011) | CO-12, INV-11 |
+| arch OI-12 | No library chosen to read `DATABASE_URL`. Phase 7 (ADR-0011) | CO-12 |
 | arch OI-13 | Poetry unpinned in CI. Actions pinned by tag, not commit | CO-12 |
 | arch OI-14 | Django 5.2 and Python 3.12 support end dates | CO-12 |
 | arch OI-15 | pandas held at 2.3.1 | CO-4, INV-9 |
@@ -122,8 +123,9 @@ These are recorded in the sources already. They are listed here only for the sta
 |---|---|
 | Conflicts | 7 (G-1 to G-5, G-23, G-24) |
 | Decisions without an ADR | 1 (G-7) |
-| Silent | 14 (G-8 to G-15, G-17 to G-22) |
+| Silent | 15 (G-8 to G-15, G-17 to G-22, G-25) |
 | Unverified | 2 (G-6, G-16) |
 | Source open items referenced | 14 |
 | Proposed rules in `standards.md` that rest on a gap | 0. All 5 rules and 2 clauses were approved 2026-10-24 (CO-8, INV-19, INV-20, two in §4, clauses in INV-17 and INV-18) |
 | Gaps resolved by that approval | 2 (G-13, G-14). G-20 in part |
+| Gaps resolved by ADR-0011 | 1 (G-25) |

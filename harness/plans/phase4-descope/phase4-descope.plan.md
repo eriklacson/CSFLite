@@ -69,7 +69,7 @@ The "cut rule" in the checks: a line that names a moved item (DigitalOcean, App 
 | T-5 | Spec brief: §7 Phase 4 paragraph, the §10 "Container is the only artifact" row, §12 delivery paragraph. Cite ADR-0011. | T-1 | `bash harness/plans/phase4-descope/phase4-descope.check.sh T-5` | 3 | done |
 | T-6 | Roadmap: Phase 4 deliverables and acceptance criteria lose the DigitalOcean and storage items and gain network runs. Phase 7 keeps its name and gains the DigitalOcean proof of concept, object storage and Postgres. No start condition is written. | T-1 | `bash harness/plans/phase4-descope/phase4-descope.check.sh T-6` | 3 | done |
 | T-7 | `architecture.md`, per Appendix D. | T-1 | `bash harness/plans/phase4-descope/phase4-descope.check.sh T-7` | 3 | done |
-| T-8 | `standards.md` and `standards-gaps.md`, per Appendix E. Add rule INV-30 (HTTPS in public mode). Add G-25 as resolved by it. | T-1 | `bash harness/plans/phase4-descope/phase4-descope.check.sh T-8` | 3 | todo |
+| T-8 | `standards.md` and `standards-gaps.md`, per Appendix E. Add rule INV-30 (HTTPS in public mode). Add G-25 as resolved by it. | T-1 | `bash harness/plans/phase4-descope/phase4-descope.check.sh T-8` | 3 | done |
 | T-9 | Confirm only the files listed above changed in `docs/`, and the cut rule holds across `docs/` outside ADRs and checks. | T-2 to T-8 | `bash harness/plans/phase4-descope/phase4-descope.check.sh T-9` | 3 | todo |
 
 ## How the tasks cover the scope

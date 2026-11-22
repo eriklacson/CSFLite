@@ -7,7 +7,7 @@ round_limit: 5                # default round limit per task; a task row can ove
 
 # Plan 01-name — {{Scope name}}
 
-> The agent drafts this plan as `harness/drafts/<stub>.plan.md`, with `<stub>.check.sh` and `<stub>.gate.yaml` beside it.
+> A person approves it by running `harness/loop/approve.sh <stub>`, which moves the folder to `harness/plans/<stub>/`.
 > A person approves it and moves all three into `harness/plans/`.
 > After approval only the Status column changes, and only `mark-done.sh` changes it.
 
@@ -21,7 +21,7 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 
 | ID | Task | Depends on | Check | Round limit | Status |
 |---|---|---|---|---|---|
-| T-1 | | — | `bash harness/plans/01-name.check.sh T-1` | 5 | todo |
+| T-1 | | — | `bash harness/plans/01-name/01-name.check.sh` | 5 | todo |
 | T-2 | | T-1 | | 5 | todo |
 
 ## How the tasks cover the scope

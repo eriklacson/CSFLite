@@ -57,6 +57,8 @@ the container in their own account.
 Neither platform choice was recorded with reasons before this amendment. Railway appeared in the
 Phase 4 design with no comparison on record.
 
+**2026-11-22.** Phase 4 ships no hosted profile ([ADR-0011](ADR-0011-phase4-ships-container-only.md)). The DigitalOcean proof of concept, object storage and Postgres move to Phase 7. An operator may still run the container on a network or in their own cloud account, with SQLite and evidence on a persistent volume under `/data`. The local-versus-hosted storage split described above starts in Phase 7. The delivery model in this ADR is unchanged.
+
 ## Alternatives Considered
 
 **Hosted SaaS.** Rejected. CSFLite would hold organization data.

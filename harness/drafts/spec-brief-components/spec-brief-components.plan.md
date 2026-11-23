@@ -7,7 +7,7 @@ round_limit: 3
 
 # Plan spec-brief-components — Label the three components in the spec brief
 
-> Draft. Not approved. Do not start IMPLEMENT until the architect approves and moves the three files into `harness/plans/`.
+> Draft. Not approved. Do not start IMPLEMENT until the architect approves and moves the folder `harness/drafts/spec-brief-components/` to `harness/plans/spec-brief-components/`.
 
 ## What this plan delivers
 
@@ -26,10 +26,10 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 
 | ID | Task | Depends on | Check | Round limit | Status |
 |---|---|---|---|---|---|
-| T-1 | Rewrite §1 Overview and "Project Components". Define the three components. State the principle: engineer governance into systems where it makes the process more efficient. State the two relationship rules (below). | — | `bash harness/plans/spec-brief-components.check.sh T-1` | 3 | todo |
-| T-2 | Add a `**Component:** <value>` line under every `##` heading from §2 on, and under every `###` heading in §3, using the tag table below. | T-1 | `bash harness/plans/spec-brief-components.check.sh T-2` | 3 | todo |
-| T-3 | Add a Component column to the §9 milestones table and the §10 decisions table, using the tag table below. | T-1 | `bash harness/plans/spec-brief-components.check.sh T-3` | 3 | todo |
-| T-4 | Confirm nothing else moved: headings are identical to the original, and the only removed lines are in §1 or are table rows. | T-2, T-3 | `bash harness/plans/spec-brief-components.check.sh T-4` | 3 | todo |
+| T-1 | Rewrite §1 Overview and "Project Components". Define the three components. State the principle: engineer governance into systems where it makes the process more efficient. State the two relationship rules (below). | — | `bash harness/plans/spec-brief-components/spec-brief-components.check.sh T-1` | 3 | todo |
+| T-2 | Add a `**Component:** <value>` line under every `##` heading from §2 on, and under every `###` heading in §3, using the tag table below. | T-1 | `bash harness/plans/spec-brief-components/spec-brief-components.check.sh T-2` | 3 | todo |
+| T-3 | Add a Component column to the §9 milestones table and the §10 decisions table, using the tag table below. | T-1 | `bash harness/plans/spec-brief-components/spec-brief-components.check.sh T-3` | 3 | todo |
+| T-4 | Confirm nothing else moved: headings are identical to the original, and the only removed lines are in §1 or are table rows. | T-2, T-3 | `bash harness/plans/spec-brief-components/spec-brief-components.check.sh T-4` | 3 | todo |
 
 ## Relationship rules to state in §1 (T-1)
 

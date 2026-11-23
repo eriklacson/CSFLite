@@ -261,7 +261,7 @@ CSFLite runs as a local CLI tool on the operator's machine. There is no hosting 
 
 Local-first because the tool is operated by the consultant on their own machine, processing organization data that should not leave the local environment without explicit agreement.
 
-Phase 4 replaces this profile with a container image the operator runs themselves, locally or in their own cloud account. Because the operator owns the infrastructure, organization data still never leaves an environment they control. See `docs/specs/design/phase-4-web-interface.md`.
+Phase 4 replaces this profile with a container image the operator runs themselves, locally or on a network or cloud account they control. Because the operator owns the infrastructure, organization data still never leaves an environment they control. CSFLite ships only the local profile. Hosted profiles are Phase 7 (ADR-0011). See `docs/specs/design/phase-4-web-interface.md`.
 
 ---
 
@@ -328,7 +328,7 @@ Each row links to its ADR in `adr/`. Decisions made after this table was written
 | Web interface replaces the CLI | Phase 4 rewrite — CLI is retired, not kept alongside | One front end to maintain rather than two. The scoring core (`assess_helpers.py`) is I/O-free and carries over unchanged, so the rewrite is confined to intake and output. | [ADR-0005](adr/ADR-0005-web-application-replaces-cli.md) |
 | Delivery model | Ships a container image, not a hosted service | The operator runs it on their own machine or in their own cloud account. CSFLite never holds organization data, which resolves the §7 local-first conflict rather than deferring it. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
 | Cloud-native scope | Portable and operable, not elastic | pandas import cost rules out scale-to-zero, and a single operator generates no load. Recorded so the application is not later "fixed" into a serverless deployment. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
-| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Running locally exercises the same container, entrypoint, and configuration model as the hosted deployment. Storage differs: local writes evidence to the filesystem, hosted to object storage. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md) |
+| Container is the only artifact | Including the local profile | One artifact and one set of instructions. Local runs and operator-deployed network runs use the same container, entrypoint, configuration model and storage: SQLite and evidence files under `/data`. Hosted profiles with object storage are Phase 7. | [ADR-0006](adr/ADR-0006-self-hosted-container-delivery.md), [ADR-0011](adr/ADR-0011-phase4-ships-container-only.md) |
 | Pre-commit hooks + CI | Black, Ruff, Bandit, pytest | Enforces code quality without manual review overhead. Appropriate for solo developer workflow. | — (tooling) |
 ---
 
@@ -350,7 +350,7 @@ The web interface **replaces** the CLI. After Phase 4, CSFLite is not operable f
 
 Carries over unchanged: the 25 curated subcategories, `csf_lookup.csv` as their single source of truth, the output contracts in §3, and `assess_helpers.py`.
 
-CSFLite ships as a container image that the operator runs on their own machine or in their own cloud account. Local first, then a self-hosted profile on DigitalOcean as a proof of concept. AWS, Azure, and GCP are Phase 7.
+CSFLite ships as a container image that the operator runs on their own machine or in their own cloud account. Phase 4 ships the local profile only. Network runs are supported, not provisioned: the operator brings a TLS proxy and a persistent volume, and public mode requires HTTPS. Hosted profiles, including the DigitalOcean proof of concept and AWS, Azure and GCP, are Phase 7 ([ADR-0011](adr/ADR-0011-phase4-ships-container-only.md)).
 
 Phase 4 covers the core 25 only. The SOC 2 and HIPAA supplements arrive in Phase 5 as collected, unscored tracks, so the crosswalk decision in §10 and the boundary in §11 do not move.
 

@@ -53,6 +53,8 @@ domain in `CSFLITE_ALLOWED_HOSTS`.
 tripped guard 2. Both are loopback names, so the control is unchanged. Source: Phase 4 spec
 consistency review, W3 ([PR #56](https://github.com/eriklacson/CSFLite/pull/56)).
 
+**2026-11-22.** Public mode stays in Phase 4, for operators who run the container on a network or in their own cloud account. The hosted environment template moves to Phase 7 with the DigitalOcean profile ([ADR-0011](ADR-0011-phase4-ships-container-only.md)). Until then, the operator sets `CSFLITE_PUBLIC`, `CSFLITE_PASSWORD` and `CSFLITE_ALLOWED_HOSTS` themselves. Both startup guards still apply.
+
 ## Alternatives Considered
 
 **Key the guard off the bind address.** Rejected. It cannot carry the signal inside a container.

@@ -126,7 +126,8 @@ No scope doc exists for this plan (decision 1). These are the plan's own criteri
 2. **`spec-brief-components` needs a scope before approval** (architect, 2026-11-28). No second exception. A scope file is written for it from the template before `approve.sh` runs on it.
 3. **`phase4-descope` T-9 marked done on its own branch** (architect, 2026-11-28). `mark-done.sh` passed it on `refactor/phase4-descope`, in PR eriklacson/CSFLite#79. Once that merges, `approve.sh` can approve this plan. The REPORT stage for `phase4-descope` stays with the architect.
 4. **The "Checked by" and "Rows it covers" tables are approved as proposed** (architect, 2026-11-28). Schema and architecture rows are left out until those records have row IDs a check can rely on.
+5. **Branch: `harness/scope-template-check`** (architect, 2026-11-28). One plan stays on one branch. The prefix follows most of the work, which is harness work. T-4 is the only docs change.
 
 ## Open items for the architect
 
-5. **Branch.** This draft sits on `harness/scope-template-check`. T-4 changes a doc, but the plan is mainly harness work, so I used the `harness/` prefix.
+None.

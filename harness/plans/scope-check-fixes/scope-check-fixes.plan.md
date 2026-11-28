@@ -1,7 +1,7 @@
 ---
 plan: scope-check-fixes
 scope_doc: docs/scopes/scope-check-fixes.scope.md
-status: draft
+status: approved
 round_limit: 3
 ---
 

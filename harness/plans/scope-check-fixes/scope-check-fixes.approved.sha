@@ -1,0 +1,3 @@
+# Approval hash. The plan hash ignores the Status column.
+2520839fda70fe678c22ddd20639a03a380be776114edbd0e4cb8cb3128f671a  scope-check-fixes.plan.md
+647feb53aec9a53aafe09d24ac7484854778afe53b99db8b51d76dfd513da006  scope-check-fixes.check.sh

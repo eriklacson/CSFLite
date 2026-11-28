@@ -1,6 +1,6 @@
 ---
 plan: scope-template-check
-scope_doc: none yet   # open item 1: this plan builds the scope check itself. See "Open items".
+scope_doc: none yet   # approved exception (decision 1). See "Decisions".
 status: draft
 round_limit: 3
 ---
@@ -85,7 +85,7 @@ Every CO and INV row in `docs/specs/standards.md`, except INV-16 (deferred to Ph
 
 ## How the tasks cover the scope
 
-No scope doc exists for this plan (open item 1). These are the plan's own criteria.
+No scope doc exists for this plan (decision 1). These are the plan's own criteria.
 
 | Criterion | Task |
 |---|---|
@@ -120,9 +120,12 @@ No scope doc exists for this plan (open item 1). These are the plan's own criter
 - **Checking quality.** Whether a criterion is really checkable stays with P-7, a person's judgment.
 - **Schema and architecture rows in "Rows it covers".** Only standards rows for now (open item 4).
 
+## Decisions
+
+1. **No scope doc for this plan: approved as the last exception** (architect, 2026-11-28). This plan builds the scope check, so it has no scope file. After T-3, `approve.sh` refuses any plan without a valid scope. No later plan can skip one.
+
 ## Open items for the architect
 
-1. **No scope doc for this plan.** This plan builds the scope check, so it has no `docs/scopes/` file. After T-3, `approve.sh` refuses any plan without a valid scope. Approve this one as the last exception, or write a scope for it first?
 2. **The draft `spec-brief-components` has `scope_doc: none yet`.** After T-3 it cannot be approved until a scope is written for it. Confirm that is intended.
 3. **Approval is blocked today.** `CURRENT` is `phase4-descope`, and its T-9 is still `todo`. `approve.sh` refuses a new plan until T-9 is marked done.
 4. Approve or change the "Checked by" table and the "Rows it covers" proposal.

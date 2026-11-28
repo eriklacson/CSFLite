@@ -1,0 +1,18 @@
+# System-wide checks for plan scope-template-check. Run every round.
+# gate.sh is not built yet, so run these by hand.
+gate:
+  - id: G-1
+    what: Harness tests pass
+    command: "poetry run python -m pytest -q harness/loop/tests"
+  - id: G-2
+    what: Product test suite still passes
+    command: "poetry run pytest"
+  - id: G-3
+    what: Golden pipeline unchanged
+    command: "poetry run pytest tests/test_golden_pipeline.py"
+  - id: G-4
+    what: Black, Ruff and Bandit pass (CO-11)
+    command: "poetry run black --check . && poetry run ruff check . && poetry run bandit -r . -x .venv,venv,build,dist,docs,migrations --severity-level high"
+  - id: G-5
+    what: The phase4-descope cut rule still holds after the Phase 4 scope is rewritten
+    command: "bash harness/plans/phase4-descope/phase4-descope.check.sh T-9"

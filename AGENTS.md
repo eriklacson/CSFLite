@@ -33,15 +33,7 @@ CI runs Black → Ruff → Bandit → pytest in sequence on Python 3.12. pytest 
 
 ## Branch naming
 
-Name every branch `<type>/<stub>`. The stub is lowercase with hyphens, and matches the plan or scope stub where one exists.
-
-| Prefix | Use for |
-|---|---|
-| `feat/<stub>` | Features |
-| `doc/<stub>` | Documentation |
-| `fix/<stub>` | Fixes for bugs, security issues and similar |
-| `harness/<stub>` | Agent harness changes: plans, drafts, loop scripts, hooks |
-| `refactor/<stub>` | Restructuring or descoping existing work, with no new features |
+Follow `BRANCHING.md`. In short: name every branch `<type>/<stub>`, where the type is `feat`, `doc`, `fix`, `harness` or `refactor`. The stub matches the plan or scope stub where one exists. One plan stays on one branch.
 
 ## Architecture
 

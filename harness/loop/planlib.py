@@ -410,12 +410,16 @@ def approve(stub):
         die(4, f"{stub}.approved.sha already exists. The plan is already approved.")
     text = plan.read_text(encoding="utf-8")
     # The plan's scope must exist and follow the scope template (P-11, with P-4, P-5, P-6).
-    scope_value = (frontmatter(text) or {}).get("scope_doc", "")
-    scope = plan_scope_doc(plan)
+    scope_value, scope, problem = resolve_scope_doc(plan)
     if scope is None:
-        die(4, f"REFUSED: the plan's scope_doc '{scope_value}' is not a file. Every plan needs a scope (P-11).")
+        die(4, f"REFUSED: the plan's scope_doc '{scope_value}' is {problem}. Every plan needs a scope (P-11).")
+    if scope.resolve() == TEMPLATE.resolve():
+        die(4, "REFUSED: the plan's scope_doc is the template itself. Copy the template and fill it in (P-11).")
     if not check_scope_file(scope):
         die(4, "REFUSED: the plan's scope does not follow docs/scopes/template.scope.md. Fix it, then approve.")
+    scope_status = (frontmatter(scope.read_text(encoding="utf-8")) or {}).get("status", "")
+    if scope_status != "ready for plan":
+        die(4, f"REFUSED: the scope's status is '{scope_status}'. Set it to 'ready for plan' once it is accepted.")
     if not list(task_rows(text.splitlines(keepends=True))):
         die(4, "the plan has no tasks table with ID and Status columns")
     current = PLANS / "CURRENT"

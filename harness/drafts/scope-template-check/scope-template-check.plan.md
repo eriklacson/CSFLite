@@ -118,7 +118,7 @@ No scope doc exists for this plan (decision 1). These are the plan's own criteri
 - **Carrying the check over to jig.** After CSFLite proves it. Tracked in eriklacson/jig#6.
 - **The tests hash.** `stop-check.sh` is not built, so the T-1 tests are not hashed. A person confirms they failed first.
 - **Checking quality.** Whether a criterion is really checkable stays with P-7, a person's judgment.
-- **Schema and architecture rows in "Rows it covers".** Only standards rows for now (open item 4).
+- **Schema and architecture rows in "Rows it covers".** Only standards rows for now (decision 4).
 
 ## Decisions
 

@@ -29,3 +29,9 @@ repos:
       entry: poetry run python -m pytest -q
       language: system
       pass_filenames: false
+    - id: scope-check
+      name: scope files follow docs/scopes/template.scope.md
+      entry: bash harness/loop/scope-check.sh --all
+      language: system
+      pass_filenames: false
+      files: '(\.md$|^harness/loop/)'

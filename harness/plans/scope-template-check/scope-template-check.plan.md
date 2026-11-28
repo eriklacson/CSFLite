@@ -1,7 +1,7 @@
 ---
 plan: scope-template-check
 scope_doc: none yet   # approved exception (decision 1). See "Decisions".
-status: draft
+status: approved
 round_limit: 3
 ---
 

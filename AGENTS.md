@@ -90,7 +90,7 @@ Tracked in the Known Technical Debt table in `docs/development_roadmap.md` (TD-1
 
 ## Execution Loop (jig)
 
-CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. Two jig scripts are built: `harness/loop/approve.sh` and `harness/loop/mark-done.sh`. The tool settings in `.claude/settings.json` block the Edit and Write tools on `harness/plans/`. A shell command can still write there, but `mark-done.sh` then refuses to run, because the plan no longer matches its approval hash. The Stop hook, the tests hash, the log and the gate runner are not built yet, so the rest of the list below is guidance until they are.
+CSFLite follows the jig process. `VOCABULARY.md` defines the terms. `harness/rules.md` holds the process rules. Three jig scripts are built: `harness/loop/approve.sh`, `harness/loop/mark-done.sh` and `harness/loop/scope-check.sh`. The tool settings in `.claude/settings.json` block the Edit and Write tools on `harness/plans/`. A shell command can still write there, but `mark-done.sh` then refuses to run, because the plan no longer matches its approval hash. The Stop hook, the tests hash, the log and the gate runner are not built yet, so the rest of the list below is guidance until they are.
 
 Every piece of work goes through six stages, no exceptions.
 
@@ -137,7 +137,7 @@ Never skip PLAN. Never start IMPLEMENT before the architect approves the plan.
 | record templates | `docs/specs/templates/` |
 | decision records | `docs/specs/adr/` |
 | audit records | `docs/specs/checks/` |
-| scopes | `docs/scopes/` (Phase 4 summary today: `docs/specs/phase-4/web-interface-scope.md`) |
+| scopes | Any file whose frontmatter says `doc: scope`, usually in `docs/scopes/`. The Phase 4 scope is `docs/specs/phase-4/web-interface-scope.md`. Every scope follows `docs/scopes/template.scope.md`, and every plan names one as its `scope_doc`. `harness/loop/scope-check.sh` checks this, and `approve.sh` refuses a plan whose scope fails. |
 | plans, checks, logs | `harness/drafts/<stub>/`, then `harness/plans/<stub>/`. One folder per scope |
 
 Existing files keep their names. ADRs stay `ADR-NNNN-*.md`, not jig's `NNNN-*.decision.md`. Process rule P-10 (file names) applies only to new process files: scopes, plans, checks, gates and logs. Existing files under `docs/specs/` are exempt.

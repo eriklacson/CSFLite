@@ -48,7 +48,7 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 | T-3 | In `approve`, before anything moves: refuse (exit 4) if the plan's `scope_doc` is missing, is not a file, or fails `scope-check`. Print the failing checks. | T-2 | `bash harness/plans/scope-template-check/scope-template-check.check.sh T-3` | 3 | done |
 | T-4 | Convert `docs/specs/phase-4/web-interface-scope.md` to the template, in place. Keep every bullet's text. Use the mapping and the proposed tables below. | T-2 | `bash harness/plans/scope-template-check/scope-template-check.check.sh T-4` | 3 | done |
 | T-5 | Run `scope-check.sh --all` in pre-commit (hook id `scope-check`) and in CI. Add a CI step that runs `python -m pytest -q harness/loop/tests`. | T-3, T-4 | `bash harness/plans/scope-template-check/scope-template-check.check.sh T-5` | 3 | done |
-| T-6 | Add rule P-11 to `harness/rules.md` and set P-5, P-6 and P-11 to `installed`. Add `scope-check.sh` to `harness/loop/README.md`. In `AGENTS.md`, say that scope files are found by `doc: scope`. | T-5 | `bash harness/plans/scope-template-check/scope-template-check.check.sh T-6` | 3 | todo |
+| T-6 | Add rule P-11 to `harness/rules.md` and set P-5, P-6 and P-11 to `installed`. Add `scope-check.sh` to `harness/loop/README.md`. In `AGENTS.md`, say that scope files are found by `doc: scope`. | T-5 | `bash harness/plans/scope-template-check/scope-template-check.check.sh T-6` | 3 | done |
 
 ## Mapping for T-4: old sections to template sections
 

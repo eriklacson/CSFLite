@@ -4,7 +4,7 @@ These rules govern the jig process itself: how specs, scopes, plans and tasks ar
 
 Rules about the software being built live in the project's ruleset, in `rulesets/<name>/rules.md`. A project with no ruleset keeps them in its own standards record. Either way, they are never repeated here. This split is why each project needs only one ruleset.
 
-P-1 and P-2 are tied to `harness/loop/mark-done.sh` and are `installed`. The rest are not tied to a working check yet, so they are `unbuilt`.
+P-1 and P-2 are tied to `harness/loop/mark-done.sh` and are `installed`. P-5, P-6 and P-11 are tied to `harness/loop/scope-check.sh`, which `approve.sh`, pre-commit and CI run, and are `installed`. The rest are not tied to a working check yet, so they are `unbuilt`.
 
 | ID | Rule | How it will be checked | Enforced at | Install status | Was |
 |---|---|---|---|---|---|
@@ -12,12 +12,13 @@ P-1 and P-2 are tied to `harness/loop/mark-done.sh` and are `installed`. The res
 | P-2 | An approved plan changes only in its status column. | `mark-done.sh` compares the plan and check script with `<stub>.approved.sha` before writing. | Every task | installed | — |
 | P-3 | A task's tests do not change after their hash is taken. | `stop-check.sh` compares the tests with `<stub>.tests.sha` every round. | Every round | unbuilt | — |
 | P-4 | Every task links to the scope criteria it covers and to its tests. | Plan approval fails if a task has no link in the plan's coverage table. | Plan approval | unbuilt | neutral N-3 |
-| P-5 | Every scope has at least one deliverable and one success criterion. | The agent cannot draft a plan for a scope missing either. | PLAN | unbuilt | neutral N-5 |
-| P-6 | Every success criterion can be checked by a command, or is marked `human`. | Plan approval fails on a criterion with an empty "Checked by" cell. | Plan approval | unbuilt | lean-security LS-6 |
+| P-5 | Every scope has at least one deliverable and one success criterion. | `scope-check.sh` (V-4) fails a scope missing either. `approve.sh` then refuses the plan. | Plan approval, pre-commit, CI | installed | neutral N-5 |
+| P-6 | Every success criterion can be checked by a command, or is marked `human`. | `scope-check.sh` (V-5) fails a criterion with an empty "Checked by" cell. `approve.sh` then refuses the plan. | Plan approval, pre-commit, CI | installed | lean-security LS-6 |
 | P-7 | Every constraint is specific enough to enforce. | A person judges it at plan approval. No command can check this. | Plan approval | unbuilt | lean-security LS-7 |
 | P-8 | Every outcome in the spec is covered by at least one scope, or listed as deferred. | A check over the spec and `docs/scopes/` fails on any uncovered outcome. | Plan approval | unbuilt | neutral N-7 |
 | P-9 | Every scope change has an accepted decision record. | Release approval is blocked if the scope differs from the plan with no record. | Release approval | unbuilt | neutral N-4 |
 | P-10 | Every file the process produces is named `<stub>.<type>.<extension>`, with lowercase stubs. The project name is the spec's stub. In a repo that already had documents, this applies only to new process files. Existing files keep their names, and `AGENTS.md` maps them. | A name check over `docs/`, `harness/drafts/` and `harness/plans/`. | Every round | unbuilt | neutral N-6 |
+| P-11 | Every scope file follows `docs/scopes/template.scope.md`: its frontmatter keys, its six sections in order, its table columns and its ID prefixes. Every plan names such a file as its `scope_doc`. | `scope-check.sh` reads the rules from the template itself (V-1 to V-3, V-6, V-7). `approve.sh` refuses a plan whose scope is missing or fails. Pre-commit and CI run `scope-check.sh --all`. | Plan approval, pre-commit, CI | installed | — |
 
 ## Why these live in the harness
 

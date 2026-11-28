@@ -1,6 +1,6 @@
 # harness/loop/
 
-The scripts that hold the agent's loop to the checks. `approve.sh` and `mark-done.sh` are written. The others are not.
+The scripts that hold the agent's loop to the checks. `approve.sh`, `mark-done.sh` and `scope-check.sh` are written. The others are not.
 
 The loop is the agent's own loop. It works through the plan's tasks in one context. These scripts make sure the agent never decides by itself that a task is done.
 
@@ -8,7 +8,8 @@ Every `<stub>.*` file named below sits in the scope's folder, `harness/plans/<st
 
 | Script | What it does | Install status |
 |---|---|---|
-| `approve.sh <stub>` | Run by the architect, never the agent. Moves `harness/drafts/<stub>/` to `harness/plans/<stub>/`, sets `status: approved`, writes `<stub>.approved.sha` (the plan with its Status column blanked, and the check script) and sets `CURRENT`. Runs every check before moving anything. Refuses if the plan is already approved, a file is missing, the plan has no tasks table, or `CURRENT` names another plan with open tasks. | installed |
+| `approve.sh <stub>` | Run by the architect, never the agent. Moves `harness/drafts/<stub>/` to `harness/plans/<stub>/`, sets `status: approved`, writes `<stub>.approved.sha` (the plan with its Status column blanked, and the check script) and sets `CURRENT`. Runs every check before moving anything. Refuses if the plan is already approved, a file is missing, the plan has no tasks table, the plan's `scope_doc` is not a file or fails `scope-check.sh`, or `CURRENT` names another plan with open tasks. | installed |
+| `scope-check.sh <file> \| --all` | Checks that a scope file follows `docs/scopes/template.scope.md` (rules P-5, P-6, P-11). Reads the frontmatter keys, statuses, headings, table columns and ID prefixes from the template itself, so changing the template changes the check. Prints `PASS <file>`, or `FAIL <file>` and one line per problem, each naming its check (V-1 to V-7). `--all` checks every tracked file with `doc: scope` frontmatter, and every plan's `scope_doc` that is a file. Run by `approve.sh`, pre-commit and CI. Tests: `harness/loop/tests/`. | installed |
 | `mark-done.sh <stub> <task-id>` | Runs the task's check. If it passes, sets the task's status to `done` in `<stub>.plan.md`. If it fails, changes nothing. Refuses if anything other than the status column differs from `<stub>.approved.sha`, or if a task it depends on is not done. | installed |
 | `stop-check.sh` | Run by the Stop hook each time the agent tries to finish. Takes or verifies `<stub>.tests.sha`, runs the current task's check and adds the round to `<stub>.log.jsonl`. Blocks the stop while the check fails, until the round limit. | unbuilt |
 | `gate.sh` | Runs the system-wide checks in `<stub>.gate.yaml`. Reports each as passed, failed or unbuilt. | unbuilt |
@@ -41,7 +42,7 @@ The decision to stop uses only what the scripts report. Anything the agent write
 
 ## Exit codes
 
-`approve.sh` and `mark-done.sh` share `planlib.py` and its exit codes.
+`approve.sh`, `mark-done.sh` and `scope-check.sh` share `planlib.py` and its exit codes. `scope-check.sh` uses only 0 (pass), 1 (a scope fails) and 2 (usage).
 
 | Code | Meaning |
 |---|---|
@@ -56,3 +57,5 @@ The decision to stop uses only what the scripts report. Anything the agent write
 - The approval hash covers the plan and the check script, as `VOCABULARY.md` defines it. The gate file is not covered.
 - Nothing stops the agent from running `approve.sh` itself. Approval is still a person's act.
 - `mark-done.sh` reads task dependencies from the plan's "Depends on" column. It understands `T-1`, `T-2, T-3` and `T-2 to T-8`.
+- `scope-check.sh` checks structure, not quality. Whether a criterion can really be checked stays a person's call (P-7).
+- `scope-check.sh --all` checks tracked files only. A new scope is checked once it is staged.

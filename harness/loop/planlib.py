@@ -11,6 +11,11 @@ mark-done <stub> <task-id>
     it depends on is not done. Runs the task's check. Writes `done` in the Status column only if
     the check exits 0 (rule P-1).
 
+scope-check <file> | --all
+    Checks that a scope file follows docs/scopes/template.scope.md (rule P-11, with P-4, P-5, P-6).
+    The rules are read from the template itself. --all checks every tracked file whose frontmatter says
+    `doc: scope`, and every draft or approved plan's scope_doc that is a file.
+
 The approval hash ignores the Status column, so mark-done can write status without breaking it.
 
 Exit codes: 0 ok, 1 check failed, 2 usage error, 3 approval hash mismatch, 4 task cannot run.
@@ -38,6 +43,7 @@ def git(*args):
 ROOT = Path(git("rev-parse", "--show-toplevel").stdout.strip() or ".")
 PLANS = ROOT / "harness" / "plans"
 DRAFTS = ROOT / "harness" / "drafts"
+TEMPLATE = ROOT / "docs" / "scopes" / "template.scope.md"
 
 
 def files(stub):
@@ -138,6 +144,203 @@ def deps(text):
     return out
 
 
+# --- scope files ---------------------------------------------------------------------------------
+
+
+def frontmatter(text):
+    """The frontmatter as a dict, with trailing `# comments` dropped. None if the text has none."""
+    m = re.match(r"\A---\n(.*?)\n---\n", text, re.S)
+    if not m:
+        return None
+    out = {}
+    for line in m.group(1).splitlines():
+        km = re.match(r"^([A-Za-z_][\w-]*):\s*(.*)$", line)
+        if km:
+            out[km.group(1)] = re.sub(r"\s+#.*$", "", km.group(2)).strip()
+    return out
+
+
+def sections(text):
+    """[(heading, [lines])] for every `## ` heading, in order."""
+    out = []
+    for line in text.splitlines():
+        if line.startswith("## "):
+            out.append((line.strip(), []))
+        elif out:
+            out[-1][1].append(line)
+    return out
+
+
+def first_table(lines):
+    """(columns, data rows) of the first table in lines. Rows with every cell empty are dropped."""
+    for i in range(len(lines) - 1):
+        if lines[i].startswith("|") and SEP_RE.match(lines[i + 1]):
+            cols = [c.strip() for c in split_row(lines[i])[1:-1]]
+            rows = []
+            for line in lines[i + 2 :]:
+                if not line.startswith("|"):
+                    break
+                cells = [c.strip() for c in split_row(line)[1:-1]]
+                if any(cells):
+                    rows.append(cells)
+            return cols, rows
+    return None, []
+
+
+def template_rules():
+    """What a scope must have, read from the template: keys, statuses, headings, columns, ID prefixes."""
+    if not TEMPLATE.exists():
+        die(2, f"scope template not found: {TEMPLATE.relative_to(ROOT)}")
+    text = TEMPLATE.read_text(encoding="utf-8")
+    keys = list(frontmatter(text) or {})
+    statuses = ["draft", "ready for plan"]
+    sm = re.search(r"^status:.*#\s*(.+)$", text, re.M)
+    if sm:
+        statuses = [x.strip() for x in sm.group(1).split("|") if x.strip()]
+    heads, columns, prefixes = [], {}, {}
+    for head, lines in sections(text):
+        heads.append(head)
+        cols, _rows = first_table(lines)
+        columns[head] = cols
+        # The template's example row (`| SC-1 | | |`) gives the section's ID prefix.
+        for line in lines:
+            pm = re.match(r"^\|\s*([A-Z]+)-1\s*\|", line)
+            if pm:
+                prefixes[head] = pm.group(1)
+                break
+    return keys, statuses, heads, columns, prefixes
+
+
+def scope_problems(path):
+    """A list of 'V-n: message' strings. Empty means the scope passes."""
+    keys, statuses, heads, columns, prefixes = template_rules()
+    text = path.read_text(encoding="utf-8")
+    problems = []
+
+    fm = frontmatter(text)
+    if fm is None:
+        problems.append("V-1: no frontmatter. A scope starts with the template's frontmatter")
+        fm = {}
+    else:
+        missing = [k for k in keys if k not in fm]
+        if missing:
+            problems.append("V-1: frontmatter is missing " + ", ".join(missing))
+        if fm.get("doc") != "scope":
+            problems.append(f"V-1: doc is '{fm.get('doc', '')}', expected 'scope'")
+        if "status" in fm and fm["status"] not in statuses:
+            problems.append(f"V-1: status is '{fm['status']}', expected one of: " + ", ".join(statuses))
+        if "scope" in fm and not STUB_RE.match(fm["scope"]):
+            problems.append(f"V-1: scope '{fm['scope']}' is not a stub (lowercase letters, digits, hyphens)")
+
+    secs = sections(text)
+    found = [h for h, _l in secs]
+    if found != heads:
+        problems.append("V-2: section headings must be exactly, in order: " + " / ".join(heads))
+    by_head = dict(secs)
+
+    seen_ids = {}
+    for head in heads:
+        if head not in by_head:
+            continue
+        cols, rows = first_table(by_head[head])
+        want = columns.get(head)
+        if want and cols != want:
+            problems.append(f"V-3: '{head}' table columns must be: " + " | ".join(want))
+            continue
+        if not want:
+            continue
+        prefix = prefixes.get(head)
+        if prefix in ("SC", "D") and not rows:
+            what = "success criterion" if prefix == "SC" else "deliverable"
+            problems.append(f"V-4: '{head}' needs at least one {what}")
+        for cells in rows:
+            row = dict(zip(cols, cells, strict=False))
+            rid = row.get("ID", "")
+            if "Checked by" in row and not row["Checked by"]:
+                problems.append(f"V-5: {rid or 'a criterion'} has an empty 'Checked by' cell")
+            if "ID" in row:
+                if prefix and not re.match(rf"^{prefix}-\d+$", rid):
+                    problems.append(f"V-6: '{rid}' in '{head}' must look like {prefix}-1")
+                if rid:
+                    if rid in seen_ids:
+                        problems.append(f"V-6: ID '{rid}' is used more than once")
+                    seen_ids[rid] = head
+            if "Record" in row and "Row ID" in row:
+                record, row_id = row["Record"].strip("`"), row["Row ID"].strip("`")
+                rec = ROOT / record
+                if not rec.is_file():
+                    problems.append(f"V-7: record '{record}' does not exist")
+                elif not re.search(rf"(?<![\w-]){re.escape(row_id)}(?![\w-])", rec.read_text(encoding="utf-8")):
+                    problems.append(f"V-7: row '{row_id}' is not in {record}")
+    return problems
+
+
+def rel(path):
+    try:
+        return str(path.resolve().relative_to(ROOT.resolve()))
+    except ValueError:
+        return str(path)
+
+
+def check_scope_file(path):
+    """Prints PASS or FAIL for one file. Returns True if it passes."""
+    if path.resolve() == TEMPLATE.resolve():
+        print(f"PASS {rel(path)} (the template itself is skipped)")
+        return True
+    if not path.is_file():
+        print(f"FAIL {rel(path)}\n  file not found")
+        return False
+    problems = scope_problems(path)
+    if problems:
+        print(f"FAIL {rel(path)}")
+        for p in problems:
+            print(f"  {p}")
+        return False
+    print(f"PASS {rel(path)}")
+    return True
+
+
+def plan_scope_doc(plan_path):
+    """The plan's scope_doc as a Path, or None if it names no file."""
+    fm = frontmatter(plan_path.read_text(encoding="utf-8")) or {}
+    value = fm.get("scope_doc", "")
+    if not value:
+        return None
+    candidate = ROOT / value
+    return candidate if candidate.is_file() else None
+
+
+def all_scope_files():
+    """Every tracked file with `doc: scope` frontmatter, plus every plan's scope_doc that is a file."""
+    found = []
+    for name in git("ls-files", "*.md").stdout.split():
+        p = ROOT / name
+        if p.resolve() == TEMPLATE.resolve() or not p.is_file():
+            continue
+        fm = frontmatter(p.read_text(encoding="utf-8"))
+        if fm and fm.get("doc") == "scope":
+            found.append(p)
+    for plan in sorted([*PLANS.glob("*/*.plan.md"), *DRAFTS.glob("*/*.plan.md")]):
+        doc = plan_scope_doc(plan)
+        if doc and doc.resolve() not in {f.resolve() for f in found}:
+            found.append(doc)
+    return found
+
+
+def scope_check(arg):
+    if arg == "--all":
+        targets = all_scope_files()
+        if not targets:
+            print("no scope files found")
+            return
+    else:
+        p = Path(arg)
+        targets = [p if p.is_absolute() else ROOT / p]
+    results = [check_scope_file(t) for t in targets]
+    if not all(results):
+        sys.exit(1)
+
+
 # --- commands --------------------------------------------------------------------------------
 
 
@@ -229,8 +432,10 @@ def main(argv):
         approve(argv[1])
     elif len(argv) == 3 and argv[0] == "mark-done":
         mark_done(argv[1], argv[2])
+    elif len(argv) == 2 and argv[0] == "scope-check":
+        scope_check(argv[1])
     else:
-        die(2, "usage: approve.sh <stub> | mark-done.sh <stub> <task-id>")
+        die(2, "usage: approve.sh <stub> | mark-done.sh <stub> <task-id> | scope-check.sh <file> | --all")
 
 
 if __name__ == "__main__":

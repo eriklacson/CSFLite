@@ -29,6 +29,7 @@ from pathlib import Path
 
 STUB_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SEP_RE = re.compile(r"^\|[\s:|-]+\|\s*$")
+UNESCAPED_PIPE_RE = re.compile(r"(?<!\\)\|")
 
 
 def die(code, msg):
@@ -60,8 +61,12 @@ def check_stub(stub):
 
 
 def split_row(line):
-    """Raw segments between pipes, so a row can be rebuilt with only one cell changed."""
-    return line.rstrip("\n").split("|")
+    """Raw segments between pipes, so a row can be rebuilt with only one cell changed.
+
+    A pipe with a backslash before it (an escaped pipe, as Markdown tables write one) is text inside a
+    cell, not a border. Rebuilding with "|".join() restores the row exactly.
+    """
+    return UNESCAPED_PIPE_RE.split(line.rstrip("\n"))
 
 
 def task_rows(lines):

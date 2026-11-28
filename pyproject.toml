@@ -43,7 +43,7 @@ select = ["E", "F", "B", "I", "S", "PT"]
 ignore = ["E501"]
 
 # Allow asserts in tests
-per-file-ignores = { "tests/**.py" = ["S101"] }
+per-file-ignores = { "tests/**.py" = ["S101"], "harness/loop/tests/**.py" = ["S101", "S603", "S607"] }
 
 [tool.bandit]
 skips = ["B101"]    # assert-used outside tests

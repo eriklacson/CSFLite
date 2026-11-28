@@ -255,11 +255,16 @@ def scope_problems(path):
         if not want:
             continue
         prefix = prefixes.get(head)
-        if prefix in ("SC", "D") and not rows:
-            what = "success criterion" if prefix == "SC" else "deliverable"
-            problems.append(f"V-4: '{head}' needs at least one {what}")
+        whole = [c for c in rows if len(c) == len(cols)]
         for cells in rows:
-            row = dict(zip(cols, cells, strict=False))
+            if len(cells) != len(cols):
+                rid = cells[0] if cells else ""
+                problems.append(f"V-3: row '{rid}' in '{head}' has {len(cells)} cells, the header has {len(cols)}")
+        if prefix in ("SC", "D") and not [c for c in whole if len(c) > 1 and c[1]]:
+            what = "success criterion" if prefix == "SC" else "deliverable"
+            problems.append(f"V-4: '{head}' needs at least one {what} with its text filled in")
+        for cells in whole:
+            row = dict(zip(cols, cells, strict=True))
             rid = row.get("ID", "")
             if "Checked by" in row and not row["Checked by"]:
                 problems.append(f"V-5: {rid or 'a criterion'} has an empty 'Checked by' cell")
@@ -273,10 +278,15 @@ def scope_problems(path):
             if "Record" in row and "Row ID" in row:
                 record, row_id = row["Record"].strip("`"), row["Row ID"].strip("`")
                 rec = ROOT / record
-                if not rec.is_file():
+                row_re = rf"^\|\s*`?{re.escape(row_id)}`?\s*\|"
+                if not row_id:
+                    problems.append(f"V-7: a row for '{record}' has an empty Row ID")
+                elif not inside_repo(rec):
+                    problems.append(f"V-7: record '{record}' is outside the repo")
+                elif not rec.is_file():
                     problems.append(f"V-7: record '{record}' does not exist")
-                elif not re.search(rf"(?<![\w-]){re.escape(row_id)}(?![\w-])", rec.read_text(encoding="utf-8")):
-                    problems.append(f"V-7: row '{row_id}' is not in {record}")
+                elif not re.search(row_re, rec.read_text(encoding="utf-8"), re.M):
+                    problems.append(f"V-7: '{row_id}' is not the first cell of a table row in {record}")
     return problems
 
 
@@ -305,19 +315,41 @@ def check_scope_file(path):
     return True
 
 
-def plan_scope_doc(plan_path):
-    """The plan's scope_doc as a Path, or None if it names no file."""
+def inside_repo(path):
+    try:
+        path.resolve().relative_to(ROOT.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def resolve_scope_doc(plan_path):
+    """(value, path, problem) for a plan's scope_doc. path is None when it cannot be used; problem says why."""
     fm = frontmatter(plan_path.read_text(encoding="utf-8")) or {}
     value = fm.get("scope_doc", "")
     if not value:
-        return None
+        return value, None, "the plan has no scope_doc"
     candidate = ROOT / value
-    return candidate if candidate.is_file() else None
+    if not inside_repo(candidate):
+        return value, None, "outside the repo"
+    if not candidate.is_file():
+        return value, None, "not a file"
+    return value, candidate, ""
+
+
+def plan_scope_doc(plan_path):
+    """The plan's scope_doc as a Path, or None if it cannot be used."""
+    return resolve_scope_doc(plan_path)[1]
 
 
 def all_scope_files():
-    """Every tracked file with `doc: scope` frontmatter, plus every plan's scope_doc that is a file."""
-    found = []
+    """(files, warnings, errors).
+
+    files: every tracked file with `doc: scope` frontmatter, plus every plan's scope_doc that is a file.
+    warnings: plans whose scope_doc is not a file. approve.sh still refuses them (decision 3, scope-check-fixes).
+    errors: plans whose scope_doc points outside the repo.
+    """
+    found, warnings, errors = [], [], []
     for name in git("ls-files", "*.md").stdout.split():
         p = ROOT / name
         if p.resolve() == TEMPLATE.resolve() or not p.is_file():
@@ -326,23 +358,34 @@ def all_scope_files():
         if fm and fm.get("doc") == "scope":
             found.append(p)
     for plan in sorted([*PLANS.glob("*/*.plan.md"), *DRAFTS.glob("*/*.plan.md")]):
-        doc = plan_scope_doc(plan)
-        if doc and doc.resolve() not in {f.resolve() for f in found}:
+        value, doc, problem = resolve_scope_doc(plan)
+        if problem == "outside the repo":
+            errors.append(f"FAIL {value} (scope_doc of {rel(plan)})\n  outside the repo")
+        elif doc is None:
+            if plan.is_relative_to(PLANS):
+                note = "It was approved without a valid scope."
+            else:
+                note = "approve.sh will refuse this plan."
+            warnings.append(f"WARN {rel(plan)}: scope_doc '{value}' is {problem}. {note}")
+        elif doc.resolve() not in {f.resolve() for f in found}:
             found.append(doc)
-    return found
+    return found, warnings, errors
 
 
 def scope_check(arg):
+    errors = []
     if arg == "--all":
-        targets = all_scope_files()
-        if not targets:
+        targets, warnings, errors = all_scope_files()
+        for line in warnings + errors:
+            print(line)
+        if not targets and not errors:
             print("no scope files found")
             return
     else:
         p = Path(arg)
         targets = [p if p.is_absolute() else ROOT / p]
     results = [check_scope_file(t) for t in targets]
-    if not all(results):
+    if errors or not all(results):
         sys.exit(1)
 
 

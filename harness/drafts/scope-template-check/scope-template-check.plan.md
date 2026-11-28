@@ -124,9 +124,9 @@ No scope doc exists for this plan (decision 1). These are the plan's own criteri
 
 1. **No scope doc for this plan: approved as the last exception** (architect, 2026-11-28). This plan builds the scope check, so it has no scope file. After T-3, `approve.sh` refuses any plan without a valid scope. No later plan can skip one.
 2. **`spec-brief-components` needs a scope before approval** (architect, 2026-11-28). No second exception. A scope file is written for it from the template before `approve.sh` runs on it.
+3. **`phase4-descope` T-9 marked done on its own branch** (architect, 2026-11-28). `mark-done.sh` passed it on `refactor/phase4-descope`, in PR eriklacson/CSFLite#79. Once that merges, `approve.sh` can approve this plan. The REPORT stage for `phase4-descope` stays with the architect.
 
 ## Open items for the architect
 
-3. **Approval is blocked today.** `CURRENT` is `phase4-descope`, and its T-9 is still `todo`. `approve.sh` refuses a new plan until T-9 is marked done.
 4. Approve or change the "Checked by" table and the "Rows it covers" proposal.
 5. **Branch.** This draft sits on `harness/scope-template-check`. T-4 changes a doc, but the plan is mainly harness work, so I used the `harness/` prefix.

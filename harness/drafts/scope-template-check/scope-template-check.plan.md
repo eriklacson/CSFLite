@@ -66,7 +66,7 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 
 Frontmatter: `scope: phase4-web-interface`, `spec_outcomes: []`, `status: ready for plan`.
 
-## Proposed "Checked by" for the six criteria (needs architect approval)
+## "Checked by" for the six criteria (approved, decision 4)
 
 | SC | Criterion (text kept) | Checked by |
 |---|---|---|
@@ -79,7 +79,7 @@ Frontmatter: `scope: phase4-web-interface`, `spec_outcomes: []`, `status: ready 
 
 Most of these tests do not exist yet. P-6 only asks that the cell is filled. Each cell names the standards row that holds the mechanism, so no new rule is invented.
 
-## Proposed "Rows it covers" (needs architect approval)
+## "Rows it covers" (approved, decision 4)
 
 Every CO and INV row in `docs/specs/standards.md`, except INV-16 (deferred to Phase 7 by ADR-0011) and CO-2 (no rule yet, G-8). `standards.md` states its scope as the Phase 4 web application, so this is derived, not chosen.
 
@@ -125,8 +125,8 @@ No scope doc exists for this plan (decision 1). These are the plan's own criteri
 1. **No scope doc for this plan: approved as the last exception** (architect, 2026-11-28). This plan builds the scope check, so it has no scope file. After T-3, `approve.sh` refuses any plan without a valid scope. No later plan can skip one.
 2. **`spec-brief-components` needs a scope before approval** (architect, 2026-11-28). No second exception. A scope file is written for it from the template before `approve.sh` runs on it.
 3. **`phase4-descope` T-9 marked done on its own branch** (architect, 2026-11-28). `mark-done.sh` passed it on `refactor/phase4-descope`, in PR eriklacson/CSFLite#79. Once that merges, `approve.sh` can approve this plan. The REPORT stage for `phase4-descope` stays with the architect.
+4. **The "Checked by" and "Rows it covers" tables are approved as proposed** (architect, 2026-11-28). Schema and architecture rows are left out until those records have row IDs a check can rely on.
 
 ## Open items for the architect
 
-4. Approve or change the "Checked by" table and the "Rows it covers" proposal.
 5. **Branch.** This draft sits on `harness/scope-template-check`. T-4 changes a doc, but the plan is mainly harness work, so I used the `harness/` prefix.

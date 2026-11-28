@@ -1,14 +1,18 @@
-"""Tests for harness/loop/scope-check.sh and the scope gate in approve.sh (plan scope-template-check).
+"""Tests for harness/loop/scope-check.sh and the scope gate in approve.sh.
+
+Plans scope-template-check (the first 21 tests) and scope-check-fixes (the tests after the marker below).
 
 Each test builds a throwaway git repo in tmp_path, copies the real loop scripts and the real scope
-template into it, and runs the scripts there. The scripts read the template from the repo they run in,
-so these tests also prove the template is the only source of the rules.
+template into it, and runs the scripts there. test_template_change_changes_rules proves that a change
+to the template changes what the check requires.
 
 Output convention the tests pin:
 - scope-check.sh <file> exits 0 and prints "PASS <file>", or exits 1 and prints "FAIL <file>" followed
   by one line per broken check, each naming its check ID (V-1 to V-7).
 - scope-check.sh with no argument exits 2.
-- approve.sh exits 4 when the plan's scope_doc is missing, not a file, or fails the scope check.
+- approve.sh exits 4 when the plan's scope_doc is missing, not a file, the template itself, not
+  `ready for plan`, or fails the scope check.
+- scope-check.sh --all prints "WARN ..." for a plan whose scope_doc is not a file, and still exits 0.
 """
 
 import shutil
@@ -132,8 +136,9 @@ def assert_fails(repo, text, check_id):
     assert check_id in out, out
 
 
-def approve(repo, stub, scope_doc):
-    write(repo, f"harness/drafts/{stub}/{stub}.plan.md", PLAN.format(stub=stub, scope_doc=scope_doc))
+def approve(repo, stub, scope_doc, task="Do it"):
+    plan = PLAN.format(stub=stub, scope_doc=scope_doc).replace("| T-1 | Do it |", f"| T-1 | {task} |")
+    write(repo, f"harness/drafts/{stub}/{stub}.plan.md", plan)
     write(repo, f"harness/drafts/{stub}/{stub}.check.sh", "#!/usr/bin/env bash\nexit 0\n")
     write(repo, f"harness/drafts/{stub}/{stub}.gate.yaml", "gate: []\n")
     r = subprocess.run(["bash", "harness/loop/approve.sh", stub], cwd=repo, capture_output=True, text=True)
@@ -270,3 +275,105 @@ def test_approve_accepts_good_scope(repo):
     assert code == 0, out
     assert f"PASS {rel}" in out, out
     assert (repo / "harness" / "plans" / "good-scope" / "good-scope.approved.sha").exists()
+
+
+# --- plan scope-check-fixes: tests written before the fixes --------------------------------------
+
+
+def test_approve_refuses_template_scope(repo):
+    code, out = approve(repo, "tpl-scope", TEMPLATE)
+    assert code == 4, out
+    assert (repo / "harness" / "drafts" / "tpl-scope").exists(), "nothing may move on refusal"
+
+
+def test_approve_refuses_draft_scope(repo):
+    rel = write(repo, "docs/scopes/01-sample.scope.md", GOOD.replace("status: ready for plan", "status: draft"))
+    code, out = approve(repo, "draft-scope", rel)
+    assert code == 4, out
+    assert "ready for plan" in out, out
+    assert (repo / "harness" / "drafts" / "draft-scope").exists(), "nothing may move on refusal"
+
+
+def test_escaped_pipe_in_scope_cell_is_text(repo):
+    # An escaped pipe inside a cell is text, not a cell border.
+    rel = write(repo, "docs/scopes/01-sample.scope.md", GOOD.replace("| SC-2 | It reads well |", r"| SC-2 | a \| b |"))
+    code, out = scope_check(repo, rel)
+    assert code == 0, out
+    # So an empty Checked by cell after it is still caught (P-6).
+    assert_fails(repo, GOOD.replace("| SC-2 | It reads well | human |", r"| SC-2 | a \| b | |"), "V-5")
+
+
+def test_escaped_pipe_in_task_row_is_text(repo):
+    rel = write(repo, "docs/scopes/01-sample.scope.md", GOOD)
+    code, out = approve(repo, "pipe-plan", rel, task=r"Do a \| b")
+    assert code == 0, out
+    r = subprocess.run(
+        ["bash", "harness/loop/mark-done.sh", "pipe-plan", "T-1"], cwd=repo, capture_output=True, text=True
+    )
+    assert r.returncode == 0, r.stdout + r.stderr
+    plan = (repo / "harness" / "plans" / "pipe-plan" / "pipe-plan.plan.md").read_text(encoding="utf-8")
+    row = next(line for line in plan.splitlines() if line.startswith("| T-1 |"))
+    assert row.rstrip().endswith("| 3 | done |"), row
+
+
+def test_short_row_fails(repo):
+    assert_fails(repo, GOOD.replace("| SC-2 | It reads well | human |", "| SC-2 | It reads well |"), "V-3")
+
+
+def test_empty_row_id_fails(repo):
+    assert_fails(repo, GOOD.replace("| docs/specs/standards.md | INV-1 |", "| docs/specs/standards.md | |"), "V-7")
+
+
+def test_record_outside_repo_fails(repo, tmp_path):
+    outside = tmp_path.parent / f"{tmp_path.name}-outside.md"
+    outside.write_text("| X-1 | A row outside the repo |\n", encoding="utf-8")
+    assert_fails(repo, GOOD.replace("| docs/specs/standards.md | INV-1 |", f"| {outside} | X-1 |"), "V-7")
+
+
+def test_row_id_only_in_prose_fails(repo):
+    (repo / "docs" / "specs" / "standards.md").write_text(
+        "| INV-1 | A rule |\n\nINV-2 is only mentioned in prose.\n", encoding="utf-8"
+    )
+    assert_fails(
+        repo, GOOD.replace("| docs/specs/standards.md | INV-1 |", "| docs/specs/standards.md | INV-2 |"), "V-7"
+    )
+
+
+def test_id_only_criterion_does_not_count(repo):
+    text = GOOD.replace("| SC-1 | It works | `poetry run pytest` |\n", "").replace(
+        "| SC-2 | It reads well | human |", "| SC-1 | | human |"
+    )
+    assert_fails(repo, text, "V-4")
+
+
+def test_open_item_bad_prefix_fails(repo):
+    row = "| X-1 | Something | Because | Nothing |\n"
+    assert_fails(repo, GOOD.rstrip("\n") + "\n" + row, "V-6")
+
+
+def test_all_fails_scope_doc_outside_repo(repo, tmp_path):
+    outside = tmp_path.parent / f"{tmp_path.name}-outside-scope.md"
+    outside.write_text(GOOD, encoding="utf-8")
+    write(repo, "harness/plans/out-plan/out-plan.plan.md", PLAN.format(stub="out-plan", scope_doc=f"../{outside.name}"))
+    git(repo, "add", "-A")
+    code, out = scope_check(repo, "--all")
+    assert code == 1, out
+    assert "outside the repo" in out, out
+
+
+def test_all_draft_without_scope(repo):
+    write(repo, "harness/drafts/no-scope/no-scope.plan.md", PLAN.format(stub="no-scope", scope_doc="none yet"))
+    git(repo, "add", "-A")
+    code, out = scope_check(repo, "--all")
+    assert code == 0, out
+    assert "WARN" in out, out
+    assert "no-scope" in out, out
+
+
+def test_template_change_changes_rules(repo):
+    # Add a required section to the repo's template. A scope without it must now fail.
+    template = repo / TEMPLATE
+    template.write_text(
+        template.read_text(encoding="utf-8") + "\n## 7. Risks\n\n| ID | Risk |\n|---|---|\n", encoding="utf-8"
+    )
+    assert_fails(repo, GOOD, "V-2")

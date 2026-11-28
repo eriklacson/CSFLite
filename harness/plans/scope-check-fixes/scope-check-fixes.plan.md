@@ -25,7 +25,7 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 
 | ID | Task | Depends on | Check | Round limit | Status |
 |---|---|---|---|---|---|
-| T-1 | Write the new tests in `harness/loop/tests/test_scope_check.py` for SC-1 to SC-9, using the names in the scope. Correct the file's docstring claim about the template. Run the new tests: they must fail. | — | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-1` | 3 | todo |
+| T-1 | Write the new tests in `harness/loop/tests/test_scope_check.py` for SC-1 to SC-9, using the names in the scope. Correct the file's docstring claim about the template. Run the new tests: they must fail. | — | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-1` | 3 | done |
 | T-2 | Fix `split_row` in `harness/loop/planlib.py` so it splits only on pipes with no backslash before them. Plan tables and scope tables both use it. | T-1 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-2` | 3 | todo |
 | T-3 | Fix the scope check: fail rows whose cell count differs from the header; close the three Rows it covers holes; count a criterion or deliverable only when its text cell is filled; check Open items IDs against the template prefix; make `--all` fail on a scope_doc outside the repo and warn (not fail) on a draft plan with no scope. Add the example row `OI-1` to §6 of `docs/scopes/template.scope.md`. | T-2 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-3` | 3 | todo |
 | T-4 | Fix `approve`: refuse when the scope is the template itself, and refuse when the scope status is not `ready for plan`. Both refusals happen before anything moves. | T-3 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-4` | 3 | todo |

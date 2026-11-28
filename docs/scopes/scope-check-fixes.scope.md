@@ -2,7 +2,7 @@
 doc: scope
 scope: scope-check-fixes
 spec_outcomes: []
-status: draft
+status: ready for plan
 version: 0.1
 date: 2026-11-28
 ---
@@ -10,7 +10,7 @@ date: 2026-11-28
 # Scope scope-check-fixes — Close the gaps the review found in the scope check
 
 > The independent review of plan `scope-template-check` found gaps in `harness/loop/scope-check.sh` and `harness/loop/approve.sh`. This scope closes them. It also repairs that plan's T-2 record, which a parsing bug wrote into the wrong cell.
-> Drafted by the agent for the architect to review. The architect sets `status: ready for plan` when it is accepted.
+> Drafted by the agent. Accepted by the architect on 2026-11-28 (`status: ready for plan`).
 
 ## 1. What this scope delivers
 
@@ -36,7 +36,7 @@ date: 2026-11-28
 | SC-5 | "Rows it covers" fails on an empty Row ID, a record outside the repo, or a row ID that is not the first cell of a table row in the record | `test_empty_row_id_fails`, `test_record_outside_repo_fails`, `test_row_id_only_in_prose_fails` |
 | SC-6 | A criterion or deliverable counts toward P-5 only when its text cell is filled | `test_id_only_criterion_does_not_count` |
 | SC-7 | Open items IDs follow the template's prefix | `test_open_item_bad_prefix_fails` |
-| SC-8 | `--all` fails on a scope_doc outside the repo, and handles a draft plan with no scope as decided in OI-1 | `test_all_fails_scope_doc_outside_repo`, `test_all_draft_without_scope` |
+| SC-8 | `--all` fails on a scope_doc outside the repo, and warns (does not fail) on a draft plan with no scope. `approve.sh` still refuses such a draft. | `test_all_fails_scope_doc_outside_repo`, `test_all_draft_without_scope` |
 | SC-9 | A change to the template changes what the check requires | `test_template_change_changes_rules` |
 | SC-10 | `AGENTS.md`, `harness/loop/README.md` and `harness/rules.md` say only what the code does | Plan check T-5 |
 | SC-11 | Plan `scope-template-check` T-2 reads Round limit `3` and Status `done`, and its approval hash matches | Plan check T-6 |
@@ -67,4 +67,3 @@ date: 2026-11-28
 
 | ID | Item | Why it is still open | What it blocks |
 |---|---|---|---|
-| OI-1 | What `--all` does with a draft plan that has no scope, such as `spec-brief-components` | Failing would turn CI red on `master` until that draft gets a scope. Warning keeps CI green, and `approve.sh` still refuses it. | SC-8 and plan task T-3 |

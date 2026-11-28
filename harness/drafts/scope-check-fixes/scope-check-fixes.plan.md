@@ -27,7 +27,7 @@ Do the tasks in order. A task starts only when every task it depends on is `done
 |---|---|---|---|---|---|
 | T-1 | Write the new tests in `harness/loop/tests/test_scope_check.py` for SC-1 to SC-9, using the names in the scope. Correct the file's docstring claim about the template. Run the new tests: they must fail. | — | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-1` | 3 | todo |
 | T-2 | Fix `split_row` in `harness/loop/planlib.py` so it splits only on pipes with no backslash before them. Plan tables and scope tables both use it. | T-1 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-2` | 3 | todo |
-| T-3 | Fix the scope check: fail rows whose cell count differs from the header; close the three Rows it covers holes; count a criterion or deliverable only when its text cell is filled; check Open items IDs against the template prefix; make `--all` fail on a scope_doc outside the repo and handle drafts with no scope as OI-1 decides. Add the example row `OI-1` to §6 of `docs/scopes/template.scope.md`. | T-2 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-3` | 3 | todo |
+| T-3 | Fix the scope check: fail rows whose cell count differs from the header; close the three Rows it covers holes; count a criterion or deliverable only when its text cell is filled; check Open items IDs against the template prefix; make `--all` fail on a scope_doc outside the repo and warn (not fail) on a draft plan with no scope. Add the example row `OI-1` to §6 of `docs/scopes/template.scope.md`. | T-2 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-3` | 3 | todo |
 | T-4 | Fix `approve`: refuse when the scope is the template itself, and refuse when the scope status is not `ready for plan`. Both refusals happen before anything moves. | T-3 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-4` | 3 | todo |
 | T-5 | Correct the docs to say only what the code does: the scopes row in `AGENTS.md`, the `approve.sh` and `scope-check.sh` rows and limits in `harness/loop/README.md`, and the P-11 row in `harness/rules.md`. | T-4 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-5` | 3 | todo |
 | T-6 | Architect only, one-off: correct the T-2 row in plan `scope-template-check` (Round limit `3`, Status `done`), then rewrite its approval hash with the command below. The agent then runs `mark-done.sh` on this task. | T-2 | `bash harness/plans/scope-check-fixes/scope-check-fixes.check.sh T-6` | 3 | todo |
@@ -91,10 +91,9 @@ See scope §5: stale citations of old headings, the tests hash-lock, headings in
 
 1. **A plan may only be approved on a scope with `status: ready for plan`** (architect, 2026-11-28). Built in T-4.
 2. **The `scope-template-check` PR waits for this plan** (architect, 2026-11-28).
+3. **`--all` warns on a draft plan with no scope; it does not fail** (architect, 2026-11-28). CI stays green. `approve.sh` still refuses such a draft.
+4. **The scope is accepted** (architect, 2026-11-28). Its status is `ready for plan`.
 
 ## Open items for the architect
 
-1. **OI-1 in the scope: what `--all` does with a draft plan that has no scope.** Today that is `spec-brief-components`.
-   - **Fail:** CI turns red on `master` until that draft gets a scope or is removed.
-   - **Warn:** CI stays green. `approve.sh` still refuses the draft. My recommendation, because approval is the real gate.
-2. **Review the scope** and set it to `status: ready for plan` before approving. Approval needs that status once T-4 lands, and it is good practice now.
+None.

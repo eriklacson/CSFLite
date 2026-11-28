@@ -137,7 +137,7 @@ Never skip PLAN. Never start IMPLEMENT before the architect approves the plan.
 | record templates | `docs/specs/templates/` |
 | decision records | `docs/specs/adr/` |
 | audit records | `docs/specs/checks/` |
-| scopes | Any file whose frontmatter says `doc: scope`, usually in `docs/scopes/`. The Phase 4 scope is `docs/specs/phase-4/web-interface-scope.md`. Every scope follows `docs/scopes/template.scope.md`, and every plan names one as its `scope_doc`. `harness/loop/scope-check.sh` checks this, and `approve.sh` refuses a plan whose scope fails. |
+| scopes | Any file whose frontmatter says `doc: scope`, usually in `docs/scopes/`. The Phase 4 scope is `docs/specs/phase-4/web-interface-scope.md`. Every scope follows `docs/scopes/template.scope.md`, and every plan names one as its `scope_doc`. `harness/loop/scope-check.sh` checks a scope's structure. `approve.sh` refuses a plan whose scope is missing, is the template itself, fails that check, or is not marked `status: ready for plan`. `scope-check.sh --all` only warns about a plan without a valid scope. |
 | plans, checks, logs | `harness/drafts/<stub>/`, then `harness/plans/<stub>/`. One folder per scope |
 
 Existing files keep their names. ADRs stay `ADR-NNNN-*.md`, not jig's `NNNN-*.decision.md`. Process rule P-10 (file names) applies only to new process files: scopes, plans, checks, gates and logs. Existing files under `docs/specs/` are exempt.
